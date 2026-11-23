@@ -1,4 +1,4 @@
-const CACHE = "viktoria-v20";
+const CACHE = "viktoria-v21";
 const API = "https://script.google.com/macros/s/AKfycbyq-9XatEqTnFvL1Fhn3V9BSM1RwRVRKiK1bjCJbarBvAYx8Z_fHdxRKb6n98E8fH8CBw/exec";
 const SHELL = ["./", "./index.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png", "./apple-touch-icon.png", "./fonts/Mardoto-Regular.ttf", "./fonts/Mardoto-Medium.ttf", "./fonts/Mardoto-Bold.ttf"];
 self.addEventListener("install", e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL))); self.skipWaiting(); });
@@ -6,7 +6,13 @@ self.addEventListener("activate", e => { e.waitUntil(caches.keys().then(ks => Pr
 self.addEventListener("fetch", e => {
   const u = new URL(e.request.url);
   if (e.request.method !== "GET" || u.origin !== location.origin) return;
-  e.respondWith(fetch(e.request, { cache: "no-cache" }).then(r => { const c = r.clone(); caches.open(CACHE).then(x => x.put(e.request, c)); return r; }).catch(() => caches.match(e.request)));
+  // Сразу отдаём копию из телефона (мгновенный запуск), а свежую версию тихо скачиваем на следующий раз.
+  e.respondWith(caches.open(CACHE).then(async c => {
+    const hit = await c.match(e.request, { ignoreSearch: true });
+    const net = fetch(e.request, { cache: "no-cache" }).then(r => { if (r && r.ok) c.put(e.request, r.clone()); return r; }).catch(() => null);
+    if (hit) { e.waitUntil(net); return hit; }
+    return (await net) || c.match("./index.html");
+  }));
 });
 /* Уведомления: сигнал приходит пустым, текст забираем у таблицы. */
 self.addEventListener("push", e => {

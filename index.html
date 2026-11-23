@@ -571,8 +571,9 @@ const curMonth=()=>{const d=new Date(NOW());return d.getFullYear()+"-"+pad(d.get
 const monthName=m=>{const [y,mm]=m.split("-");return MONTHS[Number(mm)-1]+" "+y};
 function payScreen(){
   const m=S.payMonth||(S.payMonth=curMonth());
+  if(!S.pay){try{const c=JSON.parse(localStorage.getItem("vk-pay")||"null");if(c&&c.month===m)S.pay=c}catch(e){}}
   if(!S.pay||S.pay.month!==m){if(!S.payLoading){S.payLoading=1;api("api_payments",S.code,m).then(r=>{S.pay=r;S.payLoading=0;render()}).catch(()=>{S.payLoading=0;S.payErr=1;render()})}
-    return `<div class="stack">${sec("Վճարումներ · "+monthName(m),null,emptyP(S.payErr?"Չհաջողվեց բեռնել։":"Բեռնվում է…"))}</div>`}
+    return `<div class="stack">${sec("Վճարումներ · "+monthName(m),null,S.payErr?emptyP("Չհաջողվեց բեռնել։"):panel('<div class="skel" style="padding:14px 0"><i></i><i></i><i></i><i></i></div>'))}</div>`}
   const ks=S.pay.kids.slice().sort((a,b)=>(b.due-b.paid)-(a.due-a.paid)||a.name.localeCompare(b.name,"hy"));
   const due=ks.reduce((a,k)=>a+k.due,0),paid=ks.reduce((a,k)=>a+k.paid,0),debt=ks.reduce((a,k)=>a+Math.max(0,k.due-k.paid),0);
   const noTar=ks.filter(k=>!k.due).length;
@@ -766,7 +767,7 @@ function render(){
   if(S.phase!=="app"){header([]);bar.hidden=true;app.className="notabs";
     app.innerHTML=S.phase==="boot"?`<div class="empty">Բեռնվում է…</div>`:S.phase==="error"?`<div class="off">${esc(S.err||"Կապ չկա։")}</div><div style="height:12px"></div><button class="btn pri" data-act="reload">Փորձել նորից</button>`:loginHtml();
     renderSheet(null,now);return}
-  if(!meS()){header([]);bar.hidden=true;app.className="notabs";app.innerHTML=`<div class="empty">Բեռնվում է…</div>`;return}
+  if(!meS()){header([]);bar.hidden=true;app.className="notabs";app.innerHTML=`<div class="skel" style="padding-top:18px"><i class="h"></i><i></i><i></i><i></i><i></i></div>`;return}
   const D=derive(S.marks),tabs=tabsFor(meS().role,D,now);
   if(tabs.length&&!tabs.some(t=>t[0]===S.tab))S.tab=tabs[0][0];
   header(tabs);
@@ -827,23 +828,34 @@ let busy=false;
 let lastSig="";
 function setBadge(n){try{if(navigator.setAppBadge){n?navigator.setAppBadge(n):navigator.clearAppBadge()}}catch(e){}}
 function sigOf(st){return JSON.stringify([st.contacts,st.unread,st.me&&st.me.id,st.kids,st.staff,st.settings,st.marks,st.routes,st.noSchool])}
-function applyState(st,t0){
+function applyState(st,t0,off){
   const was=S.me;
   if(!S.docsTried){S.docsTried=1;setTimeout(()=>api("api_docs",S.code).then(l=>{S.docs=l;S.docsUnread=docsUnreadN();render();docPrefetch()}).catch(()=>{}),800)}
-  S.offset=st.serverNow-Math.round((t0+Date.now())/2);S.day=st.day;S.me=st.me.id;S.staff=st.staff.sort((a,b)=>a.order-b.order);S.kids=st.kids;S.settings=st.settings;
+  S.offset=t0==null?off:st.serverNow-Math.round((t0+Date.now())/2);S.day=st.day;S.me=st.me.id;S.staff=st.staff.sort((a,b)=>a.order-b.order);S.kids=st.kids;S.settings=st.settings;
   S.unread=st.unread||0;setBadge(S.unread);S.contacts=st.contacts||{};
   S.marks=st.marks.concat(queuedAsMarks());S.routes=st.routes||[];S.noSchool=!!st.noSchool;S.sheetUrl=st.sheetUrl||"";S.offline=Q.get().length>0;
   try{if(("Notification" in window)&&Notification.permission==="granted"&&ls.get("vk-push-me")!==S.me&&"PushManager" in window&&!S.subTry){S.subTry=1;subscribePush(false).catch(()=>{}).finally(()=>{setTimeout(()=>{S.subTry=0},120000)})}}catch(e){}
 }
+/* Последние данные хранятся в телефоне: при открытии экран показывается сразу, свежие данные подтягиваются следом */
+function prefetchSections(){if(S.prefetched)return;S.prefetched=1;const r=(meS()||{}).role;
+  setTimeout(()=>{
+    if((r==="owner"||r==="coord")&&!S.payLoading){const m=S.payMonth||(S.payMonth=curMonth());S.payLoading=1;
+      api("api_payments",S.code,m).then(x=>{S.pay=x;S.payFresh=1;S.payLoading=0;try{localStorage.setItem("vk-pay",JSON.stringify(x))}catch(e){}if(S.tab==="pay")render()}).catch(()=>{S.payLoading=0})}
+    if(r==="owner"&&!S.admin&&!S.adminLoading){S.adminLoading=1;Promise.all([api("api_staffAdmin",S.code),api("api_docReads",S.code).catch(()=>null)]).then(([l,d])=>{S.admin=l;S.docReads=d;S.adminLoading=0;if(S.tab==="team")render()}).catch(()=>{S.adminLoading=0})}
+  },300)}
+function saveState(st){try{localStorage.setItem("vk-state",JSON.stringify({st,off:S.offset,me:S.me,code:S.code.slice(-2)}))}catch(e){}}
+function loadState(){try{const c=JSON.parse(localStorage.getItem("vk-state")||"null");if(!c||!c.st||c.me!==S.me||c.code!==S.code.slice(-2))return false;
+  const st=c.st;if(st.day!==dayKey(Date.now()+(c.off||0)))st.marks=[];
+  applyState(st,null,c.off||0);S.cached=1;return true}catch(e){return false}}
 async function refresh(){
   if(busy||!S.code||S.phase!=="app")return;busy=true;
   let changed=true;
-  try{await flush();const t0=Date.now(),st=await api("api_state",S.code);const sig=sigOf(st);changed=sig!==lastSig||Q.get().length>0||S.offline;lastSig=sig;applyState(st,t0)}
+  try{await flush();const t0=Date.now(),st=await api("api_state",S.code);const sig=sigOf(st);changed=sig!==lastSig||Q.get().length>0||S.offline||S.cached;lastSig=sig;applyState(st,t0);S.cached=0;saveState(st);prefetchSections()}
   catch(e){if(/bad_pin|locked/.test(e.message)){busy=false;logout("Կոդը այլևս չի գործում։ Մուտք գործեք նորից։");return}S.offline=true}
   finally{busy=false}
   if(changed)render();
 }
-function logout(msg){S.docs=null;S.docsTried=0;S.docsUnread=0;S.pay=null;S.admin=null;S.code="";S.me=null;S.pin="";S.pinErr=msg||"";S.sheet=null;S.week=null;S.tab=null;S.marks=[];S.staff=[];ls.set("vk-code",null);ls.set("vk-me",null);ls.set("vk-tab",null);S.phase="code";render()}
+function logout(msg){S.docs=null;S.docsTried=0;S.docsUnread=0;S.pay=null;S.admin=null;S.code="";S.me=null;S.pin="";S.pinErr=msg||"";S.sheet=null;S.week=null;S.tab=null;S.marks=[];S.staff=[];ls.set("vk-code",null);ls.set("vk-me",null);ls.set("vk-tab",null);ls.set("vk-state",null);ls.set("vk-pay",null);S.phase="code";render()}
 async function tryLogin(){
   if(S.busyPin)return;if(!/^(\d{6}|\d{8})$/.test(S.pin)){S.pinErr="Կոդը 6 կամ 8 թիվ է";pinUpdate();return}
   S.busyPin=true;S.pinErr="";render();
@@ -965,7 +977,7 @@ window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();S.installEv
 (function boot(){
   if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
   S.code=ls.get("vk-code")||"";S.me=ls.get("vk-me");S.tab=ls.get("vk-tab");
-  if(S.code&&S.me){S.phase="app";S.phase="app";render();refresh()}else{S.phase="code";render()}
+  if(S.code&&S.me){S.phase="app";loadState();render();refresh()}else{S.phase="code";render()}
   setInterval(()=>{if(!document.hidden)refresh()},30000);
   setInterval(()=>{if(!document.hidden&&S.phase==="app")render()},60000);
   window.addEventListener("online",()=>refresh());
