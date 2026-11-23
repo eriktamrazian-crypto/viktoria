@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#f2f3f0">
+<meta name="theme-color" content="#f7f7f2">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -19,13 +19,13 @@
 @font-face{font-family:"Mardoto";src:url(fonts/Mardoto-Medium.ttf) format("truetype");font-weight:500 600;font-display:swap}
 @font-face{font-family:"Mardoto";src:url(fonts/Mardoto-Bold.ttf) format("truetype");font-weight:700;font-display:swap}
 :root{
-  --paper:#f2f3f0; --card:#ffffff; --ink:#1c211d; --ink-2:#5f6760; --ink-3:#8e958f; --line:#e3e6e1; --wash:#eceee9;
-  --brand:#b8337a; --brand-hover:#982a69; --brand-2:#fae7f1; --brand-ink:#7f1f57;
-  --green:#3b7a1c; --green-hover:#326a17; --green-2:#e7f0df; --green-ink:#2f6416;
+  --paper:#f7f7f2; --card:#ffffff; --ink:#2a2430; --ink-2:#5f5a66; --ink-3:#958f99; --line:#e7e6de; --wash:#f0f1ea;
+  --brand:#b2347c; --brand-hover:#982a69; --brand-2:#fae7f1; --brand-ink:#7f1f57;
+  --green:#47801f; --green-hover:#3b6c19; --green-2:#e9f3dc; --green-ink:#355f14;
   --blue:#b2347c; --blue-2:#fae7f1; --amber:#94570c; --amber-2:#fbefdb; --violet:#7a4fa3; --violet-2:#f1eaf8;
   --red:#a8322a; --red-2:#fbe6e2; --sun:#f2b75c;
   --font:"Mardoto","Noto Sans Armenian",-apple-system,system-ui,sans-serif;
-  --r:14px; --tab:66px;
+  --r:16px; --tab:66px;
   --ease-out:cubic-bezier(.23,1,.32,1); --ease-drawer:cubic-bezier(.32,.72,0,1);
   color-scheme:light;
 }
@@ -243,93 +243,6 @@ th{font-size:13px;color:var(--ink-3);font-weight:600;border-top:0}
 .form label{display:flex;flex-direction:column;gap:6px;font-size:14px;color:var(--ink-2)}
 .form input{border:0;border-radius:12px;background:var(--wash);min-height:48px;padding:0 14px;font-size:16px;width:140px}
 
-/* ===== v2: как хорошие приложения iPhone. Удобство первым, без украшений ===== */
-svg.ph{width:24px;height:24px;flex:none}
-.chev{width:16px;height:16px;color:#c4c9c3}
-.top{background:rgba(242,243,240,.92);-webkit-backdrop-filter:saturate(1.6) blur(16px);backdrop-filter:saturate(1.6) blur(16px)}
-.top-in{min-height:44px}
-.me{gap:8px}.me .av{display:none}
-.me-n{font-size:16px;font-weight:600;opacity:0;transform:translateY(4px);transition:opacity .2s ease,transform .2s var(--ease-out)}
-.top.sh .me-n{opacity:1;transform:none}
-.me-r{display:none}
-.hbtn,.bell{color:var(--green)}
-.hbtn svg.ph,.bell svg.ph{width:25px;height:25px}
-.hbtn .dot{background:var(--brand)}
-.bell .badge{background:var(--brand);border:2px solid var(--paper);min-width:19px;height:19px;font-size:11px}
-.out{color:var(--green);font-weight:500;font-size:15px}
-.ltw{margin:0 4px 20px}
-.lt{font-size:32px;font-weight:700;letter-spacing:-.02em;line-height:1.12;margin:2px 0 0}
-.lsub{font-size:15px;color:var(--ink-2);margin-top:3px;line-height:1.4}
-.lsub b{color:var(--ink);font-weight:600}
-main{padding-top:0}
-.stack{gap:24px}
-.sec-h{margin:0 4px 7px}
-.sec-h h2{font-size:19px}
-.sec-h .c{font-size:15px;color:var(--ink-3);font-weight:400}
-.panel{border-radius:var(--r);box-shadow:none;padding:0}
-.panel>.row,.panel>.ib,.panel>.empty,.panel>.form,.panel>.grp{padding-left:14px;padding-right:14px}
-.row{min-height:58px;padding-top:9px;padding-bottom:9px;border-top:0;position:relative}
-.row+.row::before,.grp+.row::before{content:"";position:absolute;top:0;right:0;left:62px;height:1px;background:var(--line)}
-.row.noav::before{left:14px}
-.panel .empty{padding:14px}
-.av{width:36px;height:36px;font-size:14px;font-weight:600;background:var(--wash)!important;color:#4c544d!important;letter-spacing:0}
-.av.s-bad{background:#fbe7e5!important;color:var(--red)!important}
-.rn{font-size:16.5px;font-weight:500;line-height:1.25}
-.rs{color:var(--ink-2)}
-.rs.w{color:#a35f06}
-.rt{font-size:15px;color:var(--ink-3)}
-.rt.u{color:var(--red);font-weight:600}
-.lead{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;flex:none;background:#fbefdc;color:#a35f06}
-.lead svg.ph{width:20px;height:20px}
-.lead.u{background:#fbe7e5;color:var(--red)}
-.lead.ok{background:var(--green-2);color:var(--green)}
-.more{color:var(--green);font-size:16px;font-weight:500;flex:1}
-.pill{flex:none;border:0;height:34px;padding:0 15px;border-radius:17px;font-size:15px;font-weight:600;background:var(--green-2);color:var(--green)}
-.pill.pri{background:var(--green);color:#fff}
-.pill:active{transform:scale(.96)}
-.search{background:#e4e6e2;box-shadow:none;min-height:40px;border-radius:11px;padding-left:38px;font-size:16px;margin:0 0 10px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='%23868d87'%3E%3Cpath d='M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-size:18px;background-position:12px center}
-.btn{border-radius:13px;min-height:50px;font-size:17px}
-.btn.sm{min-height:40px;font-size:15px;border-radius:11px}
-.btn.line{background:var(--green-2);box-shadow:none;color:var(--green)}
-.btn.soft{background:var(--green-2);color:var(--green)}
-.due{background:var(--green);border-radius:var(--r)}
-.due.late{background:var(--red)}
-.hint{box-shadow:none;border-radius:var(--r)}
-.hint-ic{border-radius:10px;width:36px;height:36px}
-.ok{background:var(--card);color:var(--ink);border-radius:var(--r)}
-.al{border-radius:var(--r)}
-.nums{display:none}
-.tabbar{background:rgba(248,249,247,.94);box-shadow:0 -.5px 0 #d6d9d4}
-.tab{font-size:11px;font-weight:500;color:#8e958f;gap:2px}
-.tab svg.ph{width:26px;height:26px}
-.tab.on{color:var(--green)}
-.tab .badge{background:var(--brand)}
-.sheet{background:var(--paper)}
-.sheet .row{background:var(--card)}
-.sh-x{position:absolute;top:12px;right:14px;width:32px;height:32px;border-radius:50%;border:0;background:#e3e5e1;color:#6b726c;display:grid;place-items:center;z-index:2}
-.sh-x svg.ph{width:15px;height:15px}
-.who{display:flex;align-items:center;gap:14px;margin:4px 0 0;padding-right:40px}
-.who .av{width:56px;height:56px;font-size:20px}
-.who h1{margin:0;font-size:23px;font-weight:700;letter-spacing:-.01em;line-height:1.15}
-.who p{margin:2px 0 0;font-size:15px;color:var(--ink-2)}
-.statec{margin:16px 0 0;background:var(--card);border-radius:var(--r);padding:14px}
-.statec .nl{font-size:13px;color:var(--ink-3)}
-.statec .nw{font-size:18px;font-weight:600;margin-top:1px}
-.statec .nw span{color:var(--ink-2);font-weight:400}
-.statec .nd{font-size:14px;color:var(--ink-2);margin-top:4px}
-.statec .acts{margin:12px 0 0;gap:8px}
-.sgrp{margin-top:22px}
-.tl{margin:0;background:var(--card);border-radius:var(--r);padding:2px 14px}
-.tl li{padding:10px 0;align-items:baseline}
-.tl li+li{border-top:1px solid var(--line)}
-.tl i{display:none}
-.tl time{width:46px}
-.rowbtn{display:flex;align-items:center;gap:12px;width:100%;min-height:50px;padding:0 14px;border:0;background:var(--card);font-size:16.5px;color:var(--green);text-align:left;text-decoration:none;position:relative}
-.rowbtn+.rowbtn::before{content:"";position:absolute;top:0;right:0;left:14px;height:1px;background:var(--line)}
-.rowbtn svg.ph{width:21px;height:21px}
-.rowbtn small{margin-left:auto;color:var(--ink-3);font-size:15px}
-.rowbtn.danger{color:var(--red)}
-.rows{border-radius:var(--r);overflow:hidden}
 /* desktop */
 @media (min-width:960px){
   .tabbar{display:none}
@@ -357,10 +270,17 @@ main{padding-top:0}
 const API="https://script.google.com/macros/s/AKfycbyq-9XatEqTnFvL1Fhn3V9BSM1RwRVRKiK1bjCJbarBvAYx8Z_fHdxRKb6n98E8fH8CBw/exec";
 
 /* ---------- icons ---------- */
-/* значки: Phosphor Icons (MIT), https://phosphoricons.com */
-const PH={"now": "<path d=\"M219.31,108.68l-80-80a16,16,0,0,0-22.62,0l-80,80A15.87,15.87,0,0,0,32,120v96a8,8,0,0,0,8,8H216a8,8,0,0,0,8-8V120A15.87,15.87,0,0,0,219.31,108.68ZM208,208H48V120l80-80,80,80Z\"/>", "nowF": "<path d=\"M224,120v96a8,8,0,0,1-8,8H40a8,8,0,0,1-8-8V120a15.87,15.87,0,0,1,4.69-11.32l80-80a16,16,0,0,1,22.62,0l80,80A15.87,15.87,0,0,1,224,120Z\"/>", "road": "<path d=\"M184,32H72A32,32,0,0,0,40,64V208a16,16,0,0,0,16,16H80a16,16,0,0,0,16-16V192h64v16a16,16,0,0,0,16,16h24a16,16,0,0,0,16-16V64A32,32,0,0,0,184,32ZM56,176V120H200v56Zm0-96H200v24H56ZM72,48H184a16,16,0,0,1,16,16H56A16,16,0,0,1,72,48Zm8,160H56V192H80Zm96,0V192h24v16Zm-72-60a12,12,0,1,1-12-12A12,12,0,0,1,104,148Zm72,0a12,12,0,1,1-12-12A12,12,0,0,1,176,148Zm72-68v24a8,8,0,0,1-16,0V80a8,8,0,0,1,16,0ZM24,80v24a8,8,0,0,1-16,0V80a8,8,0,0,1,16,0Z\"/>", "roadF": "<path d=\"M248,80v24a8,8,0,0,1-16,0V80a8,8,0,0,1,16,0ZM16,72a8,8,0,0,0-8,8v24a8,8,0,0,0,16,0V80A8,8,0,0,0,16,72Zm200-8V208a16,16,0,0,1-16,16H184a16,16,0,0,1-16-16v-8H88v8a16,16,0,0,1-16,16H56a16,16,0,0,1-16-16V64A32,32,0,0,1,72,32H184A32,32,0,0,1,216,64ZM104,148a12,12,0,1,0-12,12A12,12,0,0,0,104,148Zm72,0a12,12,0,1,0-12,12A12,12,0,0,0,176,148Zm24-76H56v40H200Z\"/>", "pay": "<path d=\"M216,64H56a8,8,0,0,1,0-16H192a8,8,0,0,0,0-16H56A24,24,0,0,0,32,56V184a24,24,0,0,0,24,24H216a16,16,0,0,0,16-16V80A16,16,0,0,0,216,64Zm0,128H56a8,8,0,0,1-8-8V78.63A23.84,23.84,0,0,0,56,80H216Zm-48-60a12,12,0,1,1,12,12A12,12,0,0,1,168,132Z\"/>", "payF": "<path d=\"M216,64H56a8,8,0,0,1,0-16H192a8,8,0,0,0,0-16H56A24,24,0,0,0,32,56V184a24,24,0,0,0,24,24H216a16,16,0,0,0,16-16V80A16,16,0,0,0,216,64Zm-36,80a12,12,0,1,1,12-12A12,12,0,0,1,180,144Z\"/>", "report": "<path d=\"M224,200h-8V40a8,8,0,0,0-8-8H152a8,8,0,0,0-8,8V80H96a8,8,0,0,0-8,8v40H48a8,8,0,0,0-8,8v64H32a8,8,0,0,0,0,16H224a8,8,0,0,0,0-16ZM160,48h40V200H160ZM104,96h40V200H104ZM56,144H88v56H56Z\"/>", "reportF": "<path d=\"M232,208a8,8,0,0,1-8,8H32a8,8,0,0,1,0-16h8V136a8,8,0,0,1,8-8H72a8,8,0,0,1,8,8v64H96V88a8,8,0,0,1,8-8h32a8,8,0,0,1,8,8V200h16V40a8,8,0,0,1,8-8h40a8,8,0,0,1,8,8V200h8A8,8,0,0,1,232,208Z\"/>", "team": "<path d=\"M244.8,150.4a8,8,0,0,1-11.2-1.6A51.6,51.6,0,0,0,192,128a8,8,0,0,1-7.37-4.89,8,8,0,0,1,0-6.22A8,8,0,0,1,192,112a24,24,0,1,0-23.24-30,8,8,0,1,1-15.5-4A40,40,0,1,1,219,117.51a67.94,67.94,0,0,1,27.43,21.68A8,8,0,0,1,244.8,150.4ZM190.92,212a8,8,0,1,1-13.84,8,57,57,0,0,0-98.16,0,8,8,0,1,1-13.84-8,72.06,72.06,0,0,1,33.74-29.92,48,48,0,1,1,58.36,0A72.06,72.06,0,0,1,190.92,212ZM128,176a32,32,0,1,0-32-32A32,32,0,0,0,128,176ZM72,120a8,8,0,0,0-8-8A24,24,0,1,1,87.24,82a8,8,0,1,0,15.5-4A40,40,0,1,0,37,117.51,67.94,67.94,0,0,0,9.6,139.19a8,8,0,1,0,12.8,9.61A51.6,51.6,0,0,1,64,128,8,8,0,0,0,72,120Z\"/>", "teamF": "<path d=\"M64.12,147.8a4,4,0,0,1-4,4.2H16a8,8,0,0,1-7.8-6.17,8.35,8.35,0,0,1,1.62-6.93A67.79,67.79,0,0,1,37,117.51a40,40,0,1,1,66.46-35.8,3.94,3.94,0,0,1-2.27,4.18A64.08,64.08,0,0,0,64,144C64,145.28,64,146.54,64.12,147.8Zm182-8.91A67.76,67.76,0,0,0,219,117.51a40,40,0,1,0-66.46-35.8,3.94,3.94,0,0,0,2.27,4.18A64.08,64.08,0,0,1,192,144c0,1.28,0,2.54-.12,3.8a4,4,0,0,0,4,4.2H240a8,8,0,0,0,7.8-6.17A8.33,8.33,0,0,0,246.17,138.89Zm-89,43.18a48,48,0,1,0-58.37,0A72.13,72.13,0,0,0,65.07,212,8,8,0,0,0,72,224H184a8,8,0,0,0,6.93-12A72.15,72.15,0,0,0,157.19,182.07Z\"/>", "lessons": "<path d=\"M226.53,56.41l-96-32a8,8,0,0,0-5.06,0l-96,32A8,8,0,0,0,24,64v80a8,8,0,0,0,16,0V75.1L73.59,86.29a64,64,0,0,0,20.65,88.05c-18,7.06-33.56,19.83-44.94,37.29a8,8,0,1,0,13.4,8.74C77.77,197.25,101.57,184,128,184s50.23,13.25,65.3,36.37a8,8,0,0,0,13.4-8.74c-11.38-17.46-27-30.23-44.94-37.29a64,64,0,0,0,20.65-88l44.12-14.7a8,8,0,0,0,0-15.18ZM176,120A48,48,0,1,1,89.35,91.55l36.12,12a8,8,0,0,0,5.06,0l36.12-12A47.89,47.89,0,0,1,176,120ZM128,87.57,57.3,64,128,40.43,198.7,64Z\"/>", "lessonsF": "<path d=\"M226.53,56.41l-96-32a8,8,0,0,0-5.06,0l-96,32A8,8,0,0,0,24,64v80a8,8,0,0,0,16,0V75.1L73.59,86.29a64,64,0,0,0,20.65,88.05c-18,7.06-33.56,19.83-44.94,37.29a8,8,0,1,0,13.4,8.74C77.77,197.25,101.57,184,128,184s50.23,13.25,65.3,36.37a8,8,0,0,0,13.4-8.74c-11.38-17.46-27-30.23-44.94-37.29a64,64,0,0,0,20.65-88l44.12-14.7a8,8,0,0,0,0-15.18ZM176,120A48,48,0,1,1,89.35,91.55l36.12,12a8,8,0,0,0,5.06,0l36.12-12A47.89,47.89,0,0,1,176,120Z\"/>", "door": "<path d=\"M232,216H208V40a16,16,0,0,0-16-16H64A16,16,0,0,0,48,40V216H24a8,8,0,0,0,0,16H232a8,8,0,0,0,0-16Zm-40,0H176V40h16ZM64,40h96V216H64Zm80,92a12,12,0,1,1-12-12A12,12,0,0,1,144,132Z\"/>", "doorF": "<path d=\"M232,216H208V40a16,16,0,0,0-16-16H64A16,16,0,0,0,48,40V216H24a8,8,0,0,0,0,16H232a8,8,0,0,0,0-16Zm-64,0H64V40H168Zm-40-84a12,12,0,1,1,12,12A12,12,0,0,1,128,132Z\"/>", "chev": "<path d=\"M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z\"/>", "arrow": "<path d=\"M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z\"/>", "book": "<path d=\"M232,48H160a40,40,0,0,0-32,16A40,40,0,0,0,96,48H24a8,8,0,0,0-8,8V200a8,8,0,0,0,8,8H96a24,24,0,0,1,24,24,8,8,0,0,0,16,0,24,24,0,0,1,24-24h72a8,8,0,0,0,8-8V56A8,8,0,0,0,232,48ZM96,192H32V64H96a24,24,0,0,1,24,24V200A39.81,39.81,0,0,0,96,192Zm128,0H160a39.81,39.81,0,0,0-24,8V88a24,24,0,0,1,24-24h64Z\"/>", "bell": "<path d=\"M221.8,175.94C216.25,166.38,208,139.33,208,104a80,80,0,1,0-160,0c0,35.34-8.26,62.38-13.81,71.94A16,16,0,0,0,48,200H88.81a40,40,0,0,0,78.38,0H208a16,16,0,0,0,13.8-24.06ZM128,216a24,24,0,0,1-22.62-16h45.24A24,24,0,0,1,128,216ZM48,184c7.7-13.24,16-43.92,16-80a64,64,0,1,1,128,0c0,36.05,8.28,66.73,16,80Z\"/>", "phone": "<path d=\"M222.37,158.46l-47.11-21.11-.13-.06a16,16,0,0,0-15.17,1.4,8.12,8.12,0,0,0-.75.56L134.87,160c-15.42-7.49-31.34-23.29-38.83-38.51l20.78-24.71c.2-.25.39-.5.57-.77a16,16,0,0,0,1.32-15.06l0-.12L97.54,33.64a16,16,0,0,0-16.62-9.52A56.26,56.26,0,0,0,32,80c0,79.4,64.6,144,144,144a56.26,56.26,0,0,0,55.88-48.92A16,16,0,0,0,222.37,158.46ZM176,208A128.14,128.14,0,0,1,48,80,40.2,40.2,0,0,1,82.87,40a.61.61,0,0,0,0,.12l21,47L83.2,111.86a6.13,6.13,0,0,0-.57.77,16,16,0,0,0-1,15.7c9.06,18.53,27.73,37.06,46.46,46.11a16,16,0,0,0,15.75-1.14,8.44,8.44,0,0,0,.74-.56L168.89,152l47,21.05h0s.08,0,.11,0A40.21,40.21,0,0,1,176,208Z\"/>", "search": "<path d=\"M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z\"/>", "out": "<path d=\"M120,216a8,8,0,0,1-8,8H48a8,8,0,0,1-8-8V40a8,8,0,0,1,8-8h64a8,8,0,0,1,0,16H56V208h56A8,8,0,0,1,120,216Zm109.66-93.66-40-40a8,8,0,0,0-11.32,11.32L204.69,120H112a8,8,0,0,0,0,16h92.69l-26.35,26.34a8,8,0,0,0,11.32,11.32l40-40A8,8,0,0,0,229.66,122.34Z\"/>", "meal": "<path d=\"M224,104h-8.37a88,88,0,0,0-175.26,0H32a8,8,0,0,0-8,8,104.35,104.35,0,0,0,56,92.28V208a16,16,0,0,0,16,16h64a16,16,0,0,0,16-16v-3.72A104.35,104.35,0,0,0,232,112,8,8,0,0,0,224,104Zm-24.46,0H148.12a71.84,71.84,0,0,1,41.27-29.57A71.45,71.45,0,0,1,199.54,104ZM173.48,56.23q2.75,2.25,5.27,4.75a87.92,87.92,0,0,0-49.15,43H100.1A72.26,72.26,0,0,1,168,56C169.83,56,171.66,56.09,173.48,56.23ZM128,40a71.87,71.87,0,0,1,19,2.57A88.36,88.36,0,0,0,83.33,104H56.46A72.08,72.08,0,0,1,128,40Zm36.66,152A8,8,0,0,0,160,199.3V208H96v-8.7A8,8,0,0,0,91.34,192a88.29,88.29,0,0,1-51-72H215.63A88.29,88.29,0,0,1,164.66,192Z\"/>", "check": "<path d=\"M224,128a8,8,0,0,1-8,8H128a8,8,0,0,1,0-16h88A8,8,0,0,1,224,128ZM128,72h88a8,8,0,0,0,0-16H128a8,8,0,0,0,0,16Zm88,112H128a8,8,0,0,0,0,16h88a8,8,0,0,0,0-16ZM82.34,42.34,56,68.69,45.66,58.34A8,8,0,0,0,34.34,69.66l16,16a8,8,0,0,0,11.32,0l32-32A8,8,0,0,0,82.34,42.34Zm0,64L56,132.69,45.66,122.34a8,8,0,0,0-11.32,11.32l16,16a8,8,0,0,0,11.32,0l32-32a8,8,0,0,0-11.32-11.32Zm0,64L56,196.69,45.66,186.34a8,8,0,0,0-11.32,11.32l16,16a8,8,0,0,0,11.32,0l32-32a8,8,0,0,0-11.32-11.32Z\"/>", "clock": "<path d=\"M128,20A108,108,0,1,0,236,128,108.12,108.12,0,0,0,128,20Zm0,192a84,84,0,1,1,84-84A84.09,84.09,0,0,1,128,212Zm68-84a12,12,0,0,1-12,12H128a12,12,0,0,1-12-12V72a12,12,0,0,1,24,0v44h44A12,12,0,0,1,196,128Z\"/>", "hour": "<path d=\"M204,75.64V40a20,20,0,0,0-20-20H72A20,20,0,0,0,52,40V76a20.1,20.1,0,0,0,8,16l48,36L60,164a20.1,20.1,0,0,0-8,16v36a20,20,0,0,0,20,20H184a20,20,0,0,0,20-20V180.36a20.13,20.13,0,0,0-7.94-16L147.9,128l48.16-36.4A20.13,20.13,0,0,0,204,75.64ZM180,44V72H76V44Zm-52,69L105.33,96h45.1Zm52,99H76V182l40-30v16a12,12,0,0,0,24,0V152.11l40,30.24Z\"/>", "x": "<path d=\"M208.49,191.51a12,12,0,0,1-17,17L128,145,64.49,208.49a12,12,0,0,1-17-17L111,128,47.51,64.49a12,12,0,0,1,17-17L128,111l63.51-63.52a12,12,0,0,1,17,17L145,128Z\"/>", "warn": "<path d=\"M240.26,186.1,152.81,34.23h0a28.74,28.74,0,0,0-49.62,0L15.74,186.1a27.45,27.45,0,0,0,0,27.71A28.31,28.31,0,0,0,40.55,228h174.9a28.31,28.31,0,0,0,24.79-14.19A27.45,27.45,0,0,0,240.26,186.1Zm-20.8,15.7a4.46,4.46,0,0,1-4,2.2H40.55a4.46,4.46,0,0,1-4-2.2,3.56,3.56,0,0,1,0-3.73L124,46.2a4.77,4.77,0,0,1,8,0l87.44,151.87A3.56,3.56,0,0,1,219.46,201.8ZM116,136V104a12,12,0,0,1,24,0v32a12,12,0,0,1-24,0Zm28,40a16,16,0,1,1-16-16A16,16,0,0,1,144,176Z\"/>"};
-const ic=(n,c="")=>`<svg class="ph${c?" "+c:""}" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true">${PH[n]||""}</svg>`;
-const IC={chev:ic("chev","chev"),arrow:ic("arrow")};
+const IC={
+  now:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>',
+  road:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20 8.5 4M20 20 15.5 4M12 6v2.5M12 11v2.5M12 16v2.5"/></svg>',
+  report:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>',
+  lessons:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6.5C6.5 5 9.5 5 12 6.5 14.5 5 17.5 5 20 6.5V19c-2.5-1.5-5.5-1.5-8 0-2.5-1.5-5.5-1.5-8 0z"/><path d="M12 6.5V19"/></svg>',
+  pay:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="2.5"/><path d="M3 10h18M7 15h3"/></svg>',
+  team:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 19c.8-3.2 3-5 5.5-5s4.7 1.8 5.5 5"/><circle cx="17" cy="9" r="2.4"/><path d="M16 14.2c2.2.2 3.8 1.8 4.5 4.3"/></svg>',
+  door:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 20V5a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v15M4 20h16"/><circle cx="14.5" cy="12.5" r=".9" fill="currentColor"/></svg>',
+  chev:'<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>',
+  arrow:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>'
+};
 
 /* ---------- state ---------- */
 const S={staffList:[],staff:[],kids:[],marks:[],routes:[],week:null,settings:{playMax:60,mealAfter:120,teacherMax:3,sessionMax:50},
@@ -416,10 +336,10 @@ function derive(marks){
 }
 function state(k,now){
   const st=S.settings;
-  if(k.place==="class"){const bad=now-k.since>st.sessionMax*60000;return {c:bad?"bad":"class",w:"Դասին, "+sname(k.teacher),t:dur(now-k.since)}}
+  if(k.place==="class"){const bad=now-k.since>st.sessionMax*60000;return {c:bad?"bad":"class",w:"Դասին · "+sname(k.teacher),t:dur(now-k.since)}}
   if(k.place==="play"){const bad=!Object.keys(k.done).length&&now-k.since>st.playMax*60000;return {c:bad?"bad":"play",w:"Խաղասենյակ",t:dur(now-k.since)}}
   if(k.place==="meal") return {c:"meal",w:"Ճաշ",t:dur(now-k.since)};
-  if(k.place==="road") return {c:"road",w:"Ճանապարհին, "+sname(k.escort),t:dur(now-k.since)};
+  if(k.place==="road") return {c:"road",w:"Ճանապարհին · "+sname(k.escort),t:dur(now-k.since)};
   if(k.place==="school") return {c:"out",w:"Դպրոցում",t:hm(k.since)+"-ից"};
   if(k.place==="home") return {c:"out",w:"Գնացել է տուն",t:hm(k.since)};
   if(k.place==="absent") return {c:"out",w:"Այսօր չի գալու",t:""};
@@ -450,25 +370,23 @@ function groupsOf(list){const g=[];list.forEach(r=>{const key=r.time+"|"+r.schoo
 function alerts(D,now){
   const out=[],st=S.settings;
   liveRoutes().forEach(r=>{if(rstat(r,now).st!=="late")return;
-    out.push(r.kind==="pickup"?{u:1,kid:r.kid,t:kidName(r.kid),s:`Չեն վերցրել դպրոցից. Գնում է՝ ${sname(r.staff)}`,right:r.time}:{w:1,kid:r.kid,t:kidName(r.kid),s:`Պետք էր տանել դպրոց. Տանում է՝ ${sname(r.staff)}`,right:r.time})});
+    out.push({w:r.kind!=="pickup",kid:r.kid,txt:r.kind==="pickup"?`${kidName(r.kid)} — դասերն ավարտվել են ${r.time}-ին, չեն վերցրել · ${sname(r.staff)}`:`${kidName(r.kid)} — ${r.time}-ին պետք է տարվեր դպրոց · ${sname(r.staff)}`})});
   D.kids.forEach(k=>{if(!k.inCenter)return;
-    if(k.place==="play"&&!Object.keys(k.done).length&&now-k.since>st.playMax*60000)out.push({kid:k.id,t:k.name,s:`${dur(now-k.since)} խաղասենյակում, դասեր չի արել`});
-    if(k.place==="class"&&now-k.since>st.sessionMax*60000)out.push({w:1,kid:k.id,t:k.name,s:`${dur(now-k.since)} դասին, ${sname(k.teacher)}`});
-    if(!k.ate&&k.place!=="meal"&&k.arrivedAt&&now-k.arrivedAt>st.mealAfter*60000)out.push({w:1,kid:k.id,t:k.name,s:`Կենտրոնում է ${hm(k.arrivedAt)}-ից, դեռ չի կերել`});
+    if(k.place==="play"&&!Object.keys(k.done).length&&now-k.since>st.playMax*60000)out.push({kid:k.id,txt:`${k.name} — ${dur(now-k.since)} խաղասենյակում, դասեր չի արել`});
+    if(k.place==="class"&&now-k.since>st.sessionMax*60000)out.push({w:1,kid:k.id,txt:`${k.name} — ${dur(now-k.since)} դասին · ${sname(k.teacher)}`});
+    if(!k.ate&&k.place!=="meal"&&k.arrivedAt&&now-k.arrivedAt>st.mealAfter*60000)out.push({w:1,kid:k.id,txt:`${k.name} — կենտրոնում է ${hm(k.arrivedAt)}-ից, դեռ չի կերել`});
   });
   S.staff.filter(s=>s.role==="teacher"||s.role==="coord").forEach(s=>{const n=D.kids.filter(k=>k.place==="class"&&k.teacher===s.id).length;
-    if(n>st.teacherMax)out.push({w:1,t:s.name,s:`Միաժամանակ ${n} երեխա, նորման՝ ${st.teacherMax}`})});
-  out.forEach(a=>a.txt=a.t+". "+a.s);
+    if(n>st.teacherMax)out.push({w:1,txt:`${s.name} — միաժամանակ ${n} երեխա (նորման՝ ${st.teacherMax})`})});
   return out;
 }
-const alertRow=a=>`<${a.kid?"button":"div"} class="row" ${a.kid?`data-act="open" data-kid="${esc(a.kid)}"`:""}><div class="lead${a.u?" u":""}">${ic(a.u?"clock":a.w?"warn":"hour")}</div><div class="rm"><div class="rn">${esc(a.t)}</div><div class="rs">${esc(a.s)}</div></div>${a.right?`<div class="rt u num">${esc(a.right)}</div>`:a.kid?IC.chev:""}</${a.kid?"button":"div"}>`;
 
 /* ---------- pieces ---------- */
 const matchQ=k=>{const q=S.q.trim().toLowerCase();return !q||k.name.toLowerCase().includes(q)};
 const search=()=>`<input class="search" id="q" type="search" placeholder="Որոնել անունով" value="${esc(S.q)}" autocomplete="off" enterkeyhint="search">`;
 function kidRow(k,now,opts={}){
   const s=state(k,now);
-  return `<button class="row" data-act="open" data-kid="${esc(k.id)}"><div class="av s-${s.c}">${esc(ini(k.name))}</div><div class="rm"><div class="rn">${esc(k.name)}</div><div class="rs${opts.subCls?" "+opts.subCls:s.c==="bad"?" bad":""}">${esc(opts.sub||s.w)}</div></div><div class="rt num">${esc(opts.right??s.t)}</div>${IC.chev}</button>`;
+  return `<button class="row" data-act="open" data-kid="${esc(k.id)}"><div class="av s-${s.c}">${esc(ini(k.name))}</div><div class="rm"><div class="rn">${esc(k.name)}</div><div class="rs${s.c==="bad"?" bad":""}">${esc(opts.sub||s.w)}</div></div><div class="rt num">${esc(opts.right??s.t)}</div>${IC.chev}</button>`;
 }
 const sec=(title,count,body,extra="")=>`<section><div class="sec-h"><h2>${title}</h2>${count!=null?`<span class="c num">${count}</span>`:""}${extra}</div>${body}</section>`;
 const panel=inner=>`<div class="panel">${inner}</div>`;
@@ -478,7 +396,7 @@ function dueBanner(now){
   const mine=liveRoutes().filter(r=>r.staff===S.me).map(r=>({r,s:rstat(r,now)})).filter(x=>x.s.st==="now"||x.s.st==="late");
   if(!mine.length) return "";
   const r=mine[0].r,n=mine.filter(x=>x.r.time===r.time&&x.r.school===r.school&&x.r.kind===r.kind).length,late=mine.some(x=>x.s.st==="late");
-  return `<button class="due${late?" late":""}" data-act="myroute"><div><b>${r.kind==="pickup"?"Ժամն է գնալ դպրոց":"Ժամն է տանել դպրոց"}</b><span class="num">${esc(r.time)}, ${esc(r.school||"")}, ${n} երեխա</span></div>${IC.arrow}</button>`;
+  return `<button class="due${late?" late":""}" data-act="myroute"><div><b>${r.kind==="pickup"?"Ժամն է գնալ դպրոց":"Ժամն է տանել դպրոց"}</b><span class="num">${esc(r.time)} · ${esc(r.school||"")} · ${n} երեխա</span></div>${IC.arrow}</button>`;
 }
 function pushCard(){
   const ios=/iphone|ipad|ipod/i.test(navigator.userAgent),standalone=window.matchMedia("(display-mode: standalone)").matches||navigator.standalone;
@@ -511,18 +429,13 @@ function installHint(){
 
 /* ---------- screens ---------- */
 function teacherScreen(D,now){
-  const me=meS(),subs=mySubjects();
+  const me=meS(),subs=mySubjects(),subj=subs[0]||"";
   const mine=D.kids.filter(k=>k.place==="class"&&k.teacher===me.id);
   const others=D.kids.filter(k=>!(k.place==="class"&&k.teacher===me.id)&&matchQ(k));
   let h=`<div class="stack">${installHint()}${pushCard()}${dueBanner(now)}`;
-  h+=sec("Ինձ մոտ են",mine.length||null,mine.length?panel(mine.map(k=>{const bad=now-k.since>S.settings.sessionMax*60000;
-    return `<div class="row"><button class="av${bad?" s-bad":""}" data-act="open" data-kid="${esc(k.id)}" style="border:0" aria-label="${esc(k.name)}">${esc(ini(k.name))}</button><div class="rm" data-act="open" data-kid="${esc(k.id)}"><div class="rn">${esc(k.name)}</div><div class="rs${bad?" bad":""} num">${esc(k.subject||"")}${k.subject?", ":""}${dur(now-k.since)}</div></div><button class="pill pri" data-act="mark" data-kind="done" data-kid="${esc(k.id)}">Արեց</button></div>`}).join("")):emptyP("Հիմա ձեզ մոտ ոչ ոք չկա։ Ներքևում սեղմեք «Վերցնել»։"));
-  const takeBtn=k=>{if(!k.inCenter||k.place==="class")return "";const left=subs.filter(x=>!k.done[x]);if(left.length!==1)return "";
-    return `<button class="pill" data-act="mark" data-kind="take" data-kid="${esc(k.id)}" data-subject="${esc(left[0])}">Վերցնել</button>`};
-  h+=sec("Բոլոր երեխաները",null,search()+(others.length?panel(others.map(k=>{const s=state(k,now),d=subs.filter(x=>k.done[x]);
-    const sub=k.place==="class"?[k.subject,sname(k.teacher)].filter(Boolean).join(", "):s.w+(d.length?", "+d.join(", ")+"՝ արված":"");
-    const t=takeBtn(k);
-    return t?`<div class="row"><div class="av" data-act="open" data-kid="${esc(k.id)}">${esc(ini(k.name))}</div><div class="rm" data-act="open" data-kid="${esc(k.id)}"><div class="rn">${esc(k.name)}</div><div class="rs">${esc(sub)}</div></div>${t}</div>`:kidRow(k,now,{sub})}).join("")):emptyP("Ոչ ոք չի գտնվել։")));
+  h+=sec("Ինձ մոտ են",mine.length,mine.length?panel(mine.map(k=>{const bad=now-k.since>S.settings.sessionMax*60000;
+    return `<div class="row"><button class="av s-${bad?"bad":"class"}" data-act="open" data-kid="${esc(k.id)}" style="border:0" aria-label="${esc(k.name)}">${esc(ini(k.name))}</button><div class="rm" data-act="open" data-kid="${esc(k.id)}"><div class="rn">${esc(k.name)}</div><div class="rs${bad?" bad":""} num">${dur(now-k.since)}</div></div><button class="btn sm pri" data-act="mark" data-kind="done" data-kid="${esc(k.id)}">Արեց</button></div>`}).join("")):emptyP("Հիմա ձեզ մոտ ոչ ոք չկա։ Սեղմեք երեխայի անվան վրա ներքևում, որ վերցնեք։"));
+  h+=sec("Բոլոր երեխաները",null,search()+(others.length?panel(others.map(k=>{const d=subs.filter(x=>k.done[x]);return kidRow(k,now,{sub:d.length?state(k,now).w+" · "+d.join(", ")+"՝ արված":undefined})}).join("")):emptyP("Ոչ ոք չի գտնվել։")));
   return h+`</div>`;
 }
 function doorScreen(D,now){
@@ -552,26 +465,19 @@ function routesScreen(D,now,assign){
   });
   return `<div class="stack">${sec("Այսօրվա ճանապարհը",list.length,panel(body))}${toggle}</div>`;
 }
-const PLACES=[["class","Դասին"],["play","Խաղասենյակում"],["meal","Ճաշում"],["road","Ճանապարհին"],["school","Դպրոցում"],["none","Դեռ չեն եկել"],["absent","Այսօր չեն գալու"],["home","Գնացել են տուն"]];
-function placeRow(k,now){const s=state(k,now);let sub=s.w,right=s.t;
-  if(k.place==="class")sub=[k.subject,sname(k.teacher)].filter(Boolean).join(", ");
-  if(k.place==="play"&&s.c==="bad")return kidRow(k,now,{sub:"Դասերը դեռ չի արել",subCls:"w"});
-  if(k.place==="road")sub="Տանում է՝ "+sname(k.escort);
-  if(k.place==="play"||k.place==="meal")sub=Object.keys(k.done).length?"Արել է՝ "+Object.keys(k.done).join(", "):"Դասերը դեռ չի արել";
-  return kidRow(k,now,{sub,right})}
 function nowScreen(D,now){
-  const al=alerts(D,now);
-  const need=sec("Պետք է արձագանքել",null,panel(al.length?al.map(alertRow).join(""):`<div class="row"><div class="lead ok">${ic("check")}</div><div class="rm"><div class="rn">Ամեն ինչ կարգին է</div></div></div>`));
+  const inC=D.kids.filter(k=>k.inCenter),al=alerts(D,now);
+  const N=[["center","Կենտրոնում",inC.length,""],["class","Դասին",inC.filter(k=>k.place==="class").length,"k-class"],["play","Խաղասենյակ",inC.filter(k=>k.place==="play").length,"k-play"],["meal","Ճաշ",inC.filter(k=>k.place==="meal").length,"k-meal"]];
+  const nums=`<div class="nums">${N.map(n=>`<button class="nbox ${n[3]} ${S.filter===n[0]?"on":""}" data-act="filter" data-v="${n[0]}"><span>${n[1]}</span><b class="num">${n[2]}</b></button>`).join("")}</div>`;
+  const alertsH=sec("Ուշադրություն",al.length||null,al.length?`<div class="alerts">${al.map(a=>`<button class="al${a.w?" w":""}" ${a.kid?`data-act="open" data-kid="${esc(a.kid)}"`:""}><i></i><span>${esc(a.txt)}</span></button>`).join("")}</div>`:`<div class="ok">Հիմա ամեն ինչ կարգին է։</div>`);
   const teachers=workers().filter(s=>s.role==="teacher"||s.role==="coord");
-  const teachH=teachers.length?sec("Մանկավարժները",null,panel(teachers.map(s=>{const n=D.kids.filter(k=>k.place==="class"&&k.teacher===s.id).length;
-    return `<div class="row"><div class="av${n>S.settings.teacherMax?" s-bad":""}">${esc(ini(s.name))}</div><div class="rm"><div class="rn">${esc(s.name)}</div><div class="rs">${esc((s.subjects&&s.subjects.length?s.subjects.join(", "):s.subject)||"")}</div></div><div class="rt num">${n?n+" երեխա":""}</div></div>`}).join(""))):"";
-  const q=S.q.trim(),list=D.kids.filter(matchQ);S.exp=S.exp||{};
-  let groups="";
-  PLACES.forEach(([p,name])=>{const ks=list.filter(k=>k.place===p);if(!ks.length)return;
-    const lim=q||S.exp[p]||ks.length<=6?ks.length:5;
-    groups+=sec(name,ks.length,panel(ks.slice(0,lim).map(k=>placeRow(k,now)).join("")+(lim<ks.length?`<button class="row noav" data-act="expand" data-v="${p}"><span class="more">Եվս ${ks.length-lim} երեխա</span>${IC.chev}</button>`:"")))});
-  const listH=search()+(groups||emptyP(q?"Ոչ ոք չի գտնվել։":"Երեխաներ դեռ չկան։"));
-  return `<div class="stack">${installHint()}${pushCard()}<div class="two"><div class="stack">${need}${teachH}</div><div class="stack">${listH}</div></div></div>`;
+  const teachH=sec("Մանկավարժները",null,panel(teachers.map(s=>{const n=D.kids.filter(k=>k.place==="class"&&k.teacher===s.id).length;
+    return `<div class="row"><div class="av s-${n>S.settings.teacherMax?"bad":n?"class":"out"}">${esc(ini(s.name))}</div><div class="rm"><div class="rn">${esc(s.name)}</div><div class="rs">${esc(s.subject||"")}</div></div><div class="rt num">${n} երեխա</div></div>`}).join("")));
+  const F=[["all","Բոլորը"],["center","Կենտրոնում"],["class","Դասին"],["play","Խաղասենյակ"],["meal","Ճաշ"],["road","Ճանապարհին"],["school","Դպրոցում"],["none","Չեն եկել"],["home","Գնացել են"]];
+  const list=D.kids.filter(k=>(S.filter==="all"||(S.filter==="center"?k.inCenter:k.place===S.filter))&&matchQ(k));
+  const FN={all:"Ով որտեղ է",center:"Կենտրոնում",class:"Դասին",play:"Խաղասենյակում",meal:"Ճաշի",road:"Ճանապարհին",school:"Դպրոցում",none:"Դեռ չեն եկել",home:"Գնացել են"};
+  const listH=`<div id="kidlist" style="scroll-margin-top:80px"></div>`+sec(FN[S.filter]||"Ով որտեղ է",list.length,search()+`<div class="chips">${F.map(f=>`<button class="chip ${S.filter===f[0]?"on":""}" data-act="filter" data-v="${f[0]}">${f[1]}</button>`).join("")}</div>`+(list.length?panel(list.map(k=>kidRow(k,now)).join("")):emptyP("Այս ցուցակում ոչ ոք չկա։")));
+  return `<div class="stack">${installHint()}${pushCard()}<div class="two"><div class="stack">${nums}${alertsH}${teachH}</div><div class="stack">${listH}</div></div></div>`;
 }
 function cookScreen(D,now){
   const eating=D.kids.filter(k=>k.place==="meal"),notYet=D.kids.filter(k=>k.inCenter&&!k.ate&&k.place!=="meal"),ate=D.kids.filter(k=>k.ate);
@@ -784,23 +690,18 @@ function sheetHtml(D,now){
     if(!k.inCenter&&k.place==="none")acts.push(["absent","Այսօր չի գալու"]);
     if(k.inCenter&&k.place!=="play"&&k.place!=="class")acts.push(["play","Խաղասենյակ"]);
   }
-  if(role!=="cook"&&k.inCenter)acts.push(["home","Գնաց տուն"]);
+  if(role!=="cook"&&k.inCenter)acts.push(["home","Գնաց տուն · հանձնել"]);
   if(role==="cook"&&k.inCenter){if(k.place!=="meal")acts.push(["meal","Նստեց ուտելու",1]);else acts.push(["ate","Կերավ",1])}
   const tl=timeline(k,now);
   const doneSubj=Object.keys(k.done);
-  const pri=acts.find(x=>x[2])||acts[0],rest=acts.filter(x=>x!==pri);
-  const actBtn=(x,cls)=>`<button class="btn full ${cls}" data-act="${x[0]==="home"||x[0]==="arrive"?"handover":"mark"}" data-kind="${x[0]}" data-kid="${esc(k.id)}"${x[3]?` data-subject="${esc(x[3])}"`:""}>${esc(x[1])}</button>`;
-  const canEdit=role==="owner"||role==="coord";
-  const phones=(S.contacts[k.id]||[]).filter(c=>c.phone);
-  return `<button class="sh-x" data-act="close" aria-label="Փակել">${ic("x")}</button>
-    <div class="who"><div class="av${s.c==="bad"?" s-bad":""}">${esc(ini(k.name))}</div><div><h1>${esc(k.name)}</h1><p>${esc([grade(k),k.school].filter(Boolean).join(", "))}</p></div></div>
-    <div class="statec"><div class="nl">Հիմա</div><div class="nw">${esc(s.w)}${s.t?` <span class="num">${esc(s.t)}</span>`:""}</div>
-      <div class="nd">${doneSubj.length?"Արել է՝ "+esc(doneSubj.join(", ")):"Դասերը դեռ չի արել"}, ${k.ate?"կերել է":"դեռ չի կերել"}</div>
-      ${pri?`<div class="acts">${actBtn(pri,"pri")}${rest.map(x=>actBtn(x,"soft")).join("")}</div>`:""}</div>
-    <div class="sgrp"><div class="sec-h"><h2>Այսօր</h2></div>
-    ${tl.length?`<ul class="tl">${tl.map(e=>`<li><time class="num">${hm(e.at)}</time><span style="flex:1">${esc(e.txt.replace(/ · /g,", "))}</span>${canEdit&&e.id&&!String(e.id).startsWith("tmp")?`<button class="del" data-act="delmark" data-id="${esc(e.id)}" aria-label="Ջնջել">✕</button>`:""}</li>`).join("")}</ul>`:`<div class="panel"><div class="empty">Այսօր նշումներ դեռ չկան։</div></div>`}</div>
-    ${phones.length||canEdit?`<div class="sgrp rows">${phones.map(c=>`<a class="rowbtn" href="tel:${esc(c.phone.replace(/[^\d+]/g,""))}">${ic("phone")}Զանգել${c.rel?" ("+esc(c.rel)+")":""}<small>${esc(c.name)}</small></a>`).join("")}${canEdit?`<button class="rowbtn" data-act="kid-edit" data-kid="${esc(k.id)}">Խմբագրել քարտը</button><button class="rowbtn danger" data-act="leave" data-kid="${esc(k.id)}">Այլևս չի հաճախում</button>`:""}</div>`:""}
-    <div style="height:8px"></div>`;
+  return `<div class="sh-h"><div class="av s-${s.c}">${esc(ini(k.name))}</div><div><div class="sh-n">${esc(k.name)}</div><div class="sh-s">${esc(grade(k))}${k.school?" · "+esc(k.school):""}</div></div></div>
+    <div class="sh-s" style="margin-top:10px"><b style="color:var(--ink)">${esc(s.w)}</b>${s.t?" · "+esc(s.t):""}</div>
+    <div class="sh-s">Այսօր արել է՝ ${doneSubj.length?esc(doneSubj.join(", ")):"դեռ ոչինչ"} · ${k.ate?"կերել է":"դեռ չի կերել"}</div>
+    ${acts.length?`<div class="acts">${acts.map(a=>`<button class="btn full ${a[2]?"pri":""}" data-act="${a[0]==="home"||a[0]==="arrive"?"handover":"mark"}" data-kind="${a[0]}" data-kid="${esc(k.id)}"${a[3]?` data-subject="${esc(a[3])}"`:""}>${esc(a[1])}</button>`).join("")}</div>`:""}
+    <div class="sh-sub">Այսօրվա օրը</div>
+    ${tl.length?`<ul class="tl">${tl.map(e=>`<li><time class="num">${hm(e.at)}</time><i class="k-${e.c}"></i><span style="flex:1">${esc(e.txt)}</span>${(role==="owner"||role==="coord")&&e.id&&!String(e.id).startsWith("tmp")?`<button class="del" data-act="delmark" data-id="${esc(e.id)}" aria-label="Ջնջել">✕</button>`:""}</li>`).join("")}</ul>`:`<div class="empty">Այսօր նշումներ դեռ չկան։</div>`}
+    ${(role==="owner"||role==="coord")?`<div class="acts" style="margin-top:6px"><button class="btn full line" data-act="kid-edit" data-kid="${esc(k.id)}">Խմբագրել քարտը</button>${(S.contacts[k.id]||[]).filter(c=>c.phone).map(c=>`<a class="btn full line" href="tel:${esc(c.phone.replace(/[^\d+]/g,""))}">Զանգ · ${esc(c.name)}${c.rel?" ("+esc(c.rel)+")":""}</a>`).join("")}<button class="btn full line" data-act="leave" data-kid="${esc(k.id)}" style="color:var(--red)">Այլևս չի հաճախում</button></div>`:""}
+    <div class="acts"><button class="btn full line" data-act="close">Փակել</button></div>`;
 }
 let sheetOpenKey=null,sheetSub=null;
 function renderSheet(D,now){
@@ -817,19 +718,10 @@ function renderSheet(D,now){
 /* ---------- tabs ---------- */
 function tabsFor(role,D,now){
   const al=alerts(D,now).length,late=liveRoutes().filter(r=>rstat(r,now).st==="late").length;
-  if(role==="owner")return[["now","Հիմա","now",al],["road","Ճամփա","road",late],["pay","Վճար","pay",0],["report","Ամփոփ","report",0],["team","Թիմ","team",0]];
-  if(role==="coord")return[["lessons","Դասեր","lessons",0],["door","Գալ-գնալ","door",0],["road","Ճամփա","road",late],["pay","Վճար","pay",0],["now","Կենտրոն","now",al]];
+  if(role==="owner")return[["now","Հիմա",IC.now,al],["road","Ճամփա",IC.road,late],["pay","Վճար",IC.pay,0],["report","Ամփոփ",IC.report,0],["team","Թիմ",IC.team,0]];
+  if(role==="coord")return[["lessons","Դասեր",IC.lessons,0],["door","Գալ-գնալ",IC.door,0],["road","Ճամփա",IC.road,late],["pay","Վճար",IC.pay,0],["now","Կենտրոն",IC.now,al]];
   return[];
 }
-function titleFor(tab){const me=meS();if(!me)return "";const r=me.role;
-  if(r==="teacher"||r==="cook"||(r==="coord"&&tab==="lessons"))return me.name;
-  return {now:r==="coord"?"Կենտրոն":"Հիմա",road:"Ճանապարհ",pay:"Վճարումներ",report:"Ամփոփում",team:"Թիմ",door:"Գալ-գնալ"}[tab]||me.name}
-function subFor(tab,D,now){const me=meS(),r=me.role,n=f=>D.kids.filter(f).length;
-  if(r==="teacher"||(r==="coord"&&tab==="lessons"))return esc(mySubjects().join(", ")||ROLE[r]);
-  if(r==="cook")return `Դեռ չեն կերել՝ <b class="num">${n(k=>k.inCenter&&!k.ate&&k.place!=="meal")}</b>, ուտում են՝ <b class="num">${n(k=>k.place==="meal")}</b>`;
-  if(tab==="now")return `Կենտրոնում <b class="num">${n(k=>k.inCenter)}</b> երեխա, ճանապարհին՝ <b class="num">${n(k=>k.place==="road")}</b>`;
-  if(tab==="door")return `Եկել են <b class="num">${n(k=>k.arrivedAt)}/${D.kids.length-n(k=>k.absent)}</b>, գնացել են՝ <b class="num">${n(k=>k.place==="home")}</b>`;
-  return esc(new Date(now).toLocaleDateString("hy-AM",{weekday:"long",day:"numeric",month:"long"}))}
 function screen(tab,D,now){
   const role=meS().role;
   if(role==="teacher")return teacherScreen(D,now);
@@ -848,9 +740,9 @@ function header(tabs){
   const me=meS();setTimeout(()=>{S.unreadSeen=S.unread},0);
   let h="";
   if(me&&S.phase==="app"){
-    h=`<div class="me"><div class="me-t"><div class="me-n">${esc(titleFor(S.tab))}</div></div></div>`;
+    h=`<div class="me"><div class="av s-play">${esc(ini(me.name))}</div><div class="me-t"><div class="me-n">${esc(me.name)}</div><div class="me-r">${esc(roleLine(me))}</div></div></div>`;
     if(tabs.length)h+=`<div class="dtabs">${tabs.map(t=>`<button class="dtab ${S.tab===t[0]?"on":""}" data-act="tab" data-v="${t[0]}">${t[1]}${t[3]?`<span class="badge num">${t[3]}</span>`:""}</button>`).join("")}</div>`;
-    h+=`<button class="hbtn" data-act="docs" aria-label="Փաստաթղթեր">${ic("book")}${S.docsUnread?`<span class="dot"></span>`:""}</button><button class="bell" data-act="inbox" aria-label="Ծանուցումներ${S.unread?" · "+S.unread+" նոր":""}">${ic("bell")}${S.unread?`<span class="badge num${S.unread>(S.unreadSeen||0)?" pop":""}">${S.unread>99?"99+":S.unread}</span>`:""}</button><button class="out" data-act="logout">Ելք</button>`;
+    h+=`<button class="hbtn" data-act="docs" aria-label="Փաստաթղթեր"><svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4.5h9a3 3 0 0 1 3 3V20H8a3 3 0 0 1-3-3z"/><path d="M17 7.5h2V20h-2"/><path d="M8.5 9h5M8.5 12.5h5"/></svg>${S.docsUnread?`<span class="dot"></span>`:""}</button><button class="bell" data-act="inbox" aria-label="Ծանուցումներ${S.unread?" · "+S.unread+" նոր":""}"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg>${S.unread?`<span class="badge num${S.unread>(S.unreadSeen||0)?" pop":""}">${S.unread>99?"99+":S.unread}</span>`:""}</button><button class="out" data-act="logout">Ելք</button>`;
   }else h=`<div class="me"><img src="icon-192.png" alt="" width="36" height="36" style="border-radius:9px"><div class="me-t"><div class="me-n">Վիկտորյա</div><div class="me-r">ուսումնական կենտրոն</div></div></div>`;
   document.getElementById("hdr").innerHTML=h;
 }
@@ -880,9 +772,9 @@ function render(){
   if(tabs.length&&!tabs.some(t=>t[0]===S.tab))S.tab=tabs[0][0];
   header(tabs);
   bar.hidden=!tabs.length;app.className=tabs.length?"":"notabs";
-  bar.innerHTML=tabs.map(t=>`<button class="tab ${S.tab===t[0]?"on":""}" data-act="tab" data-v="${t[0]}"${S.tab===t[0]?' aria-current="page"':""}>${ic(S.tab===t[0]?t[2]+"F":t[2])}<span>${t[1]}</span>${t[3]?`<span class="badge num">${t[3]}</span>`:""}</button>`).join("");
+  bar.innerHTML=tabs.map(t=>`<button class="tab ${S.tab===t[0]?"on":""}" data-act="tab" data-v="${t[0]}"${S.tab===t[0]?' aria-current="page"':""}>${t[2]}<span>${t[1]}</span>${t[3]?`<span class="badge num">${t[3]}</span>`:""}</button>`).join("");
   if(lastTabShown!==S.tab){lastTabShown=S.tab;app.classList.remove("tab-in");void app.offsetWidth;app.classList.add("tab-in")}
-  app.innerHTML=(S.offline?`<div class="off" style="margin-bottom:14px">Կապ չկա։ ${Q.get().length?Q.get().length+" նշում կուղարկվի, երբ կապը վերականգնվի։":"Ցույց է տրված վերջին տվյալները։"}</div>`:"")+`<div class="ltw"><h1 class="lt">${esc(titleFor(S.tab))}</h1><div class="lsub">${subFor(S.tab,D,now)}</div></div>`+screen(S.tab,D,now);
+  app.innerHTML=(S.offline?`<div class="off" style="margin-bottom:14px">Կապ չկա։ ${Q.get().length?Q.get().length+" նշում կուղարկվի, երբ կապը վերականգնվի։":"Ցույց է տրված վերջին տվյալները։"}</div>`:"")+screen(S.tab,D,now);
   if(keepQ){const q=document.getElementById("q");if(q){q.focus({preventScroll:true});try{q.setSelectionRange(keepQ[0],keepQ[1])}catch(e){}}}
   renderSheet(D,now);
 }
@@ -1006,7 +898,6 @@ async function act(e,b,a){
     try{const c=await api("api_staffAdd",S.code,name,r.value,sb.value);S.admin=null;toast(name+" ավելացված է։ Կոդ՝ "+c);refresh();render()}catch(err){toast("Չհաջողվեց")}}
   else if(a==="comeback"){try{await api("api_setActive",S.code,b.dataset.kid,true);toast("Վերադարձված է")}catch(err){toast("Չհաջողվեց")}refresh()}
   else if(a==="tab"){S.tab=b.dataset.v;S.q="";S.sheet=null;ls.set("vk-tab",S.tab);render();window.scrollTo(0,0)}
-  else if(a==="expand"){S.exp=S.exp||{};S.exp[b.dataset.v]=1;render()}
   else if(a==="filter"){const tile=b.classList.contains("nbox");S.filter=(S.filter===b.dataset.v&&tile)?"all":b.dataset.v;render();
     if(tile){const l=document.getElementById("kidlist");if(l&&window.innerWidth<960)l.scrollIntoView({behavior:"smooth",block:"start"})}}
   else if(a==="login")tryLogin();
@@ -1079,7 +970,7 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape"&&S.sheet){S.sheet=nu
 document.addEventListener("change",async e=>{const x=e.target;if(S.edit&&x.dataset&&x.dataset.f){S.edit[x.dataset.f]=x.value;if(x.dataset.f==="shift"){x.blur();render()}return}if(x.dataset&&x.dataset.t&&S.edit){(S.edit[x.dataset.t]=S.edit[x.dataset.t]||[])[Number(x.dataset.i)]=x.value;return}if(!x.dataset||!x.dataset.assign)return;
   const r=(S.routes||[]).find(y=>y.kid===x.dataset.kid&&y.kind===x.dataset.kind),old=r?r.staff:"";if(r)r.staff=x.value;x.blur();render();
   try{await api("api_assign",S.code,S.day||dayKey(NOW()),x.dataset.kid,x.dataset.kind,x.value);toast("Նշանակված է՝ "+sname(x.value))}catch(err){if(r)r.staff=old;render();toast("Չպահպանվեց")}});
-window.addEventListener("scroll",()=>document.getElementById("top").classList.toggle("sh",window.scrollY>46),{passive:true});
+window.addEventListener("scroll",()=>document.getElementById("top").classList.toggle("sh",window.scrollY>4),{passive:true});
 window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();S.installEvt=e;render()});
 
 /* ---------- boot ---------- */
