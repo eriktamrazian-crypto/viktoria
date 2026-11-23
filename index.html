@@ -48,6 +48,12 @@ button{cursor:pointer}
 .me-r{font-size:13px;color:var(--ink-2);line-height:1.3}
 .out{border:0;background:transparent;color:var(--ink-2);font-size:14px;font-weight:500;padding:10px 12px;border-radius:12px;min-height:44px}
 .out:hover{background:var(--wash)}
+.bell{position:relative;border:0;background:transparent;color:var(--ink-2);width:44px;height:44px;border-radius:12px;display:grid;place-items:center;flex:none}
+.bell:hover{background:var(--wash)}
+.bell .badge{top:2px;left:auto;right:0}
+.ib{padding:12px 0;border-top:1px solid var(--line)}.ib:first-child{border-top:0}
+.ib b{display:block;font-size:16px}.ib p{margin:2px 0 0;color:var(--ink-2);font-size:15px}.ib time{font-size:13px;color:var(--ink-3)}
+.ib.new{background:linear-gradient(90deg,var(--green-2),transparent 70%);margin:0 -20px;padding:12px 20px;border-radius:0}
 .dtabs{display:none}
 
 /* layout */
@@ -495,6 +501,11 @@ function teamScreen(){
 /* ---------- sheet (child card) ---------- */
 function sheetHtml(D,now){
   const sh=S.sheet;if(!sh)return"";
+  if(sh.type==="inbox"){
+    const list=S.inbox;
+    const fmt=t=>{const d=new Date(t),td=dayKey(NOW())===dayKey(t);return (td?"":pad(d.getDate())+"."+pad(d.getMonth()+1)+" ")+hm(t)};
+    return `<div class="sh-n" style="margin-bottom:6px">Ծանուցումներ</div>${!list?`<div class="empty">Բեռնվում է…</div>`:list.length?list.map(x=>`<div class="ib${x.read?"":" new"}"><time class="num">${fmt(x.at)}</time><b>${esc(x.title)}</b><p>${esc(x.body)}</p></div>`).join(""):`<div class="empty">Վերջին 7 օրում ծանուցումներ չկան։</div>`}<div class="acts"><button class="btn full line" data-act="close">Փակել</button></div>`;
+  }
   if(sh.type==="myroute"){
     const mine=liveRoutes().filter(r=>r.staff===S.me);
     let body="";groupsOf(mine).forEach(g=>{body+=`<div class="grp"><b class="num">${esc(g.r.time)} · ${esc(g.r.school||"")}</b><span>${g.r.kind==="pickup"?"վերցնել":"տանել"}</span></div>`;
@@ -572,7 +583,7 @@ function header(tabs){
   if(me&&S.phase==="app"){
     h=`<div class="me"><div class="av s-play">${esc(ini(me.name))}</div><div class="me-t"><div class="me-n">${esc(me.name)}</div><div class="me-r">${esc(roleLine(me))}</div></div></div>`;
     if(tabs.length)h+=`<div class="dtabs">${tabs.map(t=>`<button class="dtab ${S.tab===t[0]?"on":""}" data-act="tab" data-v="${t[0]}">${t[1]}${t[3]?`<span class="badge num">${t[3]}</span>`:""}</button>`).join("")}</div>`;
-    h+=`<button class="out" data-act="logout">Ելք</button>`;
+    h+=`<button class="bell" data-act="inbox" aria-label="Ծանուցումներ${S.unread?" · "+S.unread+" նոր":""}"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg>${S.unread?`<span class="badge num">${S.unread>99?"99+":S.unread}</span>`:""}</button><button class="out" data-act="logout">Ելք</button>`;
   }else h=`<div class="me"><img src="icon-192.png" alt="" width="36" height="36" style="border-radius:9px"><div class="me-t"><div class="me-n">Վիկտորյա</div><div class="me-r">ուսումնական կենտրոն</div></div></div>`;
   document.getElementById("hdr").innerHTML=h;
 }
@@ -643,10 +654,12 @@ async function mark(kind,kid,subject){
 }
 let busy=false;
 let lastSig="";
-function sigOf(st){return JSON.stringify([st.me&&st.me.id,st.kids,st.staff,st.settings,st.marks,st.routes,st.noSchool])}
+function setBadge(n){try{if(navigator.setAppBadge){n?navigator.setAppBadge(n):navigator.clearAppBadge()}}catch(e){}}
+function sigOf(st){return JSON.stringify([st.unread,st.me&&st.me.id,st.kids,st.staff,st.settings,st.marks,st.routes,st.noSchool])}
 function applyState(st,t0){
   const was=S.me;
   S.offset=st.serverNow-Math.round((t0+Date.now())/2);S.day=st.day;S.me=st.me.id;S.staff=st.staff.sort((a,b)=>a.order-b.order);S.kids=st.kids;S.settings=st.settings;
+  S.unread=st.unread||0;setBadge(S.unread);
   S.marks=st.marks.concat(queuedAsMarks());S.routes=st.routes||[];S.noSchool=!!st.noSchool;S.sheetUrl=st.sheetUrl||"";S.offline=Q.get().length>0;
   try{if(("Notification" in window)&&Notification.permission==="granted"&&ls.get("vk-push-me")!==S.me&&"PushManager" in window&&!S.subTry){S.subTry=1;subscribePush(false).catch(()=>{}).finally(()=>{setTimeout(()=>{S.subTry=0},120000)})}}catch(e){}
 }
@@ -673,6 +686,8 @@ document.addEventListener("click",async e=>{
   const b=e.target.closest("[data-act]");if(!b)return;const a=b.dataset.act;
   if(a==="open"){S.sheet={type:"kid",kid:b.dataset.kid};render()}
   else if(a==="myroute"){S.sheet={type:"myroute"};render()}
+  else if(a==="inbox"){S.inbox=null;S.sheet={type:"inbox"};render();
+    try{S.inbox=await api("api_inbox",S.code);render();if(S.unread){await api("api_inboxRead",S.code);S.unread=0;setBadge(0);lastSig="";render()}}catch(err){S.inbox=[];render();toast("Չհաջողվեց բեռնել")}}
   else if(a==="close"){S.sheet=null;render()}
   else if(a==="mark")mark(b.dataset.kind,b.dataset.kid,b.dataset.subject);
   else if(a==="delmark"){if(!confirm("Ջնջե՞լ այս նշումը։"))return;const id=b.dataset.id;S.marks=S.marks.filter(m=>m.id!==id);render();try{await api("api_undo",S.code,id);toast("Նշումը ջնջված է")}catch(err){toast("Չհաջողվեց ջնջել");}refresh()}
