@@ -1,0 +1,612 @@
+<!doctype html>
+<html lang="hy">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1f5e48">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Վիկտորյա">
+<title>Վիկտորյա</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preload" href="fonts/Mardoto-Regular.ttf" as="font" type="font/ttf" crossorigin>
+<link rel="preload" href="fonts/Mardoto-Bold.ttf" as="font" type="font/ttf" crossorigin>
+<style>
+@font-face{font-family:"Mardoto";src:url(fonts/Mardoto-Regular.ttf) format("truetype");font-weight:400;font-display:swap}
+@font-face{font-family:"Mardoto";src:url(fonts/Mardoto-Medium.ttf) format("truetype");font-weight:500 600;font-display:swap}
+@font-face{font-family:"Mardoto";src:url(fonts/Mardoto-Bold.ttf) format("truetype");font-weight:700;font-display:swap}
+:root{
+  --paper:#f4f2ec; --card:#ffffff; --ink:#1c2420; --ink-2:#56615b; --ink-3:#8a948e; --line:#e4e1d8; --wash:#efece4;
+  --green:#1f5e48; --green-2:#e3eee8; --green-ink:#174a39;
+  --blue:#2b5f93; --blue-2:#e4edf7; --amber:#94570c; --amber-2:#fbefdb; --violet:#55479f; --violet-2:#ebe8f8;
+  --red:#a8322a; --red-2:#fbe6e2; --sun:#f2b75c;
+  --font:"Mardoto","Noto Sans Armenian",-apple-system,system-ui,sans-serif;
+  --r:16px; --tab:66px;
+  color-scheme:light;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%}
+body{background:var(--paper);color:var(--ink);font:400 16px/1.5 var(--font);-webkit-font-smoothing:antialiased;overscroll-behavior-y:none}
+::selection{background:var(--green-2);color:var(--green-ink)}
+input,button,select{font:inherit;color:inherit;caret-color:var(--green)}
+button{cursor:pointer}
+[hidden]{display:none!important}
+:focus-visible{outline:3px solid var(--sun);outline-offset:2px;border-radius:8px}
+.num{font-variant-numeric:tabular-nums}
+
+/* header */
+.top{position:sticky;top:0;z-index:20;background:var(--paper);padding:calc(10px + env(safe-area-inset-top,0px)) max(18px,env(safe-area-inset-right,0px)) 10px max(18px,env(safe-area-inset-left,0px));border-bottom:1px solid transparent}
+.top.sh{border-bottom-color:var(--line)}
+.top-in{max-width:1120px;margin:0 auto;display:flex;align-items:center;gap:12px;min-height:44px}
+.me{display:flex;align-items:center;gap:10px;min-width:0;flex:1}
+.me-t{min-width:0}
+.me-n{font-weight:700;font-size:17px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.me-r{font-size:13px;color:var(--ink-2);line-height:1.3}
+.out{border:0;background:transparent;color:var(--ink-2);font-size:14px;font-weight:500;padding:10px 12px;border-radius:12px;min-height:44px}
+.out:hover{background:var(--wash)}
+.dtabs{display:none}
+
+/* layout */
+main{max-width:1120px;margin:0 auto;padding:8px max(18px,env(safe-area-inset-right,0px)) calc(var(--tab) + 32px + env(safe-area-inset-bottom,0px)) max(18px,env(safe-area-inset-left,0px))}
+main.notabs{padding-bottom:calc(32px + env(safe-area-inset-bottom,0px))}
+.stack{display:flex;flex-direction:column;gap:22px}
+.sec-h{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin:0 0 6px}
+.sec-h h2{font-size:19px;font-weight:700;margin:0;letter-spacing:-.005em}
+.sec-h .c{font-size:14px;color:var(--ink-3);font-weight:500}
+.panel{background:var(--card);border-radius:var(--r);box-shadow:0 1px 2px rgba(28,36,32,.06),0 0 0 1px rgba(28,36,32,.05);padding:4px 16px}
+.empty{color:var(--ink-2);font-size:15px;padding:14px 0}
+
+/* rows */
+.row{display:flex;align-items:center;gap:12px;min-height:64px;padding:10px 0;border-top:1px solid var(--line);width:100%;background:none;border-left:0;border-right:0;border-bottom:0;text-align:left}
+.row:first-child{border-top:0}
+button.row:active{background:var(--wash)}
+.av{flex:none;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-size:14px;font-weight:600;letter-spacing:.02em}
+.av.s-class{background:var(--blue-2);color:var(--blue)} .av.s-play{background:var(--green-2);color:var(--green-ink)} .av.s-meal{background:var(--amber-2);color:var(--amber)}
+.av.s-road{background:var(--violet-2);color:var(--violet)} .av.s-out{background:var(--wash);color:var(--ink-3)} .av.s-bad{background:var(--red-2);color:var(--red)}
+.rm{flex:1;min-width:0}
+.rn{font-size:16px;font-weight:600;line-height:1.3;overflow-wrap:anywhere}
+.rs{font-size:14px;color:var(--ink-2);line-height:1.35;margin-top:2px}
+.rs.bad{color:var(--red)}
+.rt{flex:none;font-size:14px;color:var(--ink-3);text-align:right}
+.chev{flex:none;width:18px;height:18px;color:var(--ink-3)}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:14px;min-height:48px;padding:0 20px;font-size:16px;font-weight:600;background:var(--wash);color:var(--ink);text-decoration:none}
+.btn:active{transform:scale(.985)}
+.btn.pri{background:var(--green);color:#fff}
+.btn.pri:hover{background:#184e3c}
+.btn.sm{min-height:42px;padding:0 16px;font-size:15px}
+.btn.full{width:100%}
+.btn.line{background:transparent;box-shadow:inset 0 0 0 1.5px var(--line)}
+
+/* banner */
+.due{display:flex;align-items:center;gap:14px;width:100%;border:0;text-align:left;background:var(--violet);color:#fff;border-radius:var(--r);padding:16px 18px}
+.due b{display:block;font-size:17px}
+.due span{font-size:14px;opacity:.9}
+.due svg{margin-left:auto;flex:none}
+.due.late{background:var(--red)}
+
+/* numbers */
+.nums{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.nbox{border:0;background:var(--card);border-radius:14px;box-shadow:0 1px 2px rgba(28,36,32,.06),0 0 0 1px rgba(28,36,32,.05);padding:12px 14px;text-align:left;min-height:76px}
+.nbox b{display:block;font-size:28px;font-weight:700;line-height:1.1}
+.nbox span{font-size:13px;color:var(--ink-2)}
+.nbox.on{box-shadow:0 0 0 2px var(--ink)}
+.nbox.k-class b{color:var(--blue)} .nbox.k-play b{color:var(--green)} .nbox.k-meal b{color:var(--amber)} .nbox.k-road b{color:var(--violet)}
+@media (max-width:420px){.nums{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* alerts */
+.alerts{display:flex;flex-direction:column;gap:8px}
+.al{display:flex;gap:12px;align-items:flex-start;border-radius:14px;padding:12px 14px;font-size:15px;line-height:1.4;background:var(--red-2);color:var(--red);border:0;text-align:left;width:100%}
+.al.w{background:var(--amber-2);color:var(--amber)}
+.al i{flex:none;width:8px;height:8px;border-radius:50%;background:currentColor;margin-top:7px}
+.ok{border-radius:14px;padding:12px 14px;font-size:15px;background:var(--green-2);color:var(--green-ink)}
+
+/* search & filters */
+.search{width:100%;border:0;border-radius:14px;background:var(--card);box-shadow:0 0 0 1px var(--line);padding:0 16px;min-height:48px;font-size:16px;margin:0 0 10px}
+.search::placeholder{color:var(--ink-3)}
+.chips{display:flex;gap:8px;overflow-x:auto;margin:0 -18px 10px;padding:0 18px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;border:0;border-radius:999px;background:var(--card);box-shadow:inset 0 0 0 1px var(--line);min-height:40px;padding:0 16px;font-size:15px;font-weight:500;color:var(--ink-2)}
+.chip.on{background:var(--ink);color:#fff;box-shadow:none}
+
+/* route groups */
+.grp{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:14px 0 4px;border-top:1px solid var(--line)}
+.grp:first-child{border-top:0}
+.grp b{font-size:16px}
+.grp span{font-size:14px;color:var(--ink-2)}
+.sel{border:0;border-radius:12px;background:var(--wash);min-height:42px;padding:0 12px;font-size:15px;max-width:150px}
+
+/* tab bar */
+.tabbar{position:fixed;z-index:20;left:0;right:0;bottom:0;background:rgba(255,255,255,.96);backdrop-filter:saturate(1.4) blur(12px);-webkit-backdrop-filter:saturate(1.4) blur(12px);box-shadow:0 -1px 0 var(--line);display:flex;padding:0 max(8px,env(safe-area-inset-right,0px)) env(safe-area-inset-bottom,0px) max(8px,env(safe-area-inset-left,0px))}
+.tab{flex:1;border:0;background:none;min-height:var(--tab);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:13px;font-weight:600;color:var(--ink-3);position:relative}
+.tab svg{width:24px;height:24px}
+.tab.on{color:var(--green)}
+.badge{position:absolute;top:8px;left:calc(50% + 8px);min-width:20px;height:20px;border-radius:10px;background:var(--red);color:#fff;font-size:12px;font-weight:600;display:grid;place-items:center;padding:0 6px}
+
+/* sheet */
+.scrim{position:fixed;inset:0;z-index:40;background:rgba(20,26,23,.38);opacity:0;transition:opacity .22s cubic-bezier(.2,.8,.2,1)}
+.scrim.in{opacity:1}
+.sheet{position:fixed;z-index:41;left:0;right:0;bottom:0;max-height:88vh;overflow:auto;background:var(--card);border-radius:22px 22px 0 0;padding:10px 20px calc(20px + env(safe-area-inset-bottom,0px));transform:translateY(100%);transition:transform .28s cubic-bezier(.2,.8,.2,1);box-shadow:0 -10px 40px rgba(20,26,23,.18)}
+.sheet.in{transform:none}
+.grab{width:40px;height:5px;border-radius:5px;background:var(--line);margin:0 auto 14px}
+.sh-h{display:flex;align-items:center;gap:14px;margin-bottom:6px}
+.sh-h .av{width:52px;height:52px;font-size:17px}
+.sh-n{font-size:20px;font-weight:700;line-height:1.25}
+.sh-s{font-size:15px;color:var(--ink-2)}
+.acts{display:flex;flex-direction:column;gap:10px;margin:18px 0 6px}
+.tl{margin:18px 0 4px;padding:0;list-style:none}
+.tl li{display:flex;gap:12px;padding:7px 0;font-size:15px;line-height:1.4}
+.tl time{flex:none;width:48px;color:var(--ink-3)}
+.tl i{flex:none;width:10px;height:10px;border-radius:50%;margin-top:6px}
+.tl .k-class{background:var(--blue)} .tl .k-play{background:var(--green)} .tl .k-meal{background:var(--amber)} .tl .k-road{background:var(--violet)} .tl .k-out{background:var(--ink-3)}
+.sh-sub{font-size:13px;font-weight:600;color:var(--ink-3);margin:18px 0 0}
+@media (prefers-reduced-motion:reduce){.scrim,.sheet{transition:none}.btn:active{transform:none}}
+
+/* login */
+.login{max-width:440px;margin:0 auto;padding-top:4vh}
+.login h1{font-size:28px;font-weight:700;margin:0 0 4px;letter-spacing:-.01em}
+.login p{color:var(--ink-2);margin:0 0 18px}
+.code{display:flex;gap:10px;justify-content:center;margin:18px 0 8px}
+.code span{width:44px;height:56px;border-radius:12px;background:var(--card);box-shadow:inset 0 0 0 1.5px var(--line);display:grid;place-items:center;font-size:26px;font-weight:600}
+.code span.f{box-shadow:inset 0 0 0 2px var(--green)}
+.pinin{position:absolute;opacity:0;pointer-events:none;width:1px;height:1px}
+.err{color:var(--red);font-size:15px;min-height:22px;text-align:center}
+.back{border:0;background:none;color:var(--ink-2);font-size:15px;padding:10px 0;min-height:44px}
+
+/* install hint, toast, offline */
+.hint{display:flex;gap:12px;align-items:flex-start;background:var(--card);border-radius:var(--r);box-shadow:0 0 0 1px var(--line);padding:14px 16px;font-size:15px}
+.hint img{width:44px;height:44px;border-radius:10px;flex:none}
+.hint b{display:block}
+.hint .x{margin-left:auto;border:0;background:none;color:var(--ink-3);padding:4px 8px;min-height:36px}
+.toast{position:fixed;z-index:50;left:50%;transform:translateX(-50%);bottom:calc(var(--tab) + 16px + env(safe-area-inset-bottom,0px));background:var(--ink);color:#fff;border-radius:16px;padding:8px 8px 8px 18px;display:flex;gap:14px;align-items:center;font-size:15px;max-width:calc(100% - 32px);box-shadow:0 10px 30px rgba(20,26,23,.25)}
+.toast button{border:0;background:rgba(255,255,255,.14);color:#fff;border-radius:12px;min-height:40px;padding:0 14px;font-weight:600}
+main.notabs ~ .toast{bottom:calc(20px + env(safe-area-inset-bottom,0px))}
+.off{background:var(--amber-2);color:var(--amber);border-radius:14px;padding:12px 14px;font-size:15px}
+.tbl{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th,td{text-align:left;padding:10px 8px;border-top:1px solid var(--line);white-space:nowrap}
+th{font-size:13px;color:var(--ink-3);font-weight:600;border-top:0}
+.form{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;padding:12px 0}
+.form label{display:flex;flex-direction:column;gap:6px;font-size:14px;color:var(--ink-2)}
+.form input{border:0;border-radius:12px;background:var(--wash);min-height:48px;padding:0 14px;font-size:16px;width:140px}
+
+/* desktop */
+@media (min-width:960px){
+  .tabbar{display:none}
+  main{padding-bottom:48px}
+  .dtabs{display:flex;gap:4px;margin:0 auto}
+  .dtab{border:0;background:none;border-radius:12px;min-height:44px;padding:0 16px;font-size:15px;font-weight:600;color:var(--ink-2);display:flex;align-items:center;gap:8px;position:relative}
+  .dtab.on{background:var(--card);color:var(--green);box-shadow:0 0 0 1px var(--line)}
+  .dtab .badge{position:static}
+  .two{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:28px;align-items:start}
+  .sheet{left:auto;top:0;width:440px;max-height:none;border-radius:22px 0 0 22px;transform:translateX(100%);padding-top:28px}
+  .sheet.in{transform:none}
+  .grab{display:none}
+  .toast{bottom:28px}
+}
+</style>
+</head>
+<body>
+<header class="top" id="top"><div class="top-in" id="hdr"></div></header>
+<main id="app" class="notabs"><div class="empty">Բեռնվում է…</div></main>
+<nav class="tabbar" id="tabbar" hidden></nav>
+<div id="sheetbox"></div>
+<div id="toast" class="toast" role="status" hidden></div>
+
+<script>
+const API="https://script.google.com/macros/s/AKfycbyq-9XatEqTnFvL1Fhn3V9BSM1RwRVRKiK1bjCJbarBvAYx8Z_fHdxRKb6n98E8fH8CBw/exec";
+
+/* ---------- icons ---------- */
+const IC={
+  now:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>',
+  road:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20 8.5 4M20 20 15.5 4M12 6v2.5M12 11v2.5M12 16v2.5"/></svg>',
+  report:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>',
+  lessons:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6.5C6.5 5 9.5 5 12 6.5 14.5 5 17.5 5 20 6.5V19c-2.5-1.5-5.5-1.5-8 0-2.5-1.5-5.5-1.5-8 0z"/><path d="M12 6.5V19"/></svg>',
+  door:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 20V5a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v15M4 20h16"/><circle cx="14.5" cy="12.5" r=".9" fill="currentColor"/></svg>',
+  chev:'<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>',
+  arrow:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>'
+};
+
+/* ---------- state ---------- */
+const S={staffList:[],staff:[],kids:[],marks:[],routes:[],week:null,settings:{playMax:60,mealAfter:120,teacherMax:3,sessionMax:50},
+  me:null,code:"",pick:null,pin:"",pinErr:"",phase:"boot",tab:null,filter:"all",q:"",sheet:null,offline:false,lastId:null,busyPin:false,sheetUrl:""};
+const ls={get:k=>{try{return localStorage.getItem(k)}catch(e){return null}},set:(k,v)=>{try{v==null?localStorage.removeItem(k):localStorage.setItem(k,v)}catch(e){}}};
+
+const pad=n=>String(n).padStart(2,"0");
+const dayKey=x=>{const d=new Date(x);return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())};
+const hm=x=>{const d=new Date(x);return pad(d.getHours())+":"+pad(d.getMinutes())};
+const mins=ms=>Math.max(0,Math.round(ms/60000));
+const dur=ms=>{const m=mins(ms);return m<60?m+" ր":Math.floor(m/60)+" ժ "+pad(m%60)+" ր"};
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const ini=n=>String(n||"").split(/\s+/).filter(Boolean).slice(0,2).map(w=>w[0]).join("").toUpperCase();
+const staffById=id=>S.staff.find(s=>s.id===id)||S.staffList.find(s=>s.id===id);
+const sname=id=>(staffById(id)||{}).name||"ոչ ոք";
+const meS=()=>staffById(S.me);
+const kidById=id=>S.kids.find(k=>k.id===id);
+const kidName=id=>(kidById(id)||{}).name||"—";
+const ROLE={owner:"տնօրեն",coord:"համակարգող",teacher:"մանկավարժ",cook:"խոհարար"};
+const roleLine=s=>s?(s.role==="teacher"||s.role==="coord")&&s.subject?(s.role==="coord"?"համակարգող · ":"")+s.subject:ROLE[s.role]||"":"";
+const grade=k=>k.grade?k.grade+"-րդ դասարան":"";
+
+/* ---------- day model ---------- */
+function derive(marks){
+  const kids={};
+  S.kids.forEach(k=>kids[k.id]={...k,inCenter:false,place:"none",since:null,teacher:null,subject:null,ate:false,done:{},arrivedAt:null,events:[]});
+  const sessions=[],open={};
+  [...marks].sort((a,b)=>a.at-b.at).forEach(m=>{
+    const k=kids[m.kid];if(!k)return;
+    const close=res=>{const o=open[m.kid];if(o){o.end=m.at;o.result=res;delete open[m.kid]}};
+    const free=()=>{k.teacher=null;k.subject=null};
+    if(m.kind==="arrive"){close("closed");k.inCenter=true;k.place="play";k.since=m.at;k.arrivedAt=k.arrivedAt||m.at;free()}
+    else if(m.kind==="take"){close("closed");k.inCenter=true;k.arrivedAt=k.arrivedAt||m.at;k.place="class";k.since=m.at;k.teacher=m.staff;k.subject=m.subject;
+      const s={kid:m.kid,teacher:m.staff,subject:m.subject,start:m.at,end:null,result:null,day:m.day};sessions.push(s);open[m.kid]=s;k.events.push({at:m.at,sess:s})}
+    else if(m.kind==="done"||m.kind==="stop"){const o=open[m.kid];if(o){o.end=m.at;o.result=m.kind==="done"?"done":"not_done";delete open[m.kid];if(m.kind==="done")k.done[o.subject]=m.at}
+      k.place="play";k.since=m.at;free()}
+    else if(m.kind==="meal"){close("closed");k.place="meal";k.since=m.at;free()}
+    else if(m.kind==="ate"){k.ate=true;k.place="play";k.since=m.at}
+    else if(m.kind==="play"){close("closed");k.place="play";k.since=m.at;free()}
+    else if(m.kind==="home"){close("closed");k.inCenter=false;k.place="home";k.since=m.at;k.leftAt=m.at;free()}
+    else if(m.kind==="pickup"){close("closed");k.inCenter=false;k.place="road";k.since=m.at;k.escort=m.staff;free()}
+    else if(m.kind==="dropoff"){close("closed");k.inCenter=false;k.place="school";k.since=m.at;k.escort=m.staff;free()}
+    if(m.kind!=="take"&&m.kind!=="done"&&m.kind!=="stop")k.events.push({at:m.at,m});
+  });
+  return {kids:Object.values(kids).sort((a,b)=>a.name.localeCompare(b.name,"hy")),sessions};
+}
+function state(k,now){
+  const st=S.settings;
+  if(k.place==="class"){const bad=now-k.since>st.sessionMax*60000;return {c:bad?"bad":"class",w:"Դասին · "+sname(k.teacher),t:dur(now-k.since)}}
+  if(k.place==="play"){const bad=!Object.keys(k.done).length&&now-k.since>st.playMax*60000;return {c:bad?"bad":"play",w:"Խաղասենյակ",t:dur(now-k.since)}}
+  if(k.place==="meal") return {c:"meal",w:"Ճաշ",t:dur(now-k.since)};
+  if(k.place==="road") return {c:"road",w:"Ճանապարհին · "+sname(k.escort),t:dur(now-k.since)};
+  if(k.place==="school") return {c:"out",w:"Դպրոցում",t:hm(k.since)+"-ից"};
+  if(k.place==="home") return {c:"out",w:"Գնացել է տուն",t:hm(k.since)};
+  return {c:"out",w:"Դեռ չի եկել",t:""};
+}
+function timeline(k,now){
+  return k.events.map(e=>{
+    if(e.sess){const s=e.sess,end=s.end||now,r=s.result==="done"?" · արեց":s.result==="not_done"?" · չավարտեց":s.end?"":" · հիմա";
+      return {at:e.at,c:"class",txt:`${s.subject||"Դաս"} · ${sname(s.teacher)} · ${dur(end-s.start)}${r}`}}
+    const m=e.m,T={arrive:["play","Եկավ կենտրոն"],meal:["meal","Նստեց ուտելու"],ate:["meal","Կերավ"],play:["play","Խաղասենյակ"],home:["out","Գնաց տուն"],pickup:["road","Դպրոցից վերցրեց՝ "+sname(m.staff)],dropoff:["road","Տարավ դպրոց՝ "+sname(m.staff)]}[m.kind]||["out",m.kind];
+    return {at:m.at,c:T[0],txt:T[1]};
+  });
+}
+
+/* ---------- routes ---------- */
+const atToday=x=>{const [h,m]=String(x).split(":").map(Number);const d=new Date();d.setHours(h||0,m||0,0,0);return d.getTime()};
+function rstat(r,now){
+  const tt=atToday(r.time),ms=S.marks.filter(m=>m.kid===r.kid).sort((a,b)=>a.at-b.at);
+  const done=r.kind==="pickup"?ms.find(m=>(m.kind==="pickup"||m.kind==="arrive")&&m.at>=tt-30*60000):ms.find(m=>m.kind==="dropoff"&&m.at>=tt-90*60000);
+  if(done) return {st:"done",at:done.at,by:done.staff};
+  if(r.kind==="pickup") return {st:now>tt+15*60000?"late":now>=tt-15*60000?"now":"wait"};
+  return {st:now>tt+5*60000?"late":now>=tt-20*60000?"now":"wait"};
+}
+const rword=(r,s)=>s.st==="done"?(r.kind==="pickup"?"Վերցրել են ":"Տարել են ")+hm(s.at):s.st==="late"?(r.kind==="pickup"?"Չեն վերցրել":"Չեն տարել"):s.st==="now"?"Ժամն է":"";
+function groupsOf(list){const g=[];list.forEach(r=>{const key=r.time+"|"+r.school+"|"+r.kind;let x=g.find(y=>y.key===key);if(!x){x={key,r,items:[]};g.push(x)}x.items.push(r)});return g}
+
+/* ---------- alerts ---------- */
+function alerts(D,now){
+  const out=[],st=S.settings;
+  (S.routes||[]).forEach(r=>{if(rstat(r,now).st!=="late")return;
+    out.push({w:r.kind!=="pickup",kid:r.kid,txt:r.kind==="pickup"?`${kidName(r.kid)} — դասերն ավարտվել են ${r.time}-ին, չեն վերցրել · ${sname(r.staff)}`:`${kidName(r.kid)} — ${r.time}-ին պետք է տարվեր դպրոց · ${sname(r.staff)}`})});
+  D.kids.forEach(k=>{if(!k.inCenter)return;
+    if(k.place==="play"&&!Object.keys(k.done).length&&now-k.since>st.playMax*60000)out.push({kid:k.id,txt:`${k.name} — ${dur(now-k.since)} խաղասենյակում, դասեր չի արել`});
+    if(k.place==="class"&&now-k.since>st.sessionMax*60000)out.push({w:1,kid:k.id,txt:`${k.name} — ${dur(now-k.since)} դասին · ${sname(k.teacher)}`});
+    if(!k.ate&&k.place!=="meal"&&k.arrivedAt&&now-k.arrivedAt>st.mealAfter*60000)out.push({w:1,kid:k.id,txt:`${k.name} — կենտրոնում է ${hm(k.arrivedAt)}-ից, դեռ չի կերել`});
+  });
+  S.staff.filter(s=>s.role==="teacher"||s.role==="coord").forEach(s=>{const n=D.kids.filter(k=>k.place==="class"&&k.teacher===s.id).length;
+    if(n>st.teacherMax)out.push({w:1,txt:`${s.name} — միաժամանակ ${n} երեխա (նորման՝ ${st.teacherMax})`})});
+  return out;
+}
+
+/* ---------- pieces ---------- */
+const matchQ=k=>{const q=S.q.trim().toLowerCase();return !q||k.name.toLowerCase().includes(q)};
+const search=()=>`<input class="search" id="q" type="search" placeholder="Որոնել անունով" value="${esc(S.q)}" autocomplete="off" enterkeyhint="search">`;
+function kidRow(k,now,opts={}){
+  const s=state(k,now);
+  return `<button class="row" data-act="open" data-kid="${esc(k.id)}"><div class="av s-${s.c}">${esc(ini(k.name))}</div><div class="rm"><div class="rn">${esc(k.name)}</div><div class="rs${s.c==="bad"?" bad":""}">${esc(opts.sub||s.w)}</div></div><div class="rt num">${esc(opts.right??s.t)}</div>${IC.chev}</button>`;
+}
+const sec=(title,count,body,extra="")=>`<section><div class="sec-h"><h2>${title}</h2>${count!=null?`<span class="c num">${count}</span>`:""}${extra}</div>${body}</section>`;
+const panel=inner=>`<div class="panel">${inner}</div>`;
+const emptyP=t=>panel(`<div class="empty">${t}</div>`);
+
+function dueBanner(now){
+  const mine=(S.routes||[]).filter(r=>r.staff===S.me).map(r=>({r,s:rstat(r,now)})).filter(x=>x.s.st==="now"||x.s.st==="late");
+  if(!mine.length) return "";
+  const r=mine[0].r,n=mine.filter(x=>x.r.time===r.time&&x.r.school===r.school&&x.r.kind===r.kind).length,late=mine.some(x=>x.s.st==="late");
+  return `<button class="due${late?" late":""}" data-act="myroute"><div><b>${r.kind==="pickup"?"Ժամն է գնալ դպրոց":"Ժամն է տանել դպրոց"}</b><span class="num">${esc(r.time)} · ${esc(r.school||"")} · ${n} երեխա</span></div>${IC.arrow}</button>`;
+}
+function installHint(){
+  if(ls.get("vk-hint")==="1"||window.matchMedia("(display-mode: standalone)").matches||navigator.standalone) return "";
+  const ios=/iphone|ipad|ipod/i.test(navigator.userAgent);
+  const how=ios?"Safari-ում սեղմեք «Կիսվել» կոճակը, հետո «Գլխավոր էկրանին»":(S.installEvt?"":"Բրաուզերի մենյուում ընտրեք «Ավելացնել գլխավոր էկրանին»");
+  return `<div class="hint"><img src="icon-192.png" alt=""><div><b>Ավելացրեք հեռախոսի էկրանին</b>${how}${S.installEvt?`<div style="margin-top:8px"><button class="btn sm pri" data-act="install">Տեղադրել</button></div>`:""}</div><button class="x" data-act="hint-x" aria-label="Փակել">✕</button></div>`;
+}
+
+/* ---------- screens ---------- */
+function teacherScreen(D,now){
+  const me=meS(),subj=me.subject||"";
+  const mine=D.kids.filter(k=>k.place==="class"&&k.teacher===me.id);
+  const others=D.kids.filter(k=>!(k.place==="class"&&k.teacher===me.id)&&matchQ(k));
+  let h=`<div class="stack">${installHint()}${dueBanner(now)}`;
+  h+=sec("Ինձ մոտ են",mine.length,mine.length?panel(mine.map(k=>{const bad=now-k.since>S.settings.sessionMax*60000;
+    return `<div class="row"><button class="av s-${bad?"bad":"class"}" data-act="open" data-kid="${esc(k.id)}" style="border:0" aria-label="${esc(k.name)}">${esc(ini(k.name))}</button><div class="rm" data-act="open" data-kid="${esc(k.id)}"><div class="rn">${esc(k.name)}</div><div class="rs${bad?" bad":""} num">${dur(now-k.since)}</div></div><button class="btn sm pri" data-act="mark" data-kind="done" data-kid="${esc(k.id)}">Արեց</button></div>`}).join("")):emptyP("Հիմա ձեզ մոտ ոչ ոք չկա։ Սեղմեք երեխայի անվան վրա ներքևում, որ վերցնեք։"));
+  h+=sec("Բոլոր երեխաները",null,search()+(others.length?panel(others.map(k=>kidRow(k,now,{sub:k.done[subj]?state(k,now).w+" · "+subj+"՝ արված":undefined})).join("")):emptyP("Ոչ ոք չի գտնվել։")));
+  return h+`</div>`;
+}
+function doorScreen(D,now){
+  const notYet=D.kids.filter(k=>!k.arrivedAt&&k.place!=="road"&&matchQ(k)),inC=D.kids.filter(k=>k.inCenter&&matchQ(k)),gone=D.kids.filter(k=>k.place==="home"&&matchQ(k));
+  const came=D.kids.filter(k=>k.arrivedAt).length;
+  let h=`<div class="stack"><div class="nums"><div class="nbox"><span>Այսօր եկել են</span><b class="num">${came}/${D.kids.length}</b></div><div class="nbox k-play"><span>Կենտրոնում</span><b class="num">${D.kids.filter(k=>k.inCenter).length}</b></div><div class="nbox k-road"><span>Ճանապարհին</span><b class="num">${D.kids.filter(k=>k.place==="road").length}</b></div><div class="nbox"><span>Գնացել են</span><b class="num">${D.kids.filter(k=>k.place==="home").length}</b></div></div>${search()}`;
+  h+=sec("Դեռ չեն եկել",notYet.length,notYet.length?panel(notYet.map(k=>kidRow(k,now)).join("")):emptyP("Այսօր բոլորը եկել են։"));
+  h+=sec("Կենտրոնում",inC.length,inC.length?panel(inC.map(k=>kidRow(k,now,{right:hm(k.arrivedAt)+"-ից"})).join("")):emptyP("Հիմա կենտրոնում ոչ ոք չկա։"));
+  if(gone.length)h+=sec("Գնացել են տուն",gone.length,panel(gone.map(k=>kidRow(k,now,{sub:(k.arrivedAt?hm(k.arrivedAt):"")+"–"+hm(k.leftAt),right:k.arrivedAt?dur(k.leftAt-k.arrivedAt):""})).join("")));
+  return h+`</div>`;
+}
+function routesScreen(D,now,assign){
+  const list=S.routes||[];
+  if(!list.length) return `<div class="stack">${sec("Այսօրվա ճանապարհը",null,emptyP("Այսօր դպրոցների ժամանակացույցում ոչինչ չկա։ Դասերի ժամերը լրացվում են աղյուսակի «Расписание школ» թերթում։"))}</div>`;
+  const people=S.staff.filter(s=>s.role!=="cook");
+  let body="";
+  groupsOf(list).forEach(g=>{
+    body+=`<div class="grp"><b class="num">${esc(g.r.time)} · ${esc(g.r.school||"դպրոց")}</b><span>${g.r.kind==="pickup"?"վերցնել":"տանել"} · ${g.items.length}</span></div>`;
+    g.items.forEach(r=>{const k=kidById(r.kid);if(!k)return;const s=rstat(r,now);
+      const sel=assign?`<select class="sel" data-assign="1" data-kid="${esc(r.kid)}" data-kind="${r.kind}" aria-label="Ով է գնում · ${esc(k.name)}"><option value="">ոչ ոք</option>${people.map(p=>`<option value="${esc(p.id)}"${p.id===r.staff?" selected":""}>${esc(p.name)}</option>`).join("")}</select>`:`<div class="rt">${esc(sname(r.staff))}</div>`;
+      const c=s.st==="late"?"bad":s.st==="done"?"play":"road";
+      body+=`<div class="row"><div class="av s-${c}">${esc(ini(k.name))}</div><div class="rm" data-act="open" data-kid="${esc(k.id)}"><div class="rn">${esc(k.name)}</div><div class="rs${s.st==="late"?" bad":""}">${esc(rword(r,s)||(r.kind==="pickup"?"Դեռ դպրոցում է":"Կենտրոնում է"))}</div></div>${sel}</div>`});
+  });
+  return `<div class="stack">${sec("Այսօրվա ճանապարհը",list.length,panel(body))}</div>`;
+}
+function nowScreen(D,now){
+  const inC=D.kids.filter(k=>k.inCenter),al=alerts(D,now);
+  const N=[["center","Կենտրոնում",inC.length,""],["class","Դասին",inC.filter(k=>k.place==="class").length,"k-class"],["play","Խաղասենյակ",inC.filter(k=>k.place==="play").length,"k-play"],["meal","Ճաշ",inC.filter(k=>k.place==="meal").length,"k-meal"]];
+  const nums=`<div class="nums">${N.map(n=>`<button class="nbox ${n[3]} ${S.filter===n[0]?"on":""}" data-act="filter" data-v="${n[0]}"><span>${n[1]}</span><b class="num">${n[2]}</b></button>`).join("")}</div>`;
+  const alertsH=sec("Ուշադրություն",al.length||null,al.length?`<div class="alerts">${al.map(a=>`<button class="al${a.w?" w":""}" ${a.kid?`data-act="open" data-kid="${esc(a.kid)}"`:""}><i></i><span>${esc(a.txt)}</span></button>`).join("")}</div>`:`<div class="ok">Հիմա ամեն ինչ կարգին է։</div>`);
+  const teachers=S.staff.filter(s=>s.role==="teacher"||s.role==="coord");
+  const teachH=sec("Մանկավարժները",null,panel(teachers.map(s=>{const n=D.kids.filter(k=>k.place==="class"&&k.teacher===s.id).length;
+    return `<div class="row"><div class="av s-${n>S.settings.teacherMax?"bad":n?"class":"out"}">${esc(ini(s.name))}</div><div class="rm"><div class="rn">${esc(s.name)}</div><div class="rs">${esc(s.subject||"")}</div></div><div class="rt num">${n} երեխա</div></div>`}).join("")));
+  const F=[["all","Բոլորը"],["center","Կենտրոնում"],["class","Դասին"],["play","Խաղասենյակ"],["meal","Ճաշ"],["road","Ճանապարհին"],["school","Դպրոցում"],["none","Չեն եկել"],["home","Գնացել են"]];
+  const list=D.kids.filter(k=>(S.filter==="all"||(S.filter==="center"?k.inCenter:k.place===S.filter))&&matchQ(k));
+  const listH=sec("Ով որտեղ է",list.length,search()+`<div class="chips">${F.map(f=>`<button class="chip ${S.filter===f[0]?"on":""}" data-act="filter" data-v="${f[0]}">${f[1]}</button>`).join("")}</div>`+(list.length?panel(list.map(k=>kidRow(k,now)).join("")):emptyP("Այս ցուցակում ոչ ոք չկա։")));
+  return `<div class="stack">${installHint()}<div class="two"><div class="stack">${nums}${alertsH}${teachH}</div><div class="stack">${listH}</div></div></div>`;
+}
+function cookScreen(D,now){
+  const eating=D.kids.filter(k=>k.place==="meal"),notYet=D.kids.filter(k=>k.inCenter&&!k.ate&&k.place!=="meal"),ate=D.kids.filter(k=>k.ate);
+  let h=`<div class="stack">${installHint()}<div class="nums"><div class="nbox k-meal"><span>Դեռ չեն կերել</span><b class="num">${notYet.length}</b></div><div class="nbox k-meal"><span>Ուտում են</span><b class="num">${eating.length}</b></div><div class="nbox k-play"><span>Կերել են</span><b class="num">${ate.length}</b></div><div class="nbox"><span>Կենտրոնում</span><b class="num">${D.kids.filter(k=>k.inCenter).length}</b></div></div>`;
+  h+=sec("Ուտում են",eating.length,eating.length?panel(eating.map(k=>`<div class="row"><div class="av s-meal">${esc(ini(k.name))}</div><div class="rm"><div class="rn">${esc(k.name)}</div><div class="rs num">${dur(now-k.since)}</div></div><button class="btn sm pri" data-act="mark" data-kind="ate" data-kid="${esc(k.id)}">Կերավ</button></div>`).join("")):emptyP("Սեղանի շուրջ հիմա ոչ ոք չկա։"));
+  h+=sec("Դեռ չեն կերել",notYet.length,notYet.length?panel(notYet.map(k=>`<div class="row"><div class="av s-${state(k,now).c}">${esc(ini(k.name))}</div><div class="rm"><div class="rn">${esc(k.name)}</div><div class="rs">${esc(state(k,now).w)}</div></div><button class="btn sm" data-act="mark" data-kind="meal" data-kid="${esc(k.id)}">Նստեց ուտելու</button></div>`).join("")):emptyP("Կենտրոնում բոլորը կերել են։"));
+  return h+`</div>`;
+}
+function report(sessions,now){
+  const g={};sessions.forEach(s=>{const ms=(s.end||now)-s.start;if(ms<60000)return;const key=s.teacher+"|"+s.subject;const r=(g[key]=g[key]||{teacher:s.teacher,subject:s.subject,n:0,sum:0,max:0,done:0,list:[]});r.n++;r.sum+=ms;r.max=Math.max(r.max,ms);if(s.result==="done")r.done++;r.list.push({...s,ms})});
+  const by={};Object.values(g).forEach(r=>{const b=(by[r.subject]=by[r.subject]||{n:0,sum:0});b.n+=r.n;b.sum+=r.sum});
+  const rows=Object.values(g).sort((a,b)=>String(a.subject).localeCompare(String(b.subject),"hy"));
+  const long=[];rows.forEach(r=>{const avg=by[r.subject].sum/by[r.subject].n;r.list.forEach(s=>{if(s.ms>=10*60000&&s.ms>avg*1.5)long.push({...s,avg})})});
+  return {rows,by,long:long.sort((a,b)=>b.ms-a.ms).slice(0,8)};
+}
+function reportTable(R){
+  if(!R.rows.length) return emptyP("Պարապմունքներ դեռ չկան։ Կհայտնվեն, երբ մանկավարժները սկսեն նշել։");
+  let h=`<div class="panel"><div class="tbl"><table class="num"><thead><tr><th>Մանկավարժ</th><th>Առարկա</th><th>Անգամ</th><th>Միջինը</th><th>Ըստ առարկայի</th><th>Առավելագույնը</th><th>Արված</th></tr></thead><tbody>`;
+  R.rows.forEach(r=>{h+=`<tr><td>${esc(sname(r.teacher))}</td><td>${esc(r.subject)}</td><td>${r.n}</td><td><b>${mins(r.sum/r.n)} ր</b></td><td>${mins(R.by[r.subject].sum/R.by[r.subject].n)} ր</td><td>${mins(r.max)} ր</td><td>${r.done}/${r.n}</td></tr>`});
+  h+=`</tbody></table></div></div>`;
+  if(R.long.length)h+=`<div style="height:14px"></div>`+sec("Միջինից շատ երկար",R.long.length,panel(R.long.map(s=>`<div class="row"><div class="av s-bad">${esc(ini(kidName(s.kid)))}</div><div class="rm"><div class="rn">${esc(kidName(s.kid))} · ${esc(s.subject)}</div><div class="rs">${esc(sname(s.teacher))} · ${s.day||""} ${hm(s.start)}</div></div><div class="rt num">${mins(s.ms)} / ${mins(s.avg)} ր</div></div>`).join("")));
+  return h;
+}
+function reportScreen(D,now){
+  let h=`<div class="stack">`+sec("Ժամանակը մեկ երեխայի վրա · այսօր",null,reportTable(report(D.sessions,now)));
+  h+=sec("Վերջին 7 օրը",null,S.week?reportTable(report(derive(S.week).sessions,now)):panel(`<div class="form"><button class="btn line" data-act="week">Հավաքել 7 օրվա տվյալները</button></div>`));
+  if(S.week){const c={};S.week.forEach(m=>{if(m.kind==="pickup"||m.kind==="dropoff"){const x=(c[m.staff]=c[m.staff]||{p:0,d:0});m.kind==="pickup"?x.p++:x.d++}});
+    const ids=Object.keys(c);h+=sec("Ով է ուղեկցել երեխաներին · 7 օր",null,ids.length?panel(ids.map(id=>`<div class="row"><div class="av s-road">${esc(ini(sname(id)))}</div><div class="rm"><div class="rn">${esc(sname(id))}</div></div><div class="rt num">վերցրել է ${c[id].p} · տարել ${c[id].d}</div></div>`).join("")):emptyP("Նշումներ չկան։"))}
+  if(meS().role==="owner"){const st=S.settings;
+    h+=sec("Երբ զգուշացնել",null,panel(`<div class="form">
+      <label>Խաղասենյակում առանց դասի, ր<input id="set-playMax" type="number" inputmode="numeric" min="10" step="5" value="${st.playMax}"></label>
+      <label>Չի կերել գալուց հետո, ր<input id="set-mealAfter" type="number" inputmode="numeric" min="30" step="10" value="${st.mealAfter}"></label>
+      <label>Երեխա մանկավարժի մոտ միաժամանակ<input id="set-teacherMax" type="number" inputmode="numeric" min="1" step="1" value="${st.teacherMax}"></label>
+      <label>Պարապմունքը երկար է, ր<input id="set-sessionMax" type="number" inputmode="numeric" min="10" step="5" value="${st.sessionMax}"></label>
+      <button class="btn pri" data-act="save-settings">Պահպանել</button></div>`));
+    h+=sec("Նոր երեխա",null,panel(`<div class="form"><label>Անուն ազգանուն<input id="new-name" type="text" autocomplete="off" style="width:220px"></label><label>Դասարան<input id="new-grade" type="number" inputmode="numeric" min="1" max="12" value="1" style="width:100px"></label><button class="btn" data-act="add-kid">Ավելացնել</button></div><div class="err" id="new-err" style="text-align:left"></div>`));
+    if(S.sheetUrl)h+=sec("Աղյուսակ",null,panel(`<div class="form" style="align-items:center"><span style="color:var(--ink-2);flex:1;min-width:200px">Աշխատակիցների կոդերը, դպրոցները և դասացուցակը փոխվում են աղյուսակում։</span><a class="btn line" href="${esc(S.sheetUrl)}" target="_blank" rel="noopener">Բացել աղյուսակը</a></div>`));
+  }
+  return h+`</div>`;
+}
+
+/* ---------- sheet (child card) ---------- */
+function sheetHtml(D,now){
+  const sh=S.sheet;if(!sh)return"";
+  if(sh.type==="myroute"){
+    const mine=(S.routes||[]).filter(r=>r.staff===S.me);
+    let body="";groupsOf(mine).forEach(g=>{body+=`<div class="grp"><b class="num">${esc(g.r.time)} · ${esc(g.r.school||"")}</b><span>${g.r.kind==="pickup"?"վերցնել":"տանել"}</span></div>`;
+      g.items.forEach(r=>{const k=kidById(r.kid);if(!k)return;const s=rstat(r,now),kd=D.kids.find(x=>x.id===r.kid)||{};
+        let a=s.st!=="done"?`<button class="btn sm pri" data-act="mark" data-kind="${r.kind}" data-kid="${esc(r.kid)}">${r.kind==="pickup"?"Վերցրի":"Տարա"}</button>`:(r.kind==="pickup"&&kd.place==="road"?`<button class="btn sm" data-act="mark" data-kind="arrive" data-kid="${esc(r.kid)}">Բերեցի</button>`:`<div class="rt">${esc(rword(r,s))}</div>`);
+        body+=`<div class="row"><div class="av s-${s.st==="late"?"bad":s.st==="done"?"play":"road"}">${esc(ini(k.name))}</div><div class="rm"><div class="rn">${esc(k.name)}</div><div class="rs">${esc(grade(k))}</div></div>${a}</div>`})});
+    return `<div class="sh-n" style="margin-bottom:4px">Իմ ճանապարհը</div><div class="sh-s">Սեղմեք, երբ վերցնեք կամ տանեք երեխային</div>${body||`<div class="empty">Այսօր ձեզ ոչինչ նշանակված չէ։</div>`}<div class="acts"><button class="btn full line" data-act="close">Փակել</button></div>`;
+  }
+  const k=D.kids.find(x=>x.id===sh.kid);if(!k)return"";
+  const s=state(k,now),me=meS(),role=me.role,subj=me.subject||"";
+  const acts=[];
+  const myRoutes=(S.routes||[]).filter(r=>r.kid===k.id);
+  const pick=myRoutes.find(r=>r.kind==="pickup"&&rstat(r,now).st!=="done");
+  const drop=myRoutes.find(r=>r.kind==="dropoff"&&rstat(r,now).st!=="done");
+  if(role==="teacher"||role==="coord"){
+    if(k.place==="class"&&k.teacher===me.id){acts.push(["done","Արեց",1]);acts.push(["stop","Չավարտեց"])}
+    else if(k.inCenter&&!k.done[subj]&&subj)acts.push(["take","Վերցնել ինձ մոտ · "+subj,1]);
+    if(pick&&!k.inCenter&&k.place!=="road")acts.push(["pickup","Վերցրի դպրոցից",!acts.length]);
+    if(k.place==="road")acts.push(["arrive","Բերեցի կենտրոն",1]);
+    if(drop&&k.inCenter)acts.push(["dropoff","Տարա դպրոց"]);
+  }
+  if(role==="coord"||role==="owner"){
+    if(!k.inCenter&&k.place!=="road")acts.push(["arrive","Եկավ կենտրոն",!acts.some(a=>a[2])]);
+    if(k.inCenter){if(k.place!=="play"&&k.place!=="class")acts.push(["play","Խաղասենյակ"]);acts.push(["home","Գնաց տուն"])}
+  }
+  if(role==="cook"&&k.inCenter){if(k.place!=="meal")acts.push(["meal","Նստեց ուտելու",1]);else acts.push(["ate","Կերավ",1])}
+  const tl=timeline(k,now);
+  const doneSubj=Object.keys(k.done);
+  return `<div class="sh-h"><div class="av s-${s.c}">${esc(ini(k.name))}</div><div><div class="sh-n">${esc(k.name)}</div><div class="sh-s">${esc(grade(k))}${k.school?" · "+esc(k.school):""}</div></div></div>
+    <div class="sh-s" style="margin-top:10px"><b style="color:var(--ink)">${esc(s.w)}</b>${s.t?" · "+esc(s.t):""}</div>
+    <div class="sh-s">Այսօր արել է՝ ${doneSubj.length?esc(doneSubj.join(", ")):"դեռ ոչինչ"} · ${k.ate?"կերել է":"դեռ չի կերել"}</div>
+    ${acts.length?`<div class="acts">${acts.map(a=>`<button class="btn full ${a[2]?"pri":""}" data-act="mark" data-kind="${a[0]}" data-kid="${esc(k.id)}">${esc(a[1])}</button>`).join("")}</div>`:""}
+    <div class="sh-sub">Այսօրվա օրը</div>
+    ${tl.length?`<ul class="tl">${tl.map(e=>`<li><time class="num">${hm(e.at)}</time><i class="k-${e.c}"></i><span>${esc(e.txt)}</span></li>`).join("")}</ul>`:`<div class="empty">Այսօր նշումներ դեռ չկան։</div>`}
+    <div class="acts"><button class="btn full line" data-act="close">Փակել</button></div>`;
+}
+let sheetOpenKey=null;
+function renderSheet(D,now){
+  const box=document.getElementById("sheetbox");
+  if(!S.sheet){if(sheetOpenKey){const sc=box.querySelector(".scrim"),sh=box.querySelector(".sheet");if(sc)sc.classList.remove("in");if(sh)sh.classList.remove("in");setTimeout(()=>{if(!S.sheet)box.innerHTML=""},260);sheetOpenKey=null}return}
+  const key=S.sheet.type+"|"+(S.sheet.kid||"");
+  const inner=sheetHtml(D,now);
+  if(sheetOpenKey===key){const sh=box.querySelector(".sheet");if(sh){const st=sh.scrollTop;sh.innerHTML=`<div class="grab"></div>`+inner;sh.scrollTop=st}return}
+  box.innerHTML=`<div class="scrim" data-act="close"></div><div class="sheet" role="dialog" aria-modal="true"><div class="grab"></div>${inner}</div>`;
+  sheetOpenKey=key;
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{box.querySelector(".scrim")?.classList.add("in");box.querySelector(".sheet")?.classList.add("in")}));
+}
+
+/* ---------- tabs ---------- */
+function tabsFor(role,D,now){
+  const al=alerts(D,now).length,late=(S.routes||[]).filter(r=>rstat(r,now).st==="late").length;
+  if(role==="owner")return[["now","Հիմա",IC.now,al],["road","Ճանապարհ",IC.road,late],["report","Հաշվետվություն",IC.report,0]];
+  if(role==="coord")return[["lessons","Իմ դասերը",IC.lessons,0],["door","Գալ-գնալ",IC.door,0],["road","Ճանապարհ",IC.road,late],["now","Կենտրոն",IC.now,al]];
+  return[];
+}
+function screen(tab,D,now){
+  const role=meS().role;
+  if(role==="teacher")return teacherScreen(D,now);
+  if(role==="cook")return cookScreen(D,now);
+  if(tab==="lessons")return teacherScreen(D,now);
+  if(tab==="door")return doorScreen(D,now);
+  if(tab==="road")return routesScreen(D,now,true);
+  if(tab==="report")return reportScreen(D,now);
+  return nowScreen(D,now);
+}
+
+/* ---------- render ---------- */
+function header(tabs){
+  const me=meS();
+  let h="";
+  if(me&&S.phase==="app"){
+    h=`<div class="me"><div class="av s-play">${esc(ini(me.name))}</div><div class="me-t"><div class="me-n">${esc(me.name)}</div><div class="me-r">${esc(roleLine(me))}</div></div></div>`;
+    if(tabs.length)h+=`<div class="dtabs">${tabs.map(t=>`<button class="dtab ${S.tab===t[0]?"on":""}" data-act="tab" data-v="${t[0]}">${t[1]}${t[3]?`<span class="badge num">${t[3]}</span>`:""}</button>`).join("")}</div>`;
+    h+=`<button class="out" data-act="logout">Ելք</button>`;
+  }else h=`<div class="me"><img src="icon-192.png" alt="" width="36" height="36" style="border-radius:9px"><div class="me-t"><div class="me-n">Վիկտորյա</div><div class="me-r">ով որտեղ է</div></div></div>`;
+  document.getElementById("hdr").innerHTML=h;
+}
+function loginHtml(){
+  if(S.phase==="pick"){
+    const list=S.staffList;
+    return `<div class="login"><h1>Ո՞վ եք դուք</h1><p>Սեղմեք ձեր անվան վրա</p>${list.length?panel(list.map(s=>`<button class="row" data-act="pick" data-id="${esc(s.id)}"><div class="av s-play">${esc(ini(s.name))}</div><div class="rm"><div class="rn">${esc(s.name)}</div><div class="rs">${esc(roleLine(s))}</div></div>${IC.chev}</button>`).join("")):`<div class="empty">Բեռնվում է…</div>`}</div>`;
+  }
+  const s=staffById(S.pick)||{};
+  const cells=[0,1,2,3,4,5].map(i=>`<span class="num${i===S.pin.length?" f":""}">${S.pin[i]?"•":""}</span>`).join("");
+  return `<div class="login"><button class="back" data-act="repick">← Այլ անուն</button><h1>${esc(s.name||"")}</h1><p>Մուտքագրեք ձեր 6-նիշանոց կոդը։ Կոդը տալիս է Իլոնան։</p>
+    <label class="code" for="pin">${cells}</label><input id="pin" class="pinin" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="one-time-code" value="${esc(S.pin)}" aria-label="Կոդ">
+    <div class="err">${esc(S.pinErr)}</div>
+    <button class="btn full pri" data-act="login" ${S.busyPin?"disabled":""}>${S.busyPin?"Ստուգում եմ…":"Մուտք"}</button></div>`;
+}
+function render(){
+  const app=document.getElementById("app"),bar=document.getElementById("tabbar"),ae=document.activeElement;
+  let keepQ=null;
+  if(ae&&app.contains(ae)){if(ae.id==="q")keepQ=[ae.selectionStart,ae.selectionEnd];else if(ae.tagName==="INPUT"&&ae.id!=="pin")return;else if(ae.tagName==="SELECT")return}
+  const now=Date.now();
+  if(S.phase!=="app"){header([]);bar.hidden=true;app.className="notabs";
+    app.innerHTML=S.phase==="boot"?`<div class="empty">Բեռնվում է…</div>`:S.phase==="error"?`<div class="off">${esc(S.err||"Կապ չկա։")}</div><div style="height:12px"></div><button class="btn pri" data-act="reload">Փորձել նորից</button>`:loginHtml();
+    if(S.phase==="code"){const p=document.getElementById("pin");if(p&&document.activeElement!==p)setTimeout(()=>p.focus({preventScroll:true}),30)}
+    renderSheet(null,now);return}
+  const D=derive(S.marks),tabs=tabsFor(meS().role,D,now);
+  if(tabs.length&&!tabs.some(t=>t[0]===S.tab))S.tab=tabs[0][0];
+  header(tabs);
+  bar.hidden=!tabs.length;app.className=tabs.length?"":"notabs";
+  bar.innerHTML=tabs.map(t=>`<button class="tab ${S.tab===t[0]?"on":""}" data-act="tab" data-v="${t[0]}"${S.tab===t[0]?' aria-current="page"':""}>${t[2]}<span>${t[1]}</span>${t[3]?`<span class="badge num">${t[3]}</span>`:""}</button>`).join("");
+  app.innerHTML=(S.offline?`<div class="off" style="margin-bottom:14px">Կապ չկա աղյուսակի հետ։ Նշումները կարող են չպահպանվել։</div>`:"")+screen(S.tab,D,now);
+  if(keepQ){const q=document.getElementById("q");if(q){q.focus({preventScroll:true});try{q.setSelectionRange(keepQ[0],keepQ[1])}catch(e){}}}
+  renderSheet(D,now);
+}
+
+/* ---------- api ---------- */
+async function api(fn,...args){
+  const r=await fetch(API,{method:"POST",body:JSON.stringify({fn,args}),redirect:"follow"});
+  const j=await r.json();if(!j.ok)throw new Error(j.error||"error");return j.data;
+}
+let toastT;
+function toast(text,undo){
+  const el=document.getElementById("toast");
+  el.innerHTML=`<span>${esc(text)}</span>`+(undo?`<button id="undo">Չեղարկել</button>`:"");
+  el.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>{el.hidden=true;S.lastId=null},undo?60000:3200);
+  const b=document.getElementById("undo");
+  if(b)b.onclick=async()=>{const id=S.lastId;S.lastId=null;el.hidden=true;if(!id)return;S.marks=S.marks.filter(m=>m.id!==id);render();try{await api("api_undo",S.code,id)}catch(e){toast("Չհաջողվեց չեղարկել");refresh()}};
+}
+const KT={arrive:"եկավ",take:"ձեզ մոտ է",done:"արեց",stop:"չավարտեց",meal:"նստեց ուտելու",ate:"կերավ",play:"խաղասենյակում է",home:"գնաց տուն",pickup:"վերցված է դպրոցից",dropoff:"տարված է դպրոց"};
+async function mark(kind,kid){
+  const me=meS();if(!me)return;
+  const tmp={id:"tmp"+Date.now(),kind,kid,staff:S.me,subject:kind==="take"?(me.subject||""):"",at:Date.now(),day:dayKey(Date.now())};
+  S.marks.push(tmp);if(S.sheet&&S.sheet.type==="kid"&&kind!=="take"&&kind!=="arrive")S.sheet=null;if(S.sheet&&S.sheet.type==="kid")S.sheet=null;render();
+  try{navigator.vibrate&&navigator.vibrate(12)}catch(e){}
+  try{const r=await api("api_mark",S.code,kind,kid);tmp.id=r.id;tmp.at=r.at;S.lastId=r.id;toast(kidName(kid)+" — "+KT[kind],true)}
+  catch(e){S.marks=S.marks.filter(m=>m!==tmp);render();if(/bad_pin|locked/.test(e.message))logout("Կոդը այլևս չի գործում։ Մուտք գործեք նորից։");else toast("Չպահպանվեց։ Ստուգեք ինտերնետը։")}
+}
+let busy=false;
+async function refresh(){
+  if(busy||!S.code||S.phase!=="app")return;busy=true;
+  try{const st=await api("api_state",S.code,dayKey(Date.now()));
+    S.me=st.me.id;S.staff=st.staff.sort((a,b)=>a.order-b.order);S.kids=st.kids;S.settings=st.settings;S.marks=st.marks;S.routes=st.routes||[];S.sheetUrl=st.sheetUrl||"";S.offline=false}
+  catch(e){if(/bad_pin|locked/.test(e.message)){busy=false;logout("Կոդը այլևս չի գործում։ Մուտք գործեք նորից։");return}S.offline=true}
+  finally{busy=false}
+  render();
+}
+function logout(msg){S.code="";S.me=null;S.pick=null;S.pin="";S.pinErr=msg||"";S.sheet=null;S.week=null;S.tab=null;S.marks=[];ls.set("vk-code",null);ls.set("vk-me",null);S.phase="pick";render();loadStaff()}
+async function loadStaff(){try{S.staffList=await api("api_staffList");if(S.phase==="boot")S.phase="pick";render()}catch(e){if(S.phase==="boot"||S.phase==="pick"){S.phase="error";S.err="Չհաջողվեց կապվել։ Ստուգեք ինտերնետը։";render()}}}
+async function tryLogin(){
+  if(S.busyPin)return;if(!/^\d{6}$/.test(S.pin)){S.pinErr="Կոդը 6 թիվ է";render();return}
+  S.busyPin=true;S.pinErr="";render();
+  try{const me=await api("api_login",S.pick,S.pin);S.code=S.pin;S.me=me.id;ls.set("vk-code",S.code);ls.set("vk-me",S.me);S.phase="app";S.busyPin=false;S.pin="";
+    if(!S.staff.length)S.staff=S.staffList;render();refresh()}
+  catch(e){S.busyPin=false;S.pin="";S.pinErr=/locked/.test(e.message)?"Շատ սխալ փորձեր։ Սպասեք 10 րոպե։":/bad_pin/.test(e.message)?"Կոդը սխալ է։ Ստուգեք Իլոնայի մոտ։":"Կապ չկա։ Փորձեք նորից։";render()}
+}
+
+/* ---------- events ---------- */
+document.addEventListener("click",async e=>{
+  const b=e.target.closest("[data-act]");if(!b)return;const a=b.dataset.act;
+  if(a==="open"){S.sheet={type:"kid",kid:b.dataset.kid};render()}
+  else if(a==="myroute"){S.sheet={type:"myroute"};render()}
+  else if(a==="close"){S.sheet=null;render()}
+  else if(a==="mark")mark(b.dataset.kind,b.dataset.kid);
+  else if(a==="tab"){S.tab=b.dataset.v;S.q="";S.sheet=null;ls.set("vk-tab",S.tab);render();window.scrollTo(0,0)}
+  else if(a==="filter"){S.filter=(S.filter===b.dataset.v&&b.classList.contains("nbox"))?"all":b.dataset.v;render()}
+  else if(a==="pick"){S.pick=b.dataset.id;S.pin="";S.pinErr="";S.phase="code";render()}
+  else if(a==="repick"){S.phase="pick";S.pin="";S.pinErr="";render()}
+  else if(a==="login")tryLogin();
+  else if(a==="logout")logout();
+  else if(a==="reload")location.reload();
+  else if(a==="hint-x"){ls.set("vk-hint","1");render()}
+  else if(a==="install"&&S.installEvt){S.installEvt.prompt();S.installEvt=null;ls.set("vk-hint","1");render()}
+  else if(a==="week"){b.textContent="Հավաքում եմ…";try{S.week=await api("api_week",S.code);render()}catch(err){toast("Չհաջողվեց");b.textContent="Հավաքել 7 օրվա տվյալները"}}
+  else if(a==="save-settings"){const v=id=>Math.max(1,Math.round(Number(document.getElementById(id).value)||0));const st={playMax:v("set-playMax"),mealAfter:v("set-mealAfter"),teacherMax:v("set-teacherMax"),sessionMax:v("set-sessionMax")};
+    document.activeElement&&document.activeElement.blur();try{await api("api_settings",S.code,st);S.settings=st;toast("Պահպանված է");render()}catch(err){toast("Չպահպանվեց")}}
+  else if(a==="add-kid"){const n=document.getElementById("new-name"),g=document.getElementById("new-grade"),er=document.getElementById("new-err");const name=n.value.trim();
+    if(name.length<2){er.textContent="Գրեք երեխայի անունը";n.focus();return}n.blur();try{await api("api_addKid",S.code,name,g.value);toast(name+" — ավելացված է");refresh()}catch(err){toast("Չպահպանվեց")}}
+});
+document.addEventListener("input",e=>{
+  if(e.target.id==="q"){S.q=e.target.value;render()}
+  else if(e.target.id==="pin"){S.pin=e.target.value.replace(/\D/g,"").slice(0,6);S.pinErr="";render();if(S.pin.length===6)tryLogin()}
+  else if(e.target.id==="new-name"){const er=document.getElementById("new-err");if(er)er.textContent=""}
+});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&S.sheet){S.sheet=null;render()}if(e.key==="Enter"&&e.target.id==="pin")tryLogin()});
+document.addEventListener("change",async e=>{const x=e.target;if(!x.dataset||!x.dataset.assign)return;
+  const r=(S.routes||[]).find(y=>y.kid===x.dataset.kid&&y.kind===x.dataset.kind),old=r?r.staff:"";if(r)r.staff=x.value;x.blur();render();
+  try{await api("api_assign",S.code,dayKey(Date.now()),x.dataset.kid,x.dataset.kind,x.value);toast("Նշանակված է՝ "+sname(x.value))}catch(err){if(r)r.staff=old;render();toast("Չպահպանվեց")}});
+window.addEventListener("scroll",()=>document.getElementById("top").classList.toggle("sh",window.scrollY>4),{passive:true});
+window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();S.installEvt=e;render()});
+
+/* ---------- boot ---------- */
+(function boot(){
+  if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
+  S.code=ls.get("vk-code")||"";S.me=ls.get("vk-me");S.tab=ls.get("vk-tab");
+  if(S.code&&S.me){S.phase="app";render();refresh();loadStaff()}else{S.phase="boot";render();loadStaff()}
+  setInterval(()=>{if(!document.hidden)refresh();else render()},15000);
+  document.addEventListener("visibilitychange",()=>{if(!document.hidden)refresh()});
+})();
+</script>
+</body>
+</html>
