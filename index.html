@@ -26,6 +26,7 @@
   --red:#a8322a; --red-2:#fbe6e2; --sun:#f2b75c;
   --font:"Mardoto","Noto Sans Armenian",-apple-system,system-ui,sans-serif;
   --r:16px; --tab:66px;
+  --ease-out:cubic-bezier(.23,1,.32,1); --ease-drawer:cubic-bezier(.32,.72,0,1);
   color-scheme:light;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -45,11 +46,12 @@ button{cursor:pointer}
 .me{display:flex;align-items:center;gap:10px;min-width:0;flex:1}
 .me-t{min-width:0}
 .me-n{font-weight:700;font-size:17px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.me-r{font-size:13px;color:var(--ink-2);line-height:1.3}
+.me-r{font-size:13px;color:var(--ink-2);line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media (max-width:360px){.top-in{gap:4px}.me .av{display:none}.out{padding:10px 8px}}
 .out{border:0;background:transparent;color:var(--ink-2);font-size:14px;font-weight:500;padding:10px 12px;border-radius:12px;min-height:44px}
-.out:hover{background:var(--wash)}
+@media (hover:hover) and (pointer:fine){.out:hover{background:var(--wash)}}
 .bell{position:relative;border:0;background:transparent;color:var(--ink-2);width:44px;height:44px;border-radius:12px;display:grid;place-items:center;flex:none}
-.bell:hover{background:var(--wash)}
+@media (hover:hover) and (pointer:fine){.bell:hover{background:var(--wash)}}
 .bell .badge{top:2px;left:auto;right:0}
 .ib{padding:12px 0;border-top:1px solid var(--line)}.ib:first-child{border-top:0}
 .ib b{display:block;font-size:16px}.ib p{margin:2px 0 0;color:var(--ink-2);font-size:15px}.ib time{font-size:13px;color:var(--ink-3)}
@@ -85,9 +87,9 @@ button.row:active{background:var(--wash)}
 
 /* buttons */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:14px;min-height:48px;padding:0 20px;font-size:16px;font-weight:600;background:var(--wash);color:var(--ink);text-decoration:none}
-.btn:active{transform:scale(.985)}
+.btn:active{transform:scale(.97)}
 .btn.pri{background:var(--green);color:#fff}
-.btn.pri:hover{background:var(--green-hover)}
+@media (hover:hover) and (pointer:fine){.btn.pri:hover{background:var(--green-hover)}}
 .btn.sm{min-height:42px;padding:0 16px;font-size:15px}
 .btn.full{width:100%}
 .btn.line{background:transparent;box-shadow:inset 0 0 0 1.5px var(--line)}
@@ -141,10 +143,10 @@ button.row:active{background:var(--wash)}
 .badge{position:absolute;top:8px;left:calc(50% + 8px);min-width:20px;height:20px;border-radius:10px;background:var(--red);color:#fff;font-size:12px;font-weight:600;display:grid;place-items:center;padding:0 6px}
 
 /* sheet */
-.scrim{position:fixed;inset:0;z-index:40;background:rgba(20,26,23,.38);opacity:0;transition:opacity .22s cubic-bezier(.2,.8,.2,1)}
-.scrim.in{opacity:1}
-.sheet{position:fixed;z-index:41;left:0;right:0;bottom:0;max-height:88vh;overflow:auto;background:var(--card);border-radius:22px 22px 0 0;padding:10px 20px calc(20px + env(safe-area-inset-bottom,0px));transform:translateY(100%);transition:transform .28s cubic-bezier(.2,.8,.2,1);box-shadow:0 -10px 40px rgba(20,26,23,.18)}
-.sheet.in{transform:none}
+.scrim{position:fixed;inset:0;z-index:40;background:rgba(20,26,23,.38);opacity:0;transition:opacity .2s ease-out}
+.scrim.in{opacity:1;transition-duration:.3s}
+.sheet{position:fixed;z-index:41;left:0;right:0;bottom:0;max-height:88vh;overflow:auto;background:var(--card);border-radius:22px 22px 0 0;padding:10px 20px calc(20px + env(safe-area-inset-bottom,0px));transform:translateY(100%);transition:transform .2s var(--ease-out);will-change:transform;overscroll-behavior:contain;box-shadow:0 -10px 40px rgba(20,26,23,.18)}
+.sheet.in{transform:none;transition:transform .34s var(--ease-drawer)}
 .grab{width:40px;height:5px;border-radius:5px;background:var(--line);margin:0 auto 14px}
 .sh-h{display:flex;align-items:center;gap:14px;margin-bottom:6px}
 .sh-h .av{width:52px;height:52px;font-size:17px}
@@ -173,17 +175,31 @@ button.row:active{background:var(--wash)}
 .doc{font-size:16px;line-height:1.6}.doc h1{font-size:21px;line-height:1.3;margin:6px 0 10px}.doc h2{font-size:18px;margin:18px 0 6px}.doc h3{font-size:16px;margin:14px 0 4px}
 .doc h4{font-size:15px;margin:14px 0 2px;color:var(--green)}.doc p{margin:8px 0}.doc ul,.doc ol{padding-left:22px;margin:6px 0}.doc li{margin:4px 0}.doc table{font-size:14px}.doc td,.doc th{white-space:normal;vertical-align:top;min-width:90px}
 .hbtn{position:relative;border:0;background:transparent;color:var(--ink-2);width:44px;height:44px;border-radius:12px;display:grid;place-items:center;flex:none}
-.hbtn:hover{background:var(--wash)}.hbtn .dot{position:absolute;top:9px;right:9px;width:9px;height:9px;border-radius:50%;background:var(--brand)}
+@media (hover:hover) and (pointer:fine){.hbtn:hover{background:var(--wash)}}.hbtn .dot{position:absolute;top:9px;right:9px;width:9px;height:9px;border-radius:50%;background:var(--brand)}
 .tl .del{flex:none;border:0;background:var(--wash);color:var(--ink-3);border-radius:10px;width:36px;height:32px;margin-left:6px}
 .skel{display:grid;gap:10px;padding:6px 0 18px}.skel i{display:block;height:14px;border-radius:7px;background:linear-gradient(90deg,var(--wash) 0%,var(--line) 50%,var(--wash) 100%);background-size:200% 100%;animation:sk 1.2s linear infinite}.skel i.h{height:22px;width:70%;margin-bottom:6px}.skel i:nth-child(3n){width:85%}.skel i:nth-child(4n){width:60%}
 @keyframes sk{to{background-position:-200% 0}}
 .sheet.drag{transition:none}
 .grab{touch-action:none;cursor:grab;position:relative}.grab::before{content:"";position:absolute;inset:-14px -60px}
 @keyframes fin{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-.fade-in{animation:fin .22s cubic-bezier(.2,.8,.2,1)}
-.toast{animation:fin .2s cubic-bezier(.2,.8,.2,1)}
-button,.btn,.row,.tab,.chip{transition:background-color .15s,transform .12s,box-shadow .15s}
-@media (prefers-reduced-motion:reduce){.scrim,.sheet{transition:none}.btn:active{transform:none}.fade-in,.toast,.skel i{animation:none}}
+@keyframes op{from{opacity:.4}to{opacity:1}}
+@keyframes tin{from{opacity:0;transform:translateY(12px) scale(.97)}to{opacity:1;transform:none}}
+@keyframes flash{0%{background:var(--green-2)}100%{background:transparent}}
+@keyframes shake{0%,100%{transform:none}20%{transform:translateX(-8px)}40%{transform:translateX(7px)}60%{transform:translateX(-5px)}80%{transform:translateX(3px)}}
+@keyframes pop{0%{transform:scale(.6)}60%{transform:scale(1.15)}100%{transform:none}}
+.fade-in{animation:fin .22s var(--ease-out)}
+.tab-in{animation:op .16s ease-out}
+.toast{animation:tin .22s var(--ease-out);transition:opacity .16s ease-out}
+.toast.bye{opacity:0}
+.row.flash{animation:flash 1.1s ease-out;border-radius:12px}
+.dots.shake{animation:shake .38s ease-out}
+.badge.pop,.dot.pop{animation:pop .3s var(--ease-out)}
+button,.btn,.row,.tab,.chip,.nbox,.key{transition:background-color .15s ease,transform .12s var(--ease-out),box-shadow .15s ease}
+.nbox:active,.chip:active,.due:active,.al:active,.hbtn:active,.bell:active,.out:active,.back:active{transform:scale(.97)}
+.tab:active svg{transform:scale(.9)}.tab svg{transition:transform .12s var(--ease-out)}
+button.row:active,.row [data-act]:active{background:var(--wash)}
+.av{transition:background-color .25s ease,color .25s ease}
+@media (prefers-reduced-motion:reduce){.sheet,.sheet.in{transition:none}.btn:active,.nbox:active,.chip:active,.key:active{transform:none}.fade-in,.toast,.dots.shake,.badge.pop,.dot.pop{animation:none}.skel i{animation:none}}
 
 /* login */
 .login{max-width:440px;margin:0 auto;padding-top:4vh}
@@ -210,7 +226,7 @@ button,.btn,.row,.tab,.chip{transition:background-color .15s,transform .12s,box-
 .hint-ic{flex:none;width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--green-2);color:var(--green-ink)}
 .hint b{display:block}
 .hint .x{margin-left:auto;border:0;background:none;color:var(--ink-3);padding:4px 8px;min-height:36px}
-.toast{position:fixed;z-index:50;left:50%;transform:translateX(-50%);bottom:calc(var(--tab) + 16px + env(safe-area-inset-bottom,0px));background:var(--ink);color:#fff;border-radius:16px;padding:8px 8px 8px 18px;display:flex;gap:14px;align-items:center;font-size:15px;max-width:calc(100% - 32px);box-shadow:0 10px 30px rgba(20,26,23,.25)}
+.toast{position:fixed;z-index:50;left:0;right:0;margin:0 auto;width:max-content;bottom:calc(var(--tab) + 16px + env(safe-area-inset-bottom,0px));background:var(--ink);color:#fff;border-radius:16px;padding:8px 8px 8px 18px;display:flex;gap:14px;align-items:center;font-size:15px;max-width:calc(100% - 32px);box-shadow:0 10px 30px rgba(20,26,23,.25)}
 .toast button{border:0;background:rgba(255,255,255,.14);color:#fff;border-radius:12px;min-height:40px;padding:0 14px;font-weight:600}
 main.notabs ~ .toast{bottom:calc(20px + env(safe-area-inset-bottom,0px))}
 .off{background:var(--amber-2);color:var(--amber);border-radius:14px;padding:12px 14px;font-size:15px}
@@ -606,7 +622,7 @@ function cleanHtml(h){const t=document.createElement("template");t.innerHTML=h;c
 const ROLE_OPT=[["teacher","Մանկավարժ"],["coord","Համակարգող"],["cook","Խոհարար"]];
 function teamScreen(){
   if(!S.admin){if(!S.adminLoading){S.adminLoading=1;Promise.all([api("api_staffAdmin",S.code),api("api_docReads",S.code).catch(()=>null)]).then(([l,r])=>{S.admin=l;S.docReads=r;S.adminLoading=0;render()}).catch(()=>{S.adminLoading=0;S.adminErr=1;render()})}
-    return `<div class="stack">${sec("Աշխատակիցներ",null,emptyP(S.adminErr?"Չհաջողվեց բեռնել։ Փորձեք նորից։":"Բեռնվում է…"))}</div>`}
+    return `<div class="stack">${sec("Աշխատակիցներ",null,(S.adminErr?emptyP("Չհաջողվեց բեռնել։ Փորձեք նորից։"):`<div style="padding:12px 0"><div class="skel"><i></i><i></i><i></i></div></div>`))}</div>`}
   if(!Array.isArray(S.admin))return `<div class="stack">${sec("Աշխատակիցներ",null,emptyP("Չհաջողվեց բեռնել։"))}</div>`;
   const on=S.admin.filter(x=>x.active),off=S.admin.filter(x=>!x.active);
   const row=x=>`<div class="row wrap"><div class="av s-${x.active?"play":"out"}">${esc(ini(x.name))}</div><div class="rm"><div class="rn">${esc(x.name)}</div><div class="rs">${esc(ROLE[x.role]||"")}${x.subjects?" · "+esc(x.subjects):""}</div>${x.active?`<div class="code-l num">Կոդ՝ <b>${esc(x.code)}</b></div>`:""}${x.active&&S.docReads?(()=>{const ds=S.docReads.docs.filter(d=>x.role==="owner"||d.roles.includes("all")||d.roles.includes(x.role));const rd=S.docReads.reads[x.id]||{};const n=ds.filter(d=>rd[d.id+"|"+d.version]).length;return `<div class="rs">Փաստաթղթեր՝ կարդացել է ${n}/${ds.length}</div>`})():""}</div>
@@ -632,7 +648,7 @@ function sheetHtml(D,now){
   if(sh.type==="inbox"){
     const list=S.inbox;
     const fmt=t=>{const d=new Date(t),td=dayKey(NOW())===dayKey(t);return (td?"":pad(d.getDate())+"."+pad(d.getMonth()+1)+" ")+hm(t)};
-    return `<div class="sh-n" style="margin-bottom:6px">Ծանուցումներ</div>${!list?`<div class="empty">Բեռնվում է…</div>`:list.length?list.map(x=>`<div class="ib${x.read?"":" new"}"><time class="num">${fmt(x.at)}</time><b>${esc(x.title)}</b><p>${esc(x.body)}</p></div>`).join(""):`<div class="empty">Վերջին 7 օրում ծանուցումներ չկան։</div>`}<div class="acts"><button class="btn full line" data-act="close">Փակել</button></div>`;
+    return `<div class="sh-n" style="margin-bottom:6px">Ծանուցումներ</div>${!list?`<div class="skel"><i></i><i></i><i></i></div>`:list.length?list.map(x=>`<div class="ib${x.read?"":" new"}"><time class="num">${fmt(x.at)}</time><b>${esc(x.title)}</b><p>${esc(x.body)}</p></div>`).join(""):`<div class="empty">Վերջին 7 օրում ծանուցումներ չկան։</div>`}<div class="acts"><button class="btn full line" data-act="close">Փակել</button></div>`;
   }
   if(sh.type==="myroute"){
     const mine=liveRoutes().filter(r=>r.staff===S.me);
@@ -708,12 +724,12 @@ function screen(tab,D,now){
 
 /* ---------- render ---------- */
 function header(tabs){
-  const me=meS();
+  const me=meS();setTimeout(()=>{S.unreadSeen=S.unread},0);
   let h="";
   if(me&&S.phase==="app"){
     h=`<div class="me"><div class="av s-play">${esc(ini(me.name))}</div><div class="me-t"><div class="me-n">${esc(me.name)}</div><div class="me-r">${esc(roleLine(me))}</div></div></div>`;
     if(tabs.length)h+=`<div class="dtabs">${tabs.map(t=>`<button class="dtab ${S.tab===t[0]?"on":""}" data-act="tab" data-v="${t[0]}">${t[1]}${t[3]?`<span class="badge num">${t[3]}</span>`:""}</button>`).join("")}</div>`;
-    h+=`<button class="hbtn" data-act="docs" aria-label="Փաստաթղթեր"><svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4.5h9a3 3 0 0 1 3 3V20H8a3 3 0 0 1-3-3z"/><path d="M17 7.5h2V20h-2"/><path d="M8.5 9h5M8.5 12.5h5"/></svg>${S.docsUnread?`<span class="dot"></span>`:""}</button><button class="bell" data-act="inbox" aria-label="Ծանուցումներ${S.unread?" · "+S.unread+" նոր":""}"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg>${S.unread?`<span class="badge num">${S.unread>99?"99+":S.unread}</span>`:""}</button><button class="out" data-act="logout">Ելք</button>`;
+    h+=`<button class="hbtn" data-act="docs" aria-label="Փաստաթղթեր"><svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4.5h9a3 3 0 0 1 3 3V20H8a3 3 0 0 1-3-3z"/><path d="M17 7.5h2V20h-2"/><path d="M8.5 9h5M8.5 12.5h5"/></svg>${S.docsUnread?`<span class="dot"></span>`:""}</button><button class="bell" data-act="inbox" aria-label="Ծանուցումներ${S.unread?" · "+S.unread+" նոր":""}"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg>${S.unread?`<span class="badge num${S.unread>(S.unreadSeen||0)?" pop":""}">${S.unread>99?"99+":S.unread}</span>`:""}</button><button class="out" data-act="logout">Ելք</button>`;
   }else h=`<div class="me"><img src="icon-192.png" alt="" width="36" height="36" style="border-radius:9px"><div class="me-t"><div class="me-n">Վիկտորյա</div><div class="me-r">ուսումնական կենտրոն</div></div></div>`;
   document.getElementById("hdr").innerHTML=h;
 }
@@ -744,7 +760,7 @@ function render(){
   header(tabs);
   bar.hidden=!tabs.length;app.className=tabs.length?"":"notabs";
   bar.innerHTML=tabs.map(t=>`<button class="tab ${S.tab===t[0]?"on":""}" data-act="tab" data-v="${t[0]}"${S.tab===t[0]?' aria-current="page"':""}>${t[2]}<span>${t[1]}</span>${t[3]?`<span class="badge num">${t[3]}</span>`:""}</button>`).join("");
-  if(lastTabShown!==S.tab){lastTabShown=S.tab;app.classList.remove("fade-in");void app.offsetWidth;app.classList.add("fade-in")}
+  if(lastTabShown!==S.tab){lastTabShown=S.tab;app.classList.remove("tab-in");void app.offsetWidth;app.classList.add("tab-in")}
   app.innerHTML=(S.offline?`<div class="off" style="margin-bottom:14px">Կապ չկա։ ${Q.get().length?Q.get().length+" նշում կուղարկվի, երբ կապը վերականգնվի։":"Ցույց է տրված վերջին տվյալները։"}</div>`:"")+screen(S.tab,D,now);
   if(keepQ){const q=document.getElementById("q");if(q){q.focus({preventScroll:true});try{q.setSelectionRange(keepQ[0],keepQ[1])}catch(e){}}}
   renderSheet(D,now);
@@ -766,25 +782,34 @@ async function flush(){
   finally{flushing=false}
 }
 let toastT;
+function hideToast(){const el=document.getElementById("toast");if(el.hidden)return;el.classList.add("bye");clearTimeout(toastT);toastT=setTimeout(()=>{el.hidden=true;el.classList.remove("bye")},170)}
 function toast(text,undo){
   const el=document.getElementById("toast");
   el.innerHTML=`<span>${esc(text)}</span>`+(undo?`<button id="undo">Չեղարկել</button>`:"");
-  el.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>{el.hidden=true;S.lastId=null},undo?60000:3200);
+  el.classList.remove("bye");if(!el.hidden){el.style.animation="none";void el.offsetWidth;el.style.animation=""}
+  el.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>{hideToast();S.lastId=null},undo?60000:3200);
   const b=document.getElementById("undo");
-  if(b)b.onclick=async()=>{const id=S.lastId;S.lastId=null;el.hidden=true;if(!id)return;S.marks=S.marks.filter(m=>m.id!==id);render();try{await api("api_undo",S.code,id)}catch(e){toast("Չհաջողվեց չեղարկել");refresh()}};
+  if(b)b.onclick=async()=>{const id=S.lastId;S.lastId=null;hideToast();if(!id)return;
+    const m=S.marks.find(x=>x.id===id);S.marks=S.marks.filter(x=>x.id!==id);render();
+    if(String(id).startsWith("tmp")){if(m)m.cancelled=1;return}
+    try{await api("api_undo",S.code,id)}catch(e){toast("Չհաջողվեց չեղարկել");refresh()}};
 }
 const KT={noschool:"այսօր դաս չկա",absent:"այսօր չի գալու",arrive:"եկավ",take:"ձեզ մոտ է",done:"արեց",stop:"չավարտեց",meal:"նստեց ուտելու",ate:"կերավ",play:"խաղասենյակում է",home:"գնաց տուն",pickup:"վերցված է դպրոցից",dropoff:"տարված է դպրոց"};
+function flashKid(kid){if(!kid||kid==="*")return;requestAnimationFrame(()=>{const el=document.querySelector(`#app [data-kid="${CSS.escape(kid)}"]`);const row=el&&el.closest(".row");if(!row)return;row.classList.remove("flash");void row.offsetWidth;row.classList.add("flash");setTimeout(()=>row.classList.remove("flash"),1200)})}
 async function mark(kind,kid,subject,who,other){
   const me=meS();if(!me)return;
   if(kind==="take"&&!subject)subject=mySubjects()[0]||"";
   const tapAt=Date.now();
   const tmp={id:"tmp"+tapAt,kind,kid,staff:S.me,subject:kind==="take"?subject:"",at:NOW(),day:S.day,who:(other?"⚠ ":"")+(who||"")};
-  S.marks.push(tmp);if(S.sheet&&S.sheet.type==="kid"&&kind!=="take"&&kind!=="arrive")S.sheet=null;if(S.sheet&&S.sheet.type==="kid")S.sheet=null;render();
+  S.marks.push(tmp);if(S.sheet&&S.sheet.type==="kid")S.sheet=null;render();flashKid(kid);
   try{navigator.vibrate&&navigator.vibrate(12)}catch(e){}
-  try{const r=await api("api_mark",S.code,kind,kid,subject||"",tapAt,Date.now(),who||"",other?1:0);tmp.id=r.id;tmp.at=r.at;S.lastId=r.id;toast(kid==="*"?KT[kind]:kidName(kid)+" — "+KT[kind],true)}
+  S.lastId=tmp.id;toast(kid==="*"?KT[kind]:kidName(kid)+" — "+KT[kind],true);
+  try{const r=await api("api_mark",S.code,kind,kid,subject||"",tapAt,Date.now(),who||"",other?1:0);
+    if(tmp.cancelled){try{await api("api_undo",S.code,r.id)}catch(e){refresh()}return}
+    tmp.id=r.id;tmp.at=r.at;if(S.lastId===("tmp"+tapAt))S.lastId=r.id}
   catch(e){
     if(e.message==="offline"){const q=Q.get();q.push({tmp:tmp.id,kind,kid,subject:subject||"",tapAt});Q.set(q);tmp.pending=1;S.offline=true;render();toast("Կապ չկա։ Նշումը կուղարկվի, երբ կապը վերականգնվի։")}
-    else{S.marks=S.marks.filter(m=>m!==tmp);render();if(/bad_pin|locked/.test(e.message))logout("Կոդը այլևս չի գործում։ Մուտք գործեք նորից։");else toast(/no_right/.test(e.message)?"Այս նշումը ձեզ համար չէ։":"Չպահպանվեց։ Փորձեք նորից։")}}
+    else{S.marks=S.marks.filter(m=>m!==tmp);if(S.lastId===tmp.id){S.lastId=null;hideToast()}render();if(/bad_pin|locked/.test(e.message))logout("Կոդը այլևս չի գործում։ Մուտք գործեք նորից։");else toast(/no_right/.test(e.message)?"Այս նշումը ձեզ համար չէ։":"Չպահպանվեց։ Փորձեք նորից։")}}
 }
 let busy=false;
 let lastSig="";
@@ -813,7 +838,8 @@ async function tryLogin(){
   try{const code=S.pin,t0=Date.now(),st=await api("api_state",code);
     S.code=code;applyState(st,t0);
     ls.set("vk-code",S.code);ls.set("vk-me",S.me);S.phase="app";S.busyPin=false;S.pin="";S.tab=null;render()}
-  catch(e){S.busyPin=false;S.pin="";S.pinErr=/locked/.test(e.message)?"Շատ սխալ փորձեր։ Սպասեք 10 րոպե։":/bad_pin/.test(e.message)?"Կոդը սխալ է։ Ստուգեք Իլոնայի մոտ։":"Կապ չկա։ Փորձեք նորից։";render()}
+  catch(e){S.busyPin=false;S.pin="";S.pinErr=/locked/.test(e.message)?"Շատ սխալ փորձեր։ Սպասեք 10 րոպե։":/bad_pin/.test(e.message)?"Կոդը սխալ է։ Ստուգեք Իլոնայի մոտ։":"Կապ չկա։ Փորձեք նորից։";render();
+    requestAnimationFrame(()=>{const d=document.getElementById("dots");if(d){d.classList.remove("shake");void d.offsetWidth;d.classList.add("shake")}try{navigator.vibrate&&navigator.vibrate([30,40,30])}catch(e){}})}
 }
 
 /* ---------- events ---------- */
@@ -892,17 +918,18 @@ document.addEventListener("input",e=>{
   else if(e.target.id==="new-name"){const er=document.getElementById("new-err");if(er)er.textContent=""}
 });
 /* свайп вниз закрывает лист (на телефоне) */
-(()=>{let y0=0,dy=0,t0=0,sh=null,on=false;const box=document.getElementById("sheetbox");
+(()=>{let y0=0,dy=0,t0=0,sh=null,on=false,vy=0,ly=0,lt=0;const box=document.getElementById("sheetbox");
   const mobile=()=>!matchMedia("(min-width:960px)").matches;
   box.addEventListener("touchstart",e=>{if(!mobile())return;const s=e.target.closest(".sheet");if(!s||e.touches.length>1)return;
     if(e.target.closest("input,select,textarea,.tbl"))return;
-    if(!e.target.closest(".grab")&&s.scrollTop>0)return;sh=s;y0=e.touches[0].clientY;dy=0;t0=Date.now();on=false},{passive:true});
+    if(!e.target.closest(".grab")&&s.scrollTop>0)return;sh=s;y0=ly=e.touches[0].clientY;dy=0;t0=lt=Date.now();vy=0;on=false},{passive:true});
   box.addEventListener("touchmove",e=>{if(!sh)return;const d=e.touches[0].clientY-y0;
     if(!on){if(d<6){if(d<-6)sh=null;return}if(sh.scrollTop>0){sh=null;return}on=true;sh.classList.add("drag")}
+    const tn=Date.now(),yn=e.touches[0].clientY;if(tn>lt)vy=0.6*vy+0.4*((yn-ly)/(tn-lt));ly=yn;lt=tn;
     dy=Math.max(0,d);sh.style.transform=`translateY(${dy}px)`;const sc=box.querySelector(".scrim");if(sc)sc.style.opacity=String(Math.max(0,1-dy/400));if(e.cancelable)e.preventDefault()},{passive:false});
   const end=()=>{if(!sh)return;const s=sh;sh=null;if(!on)return;on=false;s.classList.remove("drag");const sc=box.querySelector(".scrim");
-    const fast=dy>40&&dy/(Date.now()-t0)>0.5;
-    if(dy>110||fast){s.style.transform="translateY(100%)";if(sc)sc.style.opacity="0";setTimeout(()=>{s.style.transform="";if(sc)sc.style.opacity="";S.sheet=null;render()},230)}
+    const fast=dy>24&&vy>0.35;
+    if(dy>110||fast){s.style.transition="transform .2s var(--ease-out)";s.style.transform="translateY(100%)";if(sc)sc.style.opacity="0";setTimeout(()=>{s.style.transition="";s.style.transform="";if(sc)sc.style.opacity="";S.sheet=null;render()},210)}
     else{s.style.transform="";if(sc)sc.style.opacity=""}};
   box.addEventListener("touchend",end);box.addEventListener("touchcancel",end)})();
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&S.sheet){S.sheet=null;render()}if(S.phase==="code"){if(/^[0-9]$/.test(e.key)&&S.pin.length<8){S.pin+=e.key;S.pinErr="";pinUpdate()}else if(e.key==="Backspace"){S.pin=S.pin.slice(0,-1);pinUpdate()}else if(e.key==="Enter")tryLogin()}});
