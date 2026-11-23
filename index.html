@@ -100,7 +100,9 @@ button.row:active{background:var(--wash)}
 .nbox span{font-size:13px;color:var(--ink-2)}
 .nbox.on{box-shadow:0 0 0 2px var(--ink)}
 .nbox.k-class b{color:var(--blue)} .nbox.k-play b{color:var(--green)} .nbox.k-meal b{color:var(--amber)} .nbox.k-road b{color:var(--violet)}
-@media (max-width:420px){.nums{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:640px){.nums{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.nbox span{display:block;overflow-wrap:anywhere;line-height:1.3}
+.nbox{min-width:0}
 
 /* alerts */
 .alerts{display:flex;flex-direction:column;gap:8px}
@@ -173,7 +175,7 @@ button.row:active{background:var(--wash)}
 
 /* install hint, toast, offline */
 .hint{display:flex;gap:12px;align-items:flex-start;background:var(--card);border-radius:var(--r);box-shadow:0 0 0 1px var(--line);padding:14px 16px;font-size:15px}
-.hint img{width:44px;height:44px;border-radius:10px;flex:none}
+.hint-ic{flex:none;width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--green-2);color:var(--green-ink)}
 .hint b{display:block}
 .hint .x{margin-left:auto;border:0;background:none;color:var(--ink-3);padding:4px 8px;min-height:36px}
 .toast{position:fixed;z-index:50;left:50%;transform:translateX(-50%);bottom:calc(var(--tab) + 16px + env(safe-area-inset-bottom,0px));background:var(--ink);color:#fff;border-radius:16px;padding:8px 8px 8px 18px;display:flex;gap:14px;align-items:center;font-size:15px;max-width:calc(100% - 32px);box-shadow:0 10px 30px rgba(20,26,23,.25)}
@@ -343,10 +345,10 @@ function dueBanner(now){
 function pushCard(){
   const ios=/iphone|ipad|ipod/i.test(navigator.userAgent),standalone=window.matchMedia("(display-mode: standalone)").matches||navigator.standalone;
   if(!("Notification" in window)||!("serviceWorker" in navigator)||!("PushManager" in window)){
-    return ios&&!standalone?`<div class="hint"><img src="icon-192.png" alt=""><div><b>Ծանուցումներ</b>Ծանուցումներ ստանալու համար նախ ավելացրեք հավելվածը գլխավոր էկրանին և բացեք այնտեղից։</div></div>`:"";}
-  if(Notification.permission==="denied")return `<div class="hint"><img src="icon-192.png" alt=""><div><b>Ծանուցումներն անջատված են</b>Միացրեք դրանք հեռախոսի կարգավորումներում՝ Վիկտորյա հավելվածի համար։</div></div>`;
-  if(Notification.permission==="granted"&&ls.get("vk-push-me")===S.me)return "";
-  return `<div class="hint"><img src="icon-192.png" alt=""><div><b>Միացրեք ծանուցումները</b>Կիմանաք, երբ է ժամը գնալ դպրոց${meS()&&meS().role!=="teacher"?", և եթե ինչ-որ բան այն չէ":""}։<div style="margin-top:10px"><button class="btn sm pri" data-act="push-on">Միացնել</button></div></div></div>`;
+    return ios&&!standalone?`<div class="hint"><span class="hint-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg></span><div><b>Ծանուցումներ</b>Ծանուցումներ ստանալու համար նախ ավելացրեք հավելվածը գլխավոր էկրանին և բացեք այնտեղից։</div></div>`:"";}
+  if(Notification.permission==="denied")return `<div class="hint"><span class="hint-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg></span><div><b>Ծանուցումներն անջատված են</b>Միացրեք դրանք հեռախոսի կարգավորումներում՝ Վիկտորյա հավելվածի համար։</div></div>`;
+  if(Notification.permission==="granted")return "";
+  return `<div class="hint"><span class="hint-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg></span><div><b>Միացրեք ծանուցումները</b>Կիմանաք, երբ է ժամը գնալ դպրոց${meS()&&meS().role!=="teacher"?", և եթե ինչ-որ բան այն չէ":""}։<div style="margin-top:10px"><button class="btn sm pri" data-act="push-on">Միացնել</button></div></div></div>`;
 }
 const b64uToU8=s=>{const p="=".repeat((4-s.length%4)%4),b=atob((s+p).replace(/-/g,"+").replace(/_/g,"/"));return Uint8Array.from(b,c=>c.charCodeAt(0))};
 async function subscribePush(test){
@@ -359,14 +361,14 @@ async function subscribePush(test){
 async function enablePush(){
   try{const perm=await Notification.requestPermission();
     if(perm!=="granted"){toast("Ծանուցումները չեն միացվել");render();return}
-    toast("Միացնում եմ…");await subscribePush(true);toast("Ծանուցումները միացված են։ Փորձնական ծանուցումը կգա մի քանի վայրկյանից։");render()}
-  catch(e){toast("Չհաջողվեց միացնել ծանուցումները");render()}
+    render();toast("Միացնում եմ…");await subscribePush(true);toast("Ծանուցումները միացված են։ Փորձնական ծանուցումը կգա մի քանի վայրկյանից։")}
+  catch(e){toast("Ծանուցումները թույլատրված են։ Միացումը կավարտվի ավտոմատ։");render()}
 }
 function installHint(){
   if(ls.get("vk-hint")==="1"||window.matchMedia("(display-mode: standalone)").matches||navigator.standalone) return "";
   const ios=/iphone|ipad|ipod/i.test(navigator.userAgent);
   const how=ios?"Safari-ում սեղմեք «Կիսվել» կոճակը, հետո «Գլխավոր էկրանին»":(S.installEvt?"":"Բրաուզերի մենյուում ընտրեք «Ավելացնել գլխավոր էկրանին»");
-  return `<div class="hint"><img src="icon-192.png" alt=""><div><b>Ավելացրեք հեռախոսի էկրանին</b>${how}${S.installEvt?`<div style="margin-top:8px"><button class="btn sm pri" data-act="install">Տեղադրել</button></div>`:""}</div><button class="x" data-act="hint-x" aria-label="Փակել">✕</button></div>`;
+  return `<div class="hint"><span class="hint-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="3" width="10" height="18" rx="2"/><path d="M11 18h2"/></svg></span><div><b>Ավելացրեք հեռախոսի էկրանին</b>${how}${S.installEvt?`<div style="margin-top:8px"><button class="btn sm pri" data-act="install">Տեղադրել</button></div>`:""}</div><button class="x" data-act="hint-x" aria-label="Փակել">✕</button></div>`;
 }
 
 /* ---------- screens ---------- */
@@ -416,7 +418,8 @@ function nowScreen(D,now){
     return `<div class="row"><div class="av s-${n>S.settings.teacherMax?"bad":n?"class":"out"}">${esc(ini(s.name))}</div><div class="rm"><div class="rn">${esc(s.name)}</div><div class="rs">${esc(s.subject||"")}</div></div><div class="rt num">${n} երեխա</div></div>`}).join("")));
   const F=[["all","Բոլորը"],["center","Կենտրոնում"],["class","Դասին"],["play","Խաղասենյակ"],["meal","Ճաշ"],["road","Ճանապարհին"],["school","Դպրոցում"],["none","Չեն եկել"],["home","Գնացել են"]];
   const list=D.kids.filter(k=>(S.filter==="all"||(S.filter==="center"?k.inCenter:k.place===S.filter))&&matchQ(k));
-  const listH=sec("Ով որտեղ է",list.length,search()+`<div class="chips">${F.map(f=>`<button class="chip ${S.filter===f[0]?"on":""}" data-act="filter" data-v="${f[0]}">${f[1]}</button>`).join("")}</div>`+(list.length?panel(list.map(k=>kidRow(k,now)).join("")):emptyP("Այս ցուցակում ոչ ոք չկա։")));
+  const FN={all:"Ով որտեղ է",center:"Կենտրոնում",class:"Դասին",play:"Խաղասենյակում",meal:"Ճաշի",road:"Ճանապարհին",school:"Դպրոցում",none:"Դեռ չեն եկել",home:"Գնացել են"};
+  const listH=`<div id="kidlist" style="scroll-margin-top:80px"></div>`+sec(FN[S.filter]||"Ով որտեղ է",list.length,search()+`<div class="chips">${F.map(f=>`<button class="chip ${S.filter===f[0]?"on":""}" data-act="filter" data-v="${f[0]}">${f[1]}</button>`).join("")}</div>`+(list.length?panel(list.map(k=>kidRow(k,now)).join("")):emptyP("Այս ցուցակում ոչ ոք չկա։")));
   return `<div class="stack">${installHint()}${pushCard()}<div class="two"><div class="stack">${nums}${alertsH}${teachH}</div><div class="stack">${listH}</div></div></div>`;
 }
 function cookScreen(D,now){
@@ -615,18 +618,21 @@ async function mark(kind,kid,subject){
     else{S.marks=S.marks.filter(m=>m!==tmp);render();if(/bad_pin|locked/.test(e.message))logout("Կոդը այլևս չի գործում։ Մուտք գործեք նորից։");else toast(/no_right/.test(e.message)?"Այս նշումը ձեզ համար չէ։":"Չպահպանվեց։ Փորձեք նորից։")}}
 }
 let busy=false;
+let lastSig="";
+function sigOf(st){return JSON.stringify([st.me&&st.me.id,st.kids,st.staff,st.settings,st.marks,st.routes,st.noSchool])}
 function applyState(st,t0){
   const was=S.me;
   S.offset=st.serverNow-Math.round((t0+Date.now())/2);S.day=st.day;S.me=st.me.id;S.staff=st.staff.sort((a,b)=>a.order-b.order);S.kids=st.kids;S.settings=st.settings;
   S.marks=st.marks.concat(queuedAsMarks());S.routes=st.routes||[];S.noSchool=!!st.noSchool;S.sheetUrl=st.sheetUrl||"";S.offline=Q.get().length>0;
-  try{if(("Notification" in window)&&Notification.permission==="granted"&&ls.get("vk-push-me")!==S.me&&"PushManager" in window)subscribePush(false).catch(()=>{})}catch(e){}
+  try{if(("Notification" in window)&&Notification.permission==="granted"&&ls.get("vk-push-me")!==S.me&&"PushManager" in window&&!S.subTry){S.subTry=1;subscribePush(false).catch(()=>{}).finally(()=>{setTimeout(()=>{S.subTry=0},120000)})}}catch(e){}
 }
 async function refresh(){
   if(busy||!S.code||S.phase!=="app")return;busy=true;
-  try{await flush();const t0=Date.now(),st=await api("api_state",S.code);applyState(st,t0)}
+  let changed=true;
+  try{await flush();const t0=Date.now(),st=await api("api_state",S.code);const sig=sigOf(st);changed=sig!==lastSig||Q.get().length>0||S.offline;lastSig=sig;applyState(st,t0)}
   catch(e){if(/bad_pin|locked/.test(e.message)){busy=false;logout("Կոդը այլևս չի գործում։ Մուտք գործեք նորից։");return}S.offline=true}
   finally{busy=false}
-  render();
+  if(changed)render();
 }
 function logout(msg){S.code="";S.me=null;S.pin="";S.pinErr=msg||"";S.sheet=null;S.week=null;S.tab=null;S.marks=[];S.staff=[];ls.set("vk-code",null);ls.set("vk-me",null);ls.set("vk-tab",null);S.phase="code";render()}
 async function tryLogin(){
@@ -650,7 +656,8 @@ document.addEventListener("click",async e=>{
   else if(a==="leave"){const k=kidById(b.dataset.kid);if(!k||!confirm(k.name+" այլևս չի՞ հաճախում։ Նա կհեռանա ցուցակներից, պատմությունը կմնա։"))return;S.sheet=null;try{await api("api_setActive",S.code,k.id,false);toast(k.name+" — հեռացված է ցուցակից")}catch(err){toast("Չհաջողվեց")}refresh()}
   else if(a==="comeback"){try{await api("api_setActive",S.code,b.dataset.kid,true);toast("Վերադարձված է")}catch(err){toast("Չհաջողվեց")}refresh()}
   else if(a==="tab"){S.tab=b.dataset.v;S.q="";S.sheet=null;ls.set("vk-tab",S.tab);render();window.scrollTo(0,0)}
-  else if(a==="filter"){S.filter=(S.filter===b.dataset.v&&b.classList.contains("nbox"))?"all":b.dataset.v;render()}
+  else if(a==="filter"){const tile=b.classList.contains("nbox");S.filter=(S.filter===b.dataset.v&&tile)?"all":b.dataset.v;render();
+    if(tile){const l=document.getElementById("kidlist");if(l&&window.innerWidth<960)l.scrollIntoView({behavior:"smooth",block:"start"})}}
   else if(a==="login")tryLogin();
   else if(a==="pin-key"){if(S.pin.length<6){S.pin+=b.dataset.v;S.pinErr="";pinUpdate()}}
   else if(a==="pin-del"){S.pin=S.pin.slice(0,-1);S.pinErr="";pinUpdate()}
