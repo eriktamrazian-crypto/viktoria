@@ -494,14 +494,9 @@ function header(tabs){
   document.getElementById("hdr").innerHTML=h;
 }
 function loginHtml(){
-  if(S.phase==="pick"){
-    const list=S.staffList;
-    return `<div class="login"><h1>Ո՞վ եք դուք</h1><p>Սեղմեք ձեր անվան վրա</p>${list.length?panel(list.map(s=>`<button class="row" data-act="pick" data-id="${esc(s.id)}"><div class="av s-play">${esc(ini(s.name))}</div><div class="rm"><div class="rn">${esc(s.name)}</div><div class="rs">${esc(roleLine(s))}</div></div>${IC.chev}</button>`).join("")):`<div class="empty">Բեռնվում է…</div>`}</div>`;
-  }
-  const s=staffById(S.pick)||{};
   const cells=[0,1,2,3,4,5].map(i=>`<span class="num${i===S.pin.length?" f":""}">${S.pin[i]?"•":""}</span>`).join("");
-  return `<div class="login"><button class="back" data-act="repick">← Այլ անուն</button><h1>${esc(s.name||"")}</h1><p>Մուտքագրեք ձեր 6-նիշանոց կոդը։ Կոդը տալիս է Իլոնան։</p>
-    <label class="code" for="pin">${cells}</label><input id="pin" class="pinin" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="one-time-code" value="${esc(S.pin)}" aria-label="Կոդ">
+  return `<div class="login"><h1>Մուտք</h1><p>Մուտքագրեք ձեր անձնական կոդը։ Կոդը տալիս է Իլոնան։</p>
+    <label class="code" for="pin">${cells}</label><input id="pin" class="pinin" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="one-time-code" value="${esc(S.pin)}" aria-label="Անձնական կոդ">
     <div class="err">${esc(S.pinErr)}</div>
     <button class="btn full pri" data-act="login" ${S.busyPin?"disabled":""}>${S.busyPin?"Ստուգում եմ…":"Մուտք"}</button></div>`;
 }
@@ -514,6 +509,7 @@ function render(){
     app.innerHTML=S.phase==="boot"?`<div class="empty">Բեռնվում է…</div>`:S.phase==="error"?`<div class="off">${esc(S.err||"Կապ չկա։")}</div><div style="height:12px"></div><button class="btn pri" data-act="reload">Փորձել նորից</button>`:loginHtml();
     if(S.phase==="code"){const p=document.getElementById("pin");if(p&&document.activeElement!==p)setTimeout(()=>p.focus({preventScroll:true}),30)}
     renderSheet(null,now);return}
+  if(!meS()){header([]);bar.hidden=true;app.className="notabs";app.innerHTML=`<div class="empty">Բեռնվում է…</div>`;return}
   const D=derive(S.marks),tabs=tabsFor(meS().role,D,now);
   if(tabs.length&&!tabs.some(t=>t[0]===S.tab))S.tab=tabs[0][0];
   header(tabs);
@@ -555,13 +551,13 @@ async function refresh(){
   finally{busy=false}
   render();
 }
-function logout(msg){S.code="";S.me=null;S.pick=null;S.pin="";S.pinErr=msg||"";S.sheet=null;S.week=null;S.tab=null;S.marks=[];ls.set("vk-code",null);ls.set("vk-me",null);S.phase="pick";render();loadStaff()}
-async function loadStaff(){try{S.staffList=await api("api_staffList");if(S.phase==="boot")S.phase="pick";render()}catch(e){if(S.phase==="boot"||S.phase==="pick"){S.phase="error";S.err="Չհաջողվեց կապվել։ Ստուգեք ինտերնետը։";render()}}}
+function logout(msg){S.code="";S.me=null;S.pin="";S.pinErr=msg||"";S.sheet=null;S.week=null;S.tab=null;S.marks=[];S.staff=[];ls.set("vk-code",null);ls.set("vk-me",null);ls.set("vk-tab",null);S.phase="code";render()}
 async function tryLogin(){
   if(S.busyPin)return;if(!/^\d{6}$/.test(S.pin)){S.pinErr="Կոդը 6 թիվ է";render();return}
   S.busyPin=true;S.pinErr="";render();
-  try{const me=await api("api_login",S.pick,S.pin);S.code=S.pin;S.me=me.id;ls.set("vk-code",S.code);ls.set("vk-me",S.me);S.phase="app";S.busyPin=false;S.pin="";
-    if(!S.staff.length)S.staff=S.staffList;render();refresh()}
+  try{const code=S.pin,st=await api("api_state",code,dayKey(Date.now()));
+    S.code=code;S.me=st.me.id;S.staff=st.staff.sort((a,b)=>a.order-b.order);S.kids=st.kids;S.settings=st.settings;S.marks=st.marks;S.routes=st.routes||[];S.sheetUrl=st.sheetUrl||"";
+    ls.set("vk-code",S.code);ls.set("vk-me",S.me);S.phase="app";S.busyPin=false;S.pin="";S.tab=null;render()}
   catch(e){S.busyPin=false;S.pin="";S.pinErr=/locked/.test(e.message)?"Շատ սխալ փորձեր։ Սպասեք 10 րոպե։":/bad_pin/.test(e.message)?"Կոդը սխալ է։ Ստուգեք Իլոնայի մոտ։":"Կապ չկա։ Փորձեք նորից։";render()}
 }
 
@@ -574,8 +570,6 @@ document.addEventListener("click",async e=>{
   else if(a==="mark")mark(b.dataset.kind,b.dataset.kid);
   else if(a==="tab"){S.tab=b.dataset.v;S.q="";S.sheet=null;ls.set("vk-tab",S.tab);render();window.scrollTo(0,0)}
   else if(a==="filter"){S.filter=(S.filter===b.dataset.v&&b.classList.contains("nbox"))?"all":b.dataset.v;render()}
-  else if(a==="pick"){S.pick=b.dataset.id;S.pin="";S.pinErr="";S.phase="code";render()}
-  else if(a==="repick"){S.phase="pick";S.pin="";S.pinErr="";render()}
   else if(a==="login")tryLogin();
   else if(a==="logout")logout();
   else if(a==="reload")location.reload();
@@ -603,7 +597,7 @@ window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();S.installEv
 (function boot(){
   if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
   S.code=ls.get("vk-code")||"";S.me=ls.get("vk-me");S.tab=ls.get("vk-tab");
-  if(S.code&&S.me){S.phase="app";render();refresh();loadStaff()}else{S.phase="boot";render();loadStaff()}
+  if(S.code&&S.me){S.phase="app";S.phase="app";render();refresh()}else{S.phase="code";render()}
   setInterval(()=>{if(!document.hidden)refresh();else render()},15000);
   document.addEventListener("visibilitychange",()=>{if(!document.hidden)refresh()});
 })();
