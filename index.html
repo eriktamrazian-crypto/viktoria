@@ -148,6 +148,7 @@ button.row:active{background:var(--wash)}
 .tl i{flex:none;width:10px;height:10px;border-radius:50%;margin-top:6px}
 .tl .k-class{background:var(--blue)} .tl .k-play{background:var(--green)} .tl .k-meal{background:var(--amber)} .tl .k-road{background:var(--violet)} .tl .k-out{background:var(--ink-3)}
 .sh-sub{font-size:13px;font-weight:600;color:var(--ink-3);margin:18px 0 0}
+.tl .del{flex:none;border:0;background:var(--wash);color:var(--ink-3);border-radius:10px;width:36px;height:32px;margin-left:6px}
 @media (prefers-reduced-motion:reduce){.scrim,.sheet{transition:none}.btn:active{transform:none}}
 
 /* login */
@@ -222,6 +223,7 @@ const S={staffList:[],staff:[],kids:[],marks:[],routes:[],week:null,settings:{pl
   me:null,code:"",pick:null,pin:"",pinErr:"",phase:"boot",tab:null,filter:"all",q:"",sheet:null,offline:false,lastId:null,busyPin:false,sheetUrl:""};
 const ls={get:k=>{try{return localStorage.getItem(k)}catch(e){return null}},set:(k,v)=>{try{v==null?localStorage.removeItem(k):localStorage.setItem(k,v)}catch(e){}}};
 
+const NOW=()=>Date.now()+(S.offset||0);
 const pad=n=>String(n).padStart(2,"0");
 const dayKey=x=>{const d=new Date(x);return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())};
 const hm=x=>{const d=new Date(x);return pad(d.getHours())+":"+pad(d.getMinutes())};
@@ -234,6 +236,10 @@ const sname=id=>(staffById(id)||{}).name||"ոչ ոք";
 const meS=()=>staffById(S.me);
 const kidById=id=>S.kids.find(k=>k.id===id);
 const kidName=id=>(kidById(id)||{}).name||"—";
+const activeKids=()=>S.kids.filter(k=>k.active!==false);
+const absentIds=()=>new Set(S.marks.filter(m=>m.kind==="absent").map(m=>m.kid));
+const liveRoutes=()=>{const ab=absentIds(),act=new Set(activeKids().map(k=>k.id));return (S.routes||[]).filter(r=>act.has(r.kid)&&!ab.has(r.kid))};
+const mySubjects=()=>{const me=meS();return me?(me.subjects&&me.subjects.length?me.subjects:(me.subject?[me.subject]:[])):[]};
 const ROLE={owner:"տնօրեն",coord:"համակարգող",teacher:"մանկավարժ",cook:"խոհարար"};
 const roleLine=s=>s?(s.role==="teacher"||s.role==="coord")&&s.subject?(s.role==="coord"?"համակարգող · ":"")+s.subject:ROLE[s.role]||"":"";
 const grade=k=>k.grade?k.grade+"-րդ դասարան":"";
@@ -241,15 +247,16 @@ const grade=k=>k.grade?k.grade+"-րդ դասարան":"";
 /* ---------- day model ---------- */
 function derive(marks){
   const kids={};
-  S.kids.forEach(k=>kids[k.id]={...k,inCenter:false,place:"none",since:null,teacher:null,subject:null,ate:false,done:{},arrivedAt:null,events:[]});
+  activeKids().forEach(k=>kids[k.id]={...k,inCenter:false,place:"none",since:null,teacher:null,subject:null,ate:false,done:{},arrivedAt:null,events:[],absent:false});
   const sessions=[],open={};
   [...marks].sort((a,b)=>a.at-b.at).forEach(m=>{
     const k=kids[m.kid];if(!k)return;
     const close=res=>{const o=open[m.kid];if(o){o.end=m.at;o.result=res;delete open[m.kid]}};
     const free=()=>{k.teacher=null;k.subject=null};
-    if(m.kind==="arrive"){close("closed");k.inCenter=true;k.place="play";k.since=m.at;k.arrivedAt=k.arrivedAt||m.at;free()}
+    if(m.kind==="absent"){if(!k.inCenter&&k.place==="none"){k.absent=true;k.place="absent";k.since=m.at}}
+    else if(m.kind==="arrive"){close("closed");k.absent=false;k.inCenter=true;k.place="play";k.since=m.at;k.arrivedAt=k.arrivedAt||m.at;free()}
     else if(m.kind==="take"){close("closed");k.inCenter=true;k.arrivedAt=k.arrivedAt||m.at;k.place="class";k.since=m.at;k.teacher=m.staff;k.subject=m.subject;
-      const s={kid:m.kid,teacher:m.staff,subject:m.subject,start:m.at,end:null,result:null,day:m.day};sessions.push(s);open[m.kid]=s;k.events.push({at:m.at,sess:s})}
+      const s={kid:m.kid,teacher:m.staff,subject:m.subject,start:m.at,end:null,result:null,day:m.day};sessions.push(s);open[m.kid]=s;k.events.push({at:m.at,sess:s,id:m.id})}
     else if(m.kind==="done"||m.kind==="stop"){const o=open[m.kid];if(o){o.end=m.at;o.result=m.kind==="done"?"done":"not_done";delete open[m.kid];if(m.kind==="done")k.done[o.subject]=m.at}
       k.place="play";k.since=m.at;free()}
     else if(m.kind==="meal"){close("closed");k.place="meal";k.since=m.at;free()}
@@ -258,7 +265,7 @@ function derive(marks){
     else if(m.kind==="home"){close("closed");k.inCenter=false;k.place="home";k.since=m.at;k.leftAt=m.at;free()}
     else if(m.kind==="pickup"){close("closed");k.inCenter=false;k.place="road";k.since=m.at;k.escort=m.staff;free()}
     else if(m.kind==="dropoff"){close("closed");k.inCenter=false;k.place="school";k.since=m.at;k.escort=m.staff;free()}
-    if(m.kind!=="take"&&m.kind!=="done"&&m.kind!=="stop")k.events.push({at:m.at,m});
+    if(m.kind!=="take")k.events.push({at:m.at,m,id:m.id,hide:m.kind==="done"||m.kind==="stop"});
   });
   return {kids:Object.values(kids).sort((a,b)=>a.name.localeCompare(b.name,"hy")),sessions};
 }
@@ -270,19 +277,20 @@ function state(k,now){
   if(k.place==="road") return {c:"road",w:"Ճանապարհին · "+sname(k.escort),t:dur(now-k.since)};
   if(k.place==="school") return {c:"out",w:"Դպրոցում",t:hm(k.since)+"-ից"};
   if(k.place==="home") return {c:"out",w:"Գնացել է տուն",t:hm(k.since)};
+  if(k.place==="absent") return {c:"out",w:"Այսօր չի գալու",t:""};
   return {c:"out",w:"Դեռ չի եկել",t:""};
 }
 function timeline(k,now){
-  return k.events.map(e=>{
+  return k.events.filter(e=>!e.hide).map(e=>{
     if(e.sess){const s=e.sess,end=s.end||now,r=s.result==="done"?" · արեց":s.result==="not_done"?" · չավարտեց":s.end?"":" · հիմա";
-      return {at:e.at,c:"class",txt:`${s.subject||"Դաս"} · ${sname(s.teacher)} · ${dur(end-s.start)}${r}`}}
-    const m=e.m,T={arrive:["play","Եկավ կենտրոն"],meal:["meal","Նստեց ուտելու"],ate:["meal","Կերավ"],play:["play","Խաղասենյակ"],home:["out","Գնաց տուն"],pickup:["road","Դպրոցից վերցրեց՝ "+sname(m.staff)],dropoff:["road","Տարավ դպրոց՝ "+sname(m.staff)]}[m.kind]||["out",m.kind];
-    return {at:m.at,c:T[0],txt:T[1]};
+      return {at:e.at,id:e.id,c:"class",txt:`${s.subject||"Դաս"} · ${sname(s.teacher)} · ${dur(end-s.start)}${r}`}}
+    const m=e.m,T={arrive:["play","Եկավ կենտրոն"],meal:["meal","Նստեց ուտելու"],ate:["meal","Կերավ"],play:["play","Խաղասենյակ"],home:["out","Գնաց տուն"],pickup:["road","Դպրոցից վերցրեց՝ "+sname(m.staff)],dropoff:["road","Տարավ դպրոց՝ "+sname(m.staff)],absent:["out","Այսօր չի գալու · նշեց "+sname(m.staff)]}[m.kind]||["out",m.kind];
+    return {at:m.at,id:e.id,c:T[0],txt:T[1]};
   });
 }
 
 /* ---------- routes ---------- */
-const atToday=x=>{const [h,m]=String(x).split(":").map(Number);const d=new Date();d.setHours(h||0,m||0,0,0);return d.getTime()};
+const atToday=x=>{const [h,m]=String(x).split(":").map(Number);const d=new Date(NOW());d.setHours(h||0,m||0,0,0);return d.getTime()};
 function rstat(r,now){
   const tt=atToday(r.time),ms=S.marks.filter(m=>m.kid===r.kid).sort((a,b)=>a.at-b.at);
   const done=r.kind==="pickup"?ms.find(m=>(m.kind==="pickup"||m.kind==="arrive")&&m.at>=tt-30*60000):ms.find(m=>m.kind==="dropoff"&&m.at>=tt-90*60000);
@@ -296,7 +304,7 @@ function groupsOf(list){const g=[];list.forEach(r=>{const key=r.time+"|"+r.schoo
 /* ---------- alerts ---------- */
 function alerts(D,now){
   const out=[],st=S.settings;
-  (S.routes||[]).forEach(r=>{if(rstat(r,now).st!=="late")return;
+  liveRoutes().forEach(r=>{if(rstat(r,now).st!=="late")return;
     out.push({w:r.kind!=="pickup",kid:r.kid,txt:r.kind==="pickup"?`${kidName(r.kid)} — դասերն ավարտվել են ${r.time}-ին, չեն վերցրել · ${sname(r.staff)}`:`${kidName(r.kid)} — ${r.time}-ին պետք է տարվեր դպրոց · ${sname(r.staff)}`})});
   D.kids.forEach(k=>{if(!k.inCenter)return;
     if(k.place==="play"&&!Object.keys(k.done).length&&now-k.since>st.playMax*60000)out.push({kid:k.id,txt:`${k.name} — ${dur(now-k.since)} խաղասենյակում, դասեր չի արել`});
@@ -320,7 +328,7 @@ const panel=inner=>`<div class="panel">${inner}</div>`;
 const emptyP=t=>panel(`<div class="empty">${t}</div>`);
 
 function dueBanner(now){
-  const mine=(S.routes||[]).filter(r=>r.staff===S.me).map(r=>({r,s:rstat(r,now)})).filter(x=>x.s.st==="now"||x.s.st==="late");
+  const mine=liveRoutes().filter(r=>r.staff===S.me).map(r=>({r,s:rstat(r,now)})).filter(x=>x.s.st==="now"||x.s.st==="late");
   if(!mine.length) return "";
   const r=mine[0].r,n=mine.filter(x=>x.r.time===r.time&&x.r.school===r.school&&x.r.kind===r.kind).length,late=mine.some(x=>x.s.st==="late");
   return `<button class="due${late?" late":""}" data-act="myroute"><div><b>${r.kind==="pickup"?"Ժամն է գնալ դպրոց":"Ժամն է տանել դպրոց"}</b><span class="num">${esc(r.time)} · ${esc(r.school||"")} · ${n} երեխա</span></div>${IC.arrow}</button>`;
@@ -334,27 +342,30 @@ function installHint(){
 
 /* ---------- screens ---------- */
 function teacherScreen(D,now){
-  const me=meS(),subj=me.subject||"";
+  const me=meS(),subs=mySubjects(),subj=subs[0]||"";
   const mine=D.kids.filter(k=>k.place==="class"&&k.teacher===me.id);
   const others=D.kids.filter(k=>!(k.place==="class"&&k.teacher===me.id)&&matchQ(k));
   let h=`<div class="stack">${installHint()}${dueBanner(now)}`;
   h+=sec("Ինձ մոտ են",mine.length,mine.length?panel(mine.map(k=>{const bad=now-k.since>S.settings.sessionMax*60000;
     return `<div class="row"><button class="av s-${bad?"bad":"class"}" data-act="open" data-kid="${esc(k.id)}" style="border:0" aria-label="${esc(k.name)}">${esc(ini(k.name))}</button><div class="rm" data-act="open" data-kid="${esc(k.id)}"><div class="rn">${esc(k.name)}</div><div class="rs${bad?" bad":""} num">${dur(now-k.since)}</div></div><button class="btn sm pri" data-act="mark" data-kind="done" data-kid="${esc(k.id)}">Արեց</button></div>`}).join("")):emptyP("Հիմա ձեզ մոտ ոչ ոք չկա։ Սեղմեք երեխայի անվան վրա ներքևում, որ վերցնեք։"));
-  h+=sec("Բոլոր երեխաները",null,search()+(others.length?panel(others.map(k=>kidRow(k,now,{sub:k.done[subj]?state(k,now).w+" · "+subj+"՝ արված":undefined})).join("")):emptyP("Ոչ ոք չի գտնվել։")));
+  h+=sec("Բոլոր երեխաները",null,search()+(others.length?panel(others.map(k=>{const d=subs.filter(x=>k.done[x]);return kidRow(k,now,{sub:d.length?state(k,now).w+" · "+d.join(", ")+"՝ արված":undefined})}).join("")):emptyP("Ոչ ոք չի գտնվել։")));
   return h+`</div>`;
 }
 function doorScreen(D,now){
-  const notYet=D.kids.filter(k=>!k.arrivedAt&&k.place!=="road"&&matchQ(k)),inC=D.kids.filter(k=>k.inCenter&&matchQ(k)),gone=D.kids.filter(k=>k.place==="home"&&matchQ(k));
+  const notYet=D.kids.filter(k=>!k.arrivedAt&&k.place!=="road"&&!k.absent&&matchQ(k)),inC=D.kids.filter(k=>k.inCenter&&matchQ(k)),gone=D.kids.filter(k=>k.place==="home"&&matchQ(k)),abs=D.kids.filter(k=>k.absent&&matchQ(k));
   const came=D.kids.filter(k=>k.arrivedAt).length;
-  let h=`<div class="stack"><div class="nums"><div class="nbox"><span>Այսօր եկել են</span><b class="num">${came}/${D.kids.length}</b></div><div class="nbox k-play"><span>Կենտրոնում</span><b class="num">${D.kids.filter(k=>k.inCenter).length}</b></div><div class="nbox k-road"><span>Ճանապարհին</span><b class="num">${D.kids.filter(k=>k.place==="road").length}</b></div><div class="nbox"><span>Գնացել են</span><b class="num">${D.kids.filter(k=>k.place==="home").length}</b></div></div>${search()}`;
+  let h=`<div class="stack"><div class="nums"><div class="nbox"><span>Այսօր եկել են</span><b class="num">${came}/${D.kids.length-D.kids.filter(k=>k.absent).length}</b></div><div class="nbox k-play"><span>Կենտրոնում</span><b class="num">${D.kids.filter(k=>k.inCenter).length}</b></div><div class="nbox k-road"><span>Ճանապարհին</span><b class="num">${D.kids.filter(k=>k.place==="road").length}</b></div><div class="nbox"><span>Գնացել են</span><b class="num">${D.kids.filter(k=>k.place==="home").length}</b></div></div>${search()}`;
   h+=sec("Դեռ չեն եկել",notYet.length,notYet.length?panel(notYet.map(k=>kidRow(k,now)).join("")):emptyP("Այսօր բոլորը եկել են։"));
   h+=sec("Կենտրոնում",inC.length,inC.length?panel(inC.map(k=>kidRow(k,now,{right:hm(k.arrivedAt)+"-ից"})).join("")):emptyP("Հիմա կենտրոնում ոչ ոք չկա։"));
+  if(abs.length)h+=sec("Այսօր չեն գալու",abs.length,panel(abs.map(k=>kidRow(k,now)).join("")));
   if(gone.length)h+=sec("Գնացել են տուն",gone.length,panel(gone.map(k=>kidRow(k,now,{sub:(k.arrivedAt?hm(k.arrivedAt):"")+"–"+hm(k.leftAt),right:k.arrivedAt?dur(k.leftAt-k.arrivedAt):""})).join("")));
   return h+`</div>`;
 }
 function routesScreen(D,now,assign){
-  const list=S.routes||[];
-  if(!list.length) return `<div class="stack">${sec("Այսօրվա ճանապարհը",null,emptyP("Այսօր դպրոցների ժամանակացույցում ոչինչ չկա։ Դասերի ժամերը լրացվում են աղյուսակի «Расписание школ» թերթում։"))}</div>`;
+  const list=liveRoutes();
+  const ns=S.marks.find(m=>m.kind==="noschool");
+  const toggle=assign?(ns?`<div class="ok" style="display:flex;gap:12px;align-items:center;flex-wrap:wrap"><span style="flex:1;min-width:180px">Այսօր դպրոցներում դաս չկա. ճանապարհը անջատված է։</span><button class="btn sm line" data-act="delmark" data-id="${esc(ns.id)}">Վերականգնել</button></div>`:`<button class="btn line full" data-act="noschool">Այսօր դպրոցներում դաս չկա</button>`):"";
+  if(!list.length) return `<div class="stack">${toggle}${sec("Այսօրվա ճանապարհը",null,emptyP(ns?"Այսօր ճանապարհ չկա։":"Այսօր դպրոցների ժամանակացույցում ոչինչ չկա։ Դասերի ժամերը լրացվում են աղյուսակի «Расписание школ» թերթում։"))}</div>`;
   const people=S.staff.filter(s=>s.role!=="cook");
   let body="";
   groupsOf(list).forEach(g=>{
@@ -364,7 +375,7 @@ function routesScreen(D,now,assign){
       const c=s.st==="late"?"bad":s.st==="done"?"play":"road";
       body+=`<div class="row wrap"><div class="av s-${c}">${esc(ini(k.name))}</div><div class="rm" data-act="open" data-kid="${esc(k.id)}"><div class="rn">${esc(k.name)}</div><div class="rs${s.st==="late"?" bad":""}">${esc(rword(r,s)||(r.kind==="pickup"?"Դեռ դպրոցում է":"Կենտրոնում է"))}</div></div>${sel}</div>`});
   });
-  return `<div class="stack">${sec("Այսօրվա ճանապարհը",list.length,panel(body))}</div>`;
+  return `<div class="stack">${sec("Այսօրվա ճանապարհը",list.length,panel(body))}${toggle}</div>`;
 }
 function nowScreen(D,now){
   const inC=D.kids.filter(k=>k.inCenter),al=alerts(D,now);
@@ -387,17 +398,22 @@ function cookScreen(D,now){
   return h+`</div>`;
 }
 function report(sessions,now){
-  const g={};sessions.forEach(s=>{const ms=(s.end||now)-s.start;if(ms<60000)return;const key=s.teacher+"|"+s.subject;const r=(g[key]=g[key]||{teacher:s.teacher,subject:s.subject,n:0,sum:0,max:0,done:0,list:[]});r.n++;r.sum+=ms;r.max=Math.max(r.max,ms);if(s.result==="done")r.done++;r.list.push({...s,ms})});
-  const by={};Object.values(g).forEach(r=>{const b=(by[r.subject]=by[r.subject]||{n:0,sum:0});b.n+=r.n;b.sum+=r.sum});
+  const today=S.day||dayKey(now),g={};
+  sessions.forEach(s=>{const key=s.teacher+"|"+s.subject;const r=(g[key]=g[key]||{teacher:s.teacher,subject:s.subject,n:0,sum:0,max:0,done:0,open:0,list:[]});
+    const ok=s.result==="done"||s.result==="not_done";
+    if(!ok){if(s.end||s.day!==today)r.open++;return}
+    const ms=s.end-s.start;if(ms<60000)return;r.n++;r.sum+=ms;r.max=Math.max(r.max,ms);if(s.result==="done")r.done++;r.list.push({...s,ms})});
+  Object.keys(g).forEach(k=>{if(!g[k].n&&!g[k].open)delete g[k]});
+  const by={};Object.values(g).forEach(r=>{const b=(by[r.subject]=by[r.subject]||{n:0,sum:0});b.n+=r.n;b.sum+=r.sum});const avgOf=(a,b)=>b?a/b:0;
   const rows=Object.values(g).sort((a,b)=>String(a.subject).localeCompare(String(b.subject),"hy"));
-  const long=[];rows.forEach(r=>{const avg=by[r.subject].sum/by[r.subject].n;r.list.forEach(s=>{if(s.ms>=10*60000&&s.ms>avg*1.5)long.push({...s,avg})})});
+  const long=[];rows.forEach(r=>{const avg=avgOf(by[r.subject].sum,by[r.subject].n);r.list.forEach(s=>{if(s.ms>=10*60000&&s.ms>avg*1.5)long.push({...s,avg})})});
   return {rows,by,long:long.sort((a,b)=>b.ms-a.ms).slice(0,8)};
 }
 function reportTable(R){
   if(!R.rows.length) return emptyP("Պարապմունքներ դեռ չկան։ Կհայտնվեն, երբ մանկավարժները սկսեն նշել։");
-  let h=`<div class="panel"><div class="tbl"><table class="num"><thead><tr><th>Մանկավարժ</th><th>Առարկա</th><th>Անգամ</th><th>Միջինը</th><th>Ըստ առարկայի</th><th>Առավելագույնը</th><th>Արված</th></tr></thead><tbody>`;
-  R.rows.forEach(r=>{h+=`<tr><td>${esc(sname(r.teacher))}</td><td>${esc(r.subject)}</td><td>${r.n}</td><td><b>${mins(r.sum/r.n)} ր</b></td><td>${mins(R.by[r.subject].sum/R.by[r.subject].n)} ր</td><td>${mins(r.max)} ր</td><td>${r.done}/${r.n}</td></tr>`});
-  h+=`</tbody></table></div></div>`;
+  let h=`<div class="panel"><div class="tbl"><table class="num"><thead><tr><th>Մանկավարժ</th><th>Առարկա</th><th>Անգամ</th><th>Միջինը</th><th>Ըստ առարկայի</th><th>Առավելագույնը</th><th>Արված</th><th>Չփակված</th></tr></thead><tbody>`;
+  R.rows.forEach(r=>{const bn=R.by[r.subject];h+=`<tr><td>${esc(sname(r.teacher))}</td><td>${esc(r.subject)}</td><td>${r.n}</td><td><b>${r.n?mins(r.sum/r.n)+" ր":"—"}</b></td><td>${bn.n?mins(bn.sum/bn.n)+" ր":"—"}</td><td>${r.n?mins(r.max)+" ր":"—"}</td><td>${r.done}/${r.n}</td><td${r.open?' style="color:var(--red)"':""}>${r.open}</td></tr>`});
+  h+=`</tbody></table></div><div class="empty" style="padding:4px 0 12px;font-size:13px">«Չփակված»՝ մանկավարժը չի սեղմել «Արեց» կամ «Չավարտեց»։ Այդ պարապմունքները միջինի մեջ չեն մտնում։</div></div>`;
   if(R.long.length)h+=`<div style="height:14px"></div>`+sec("Միջինից շատ երկար",R.long.length,panel(R.long.map(s=>`<div class="row"><div class="av s-bad">${esc(ini(kidName(s.kid)))}</div><div class="rm"><div class="rn">${esc(kidName(s.kid))} · ${esc(s.subject)}</div><div class="rs">${esc(sname(s.teacher))} · ${s.day||""} ${hm(s.start)}</div></div><div class="rt num">${mins(s.ms)} / ${mins(s.avg)} ր</div></div>`).join("")));
   return h;
 }
@@ -406,6 +422,8 @@ function reportScreen(D,now){
   h+=sec("Վերջին 7 օրը",null,S.week?reportTable(report(derive(S.week).sessions,now)):panel(`<div class="form"><button class="btn line" data-act="week">Հավաքել 7 օրվա տվյալները</button></div>`));
   if(S.week){const c={};S.week.forEach(m=>{if(m.kind==="pickup"||m.kind==="dropoff"){const x=(c[m.staff]=c[m.staff]||{p:0,d:0});m.kind==="pickup"?x.p++:x.d++}});
     const ids=Object.keys(c);h+=sec("Ով է ուղեկցել երեխաներին · 7 օր",null,ids.length?panel(ids.map(id=>`<div class="row"><div class="av s-road">${esc(ini(sname(id)))}</div><div class="rm"><div class="rn">${esc(sname(id))}</div></div><div class="rt num">վերցրել է ${c[id].p} · տարել ${c[id].d}</div></div>`).join("")):emptyP("Նշումներ չկան։"))}
+  const gone=S.kids.filter(k=>k.active===false);
+  if(gone.length)h+=sec("Այլևս չեն հաճախում",gone.length,panel(gone.map(k=>`<div class="row wrap"><div class="av s-out">${esc(ini(k.name))}</div><div class="rm"><div class="rn">${esc(k.name)}</div><div class="rs">${k.leftFrom?esc(k.leftFrom)+"-ից":""}</div></div><button class="btn sm line" data-act="comeback" data-kid="${esc(k.id)}">Վերադարձնել</button></div>`).join("")));
   if(meS().role==="owner"){const st=S.settings;
     h+=sec("Երբ զգուշացնել",null,panel(`<div class="form">
       <label>Խաղասենյակում առանց դասի, ր<input id="set-playMax" type="number" inputmode="numeric" min="10" step="5" value="${st.playMax}"></label>
@@ -423,7 +441,7 @@ function reportScreen(D,now){
 function sheetHtml(D,now){
   const sh=S.sheet;if(!sh)return"";
   if(sh.type==="myroute"){
-    const mine=(S.routes||[]).filter(r=>r.staff===S.me);
+    const mine=liveRoutes().filter(r=>r.staff===S.me);
     let body="";groupsOf(mine).forEach(g=>{body+=`<div class="grp"><b class="num">${esc(g.r.time)} · ${esc(g.r.school||"")}</b><span>${g.r.kind==="pickup"?"վերցնել":"տանել"}</span></div>`;
       g.items.forEach(r=>{const k=kidById(r.kid);if(!k)return;const s=rstat(r,now),kd=D.kids.find(x=>x.id===r.kid)||{};
         let a=s.st!=="done"?`<button class="btn sm pri" data-act="mark" data-kind="${r.kind}" data-kid="${esc(r.kid)}">${r.kind==="pickup"?"Վերցրի":"Տարա"}</button>`:(r.kind==="pickup"&&kd.place==="road"?`<button class="btn sm" data-act="mark" data-kind="arrive" data-kid="${esc(r.kid)}">Բերեցի</button>`:`<div class="rt">${esc(rword(r,s))}</div>`);
@@ -431,20 +449,22 @@ function sheetHtml(D,now){
     return `<div class="sh-n" style="margin-bottom:4px">Իմ ճանապարհը</div><div class="sh-s">Սեղմեք, երբ վերցնեք կամ տանեք երեխային</div>${body||`<div class="empty">Այսօր ձեզ ոչինչ նշանակված չէ։</div>`}<div class="acts"><button class="btn full line" data-act="close">Փակել</button></div>`;
   }
   const k=D.kids.find(x=>x.id===sh.kid);if(!k)return"";
-  const s=state(k,now),me=meS(),role=me.role,subj=me.subject||"";
+  const s=state(k,now),me=meS(),role=me.role,subs=mySubjects();
   const acts=[];
-  const myRoutes=(S.routes||[]).filter(r=>r.kid===k.id);
+  const myRoutes=liveRoutes().filter(r=>r.kid===k.id);
   const pick=myRoutes.find(r=>r.kind==="pickup"&&rstat(r,now).st!=="done");
   const drop=myRoutes.find(r=>r.kind==="dropoff"&&rstat(r,now).st!=="done");
   if(role==="teacher"||role==="coord"){
     if(k.place==="class"&&k.teacher===me.id){acts.push(["done","Արեց",1]);acts.push(["stop","Չավարտեց"])}
-    else if(k.inCenter&&!k.done[subj]&&subj)acts.push(["take","Վերցնել ինձ մոտ · "+subj,1]);
+    else if(k.inCenter){const other=k.place==="class"?" · հիմա՝ "+sname(k.teacher):"";
+      subs.filter(x=>!k.done[x]).forEach((x,i)=>acts.push(["take","Վերցնել ինձ մոտ · "+x+other,i===0,x]))}
     if(pick&&!k.inCenter&&k.place!=="road")acts.push(["pickup","Վերցրի դպրոցից",!acts.length]);
     if(k.place==="road")acts.push(["arrive","Բերեցի կենտրոն",1]);
     if(drop&&k.inCenter)acts.push(["dropoff","Տարա դպրոց"]);
   }
   if(role==="coord"||role==="owner"){
     if(!k.inCenter&&k.place!=="road")acts.push(["arrive","Եկավ կենտրոն",!acts.some(a=>a[2])]);
+    if(!k.inCenter&&k.place==="none")acts.push(["absent","Այսօր չի գալու"]);
     if(k.inCenter){if(k.place!=="play"&&k.place!=="class")acts.push(["play","Խաղասենյակ"]);acts.push(["home","Գնաց տուն"])}
   }
   if(role==="cook"&&k.inCenter){if(k.place!=="meal")acts.push(["meal","Նստեց ուտելու",1]);else acts.push(["ate","Կերավ",1])}
@@ -453,9 +473,10 @@ function sheetHtml(D,now){
   return `<div class="sh-h"><div class="av s-${s.c}">${esc(ini(k.name))}</div><div><div class="sh-n">${esc(k.name)}</div><div class="sh-s">${esc(grade(k))}${k.school?" · "+esc(k.school):""}</div></div></div>
     <div class="sh-s" style="margin-top:10px"><b style="color:var(--ink)">${esc(s.w)}</b>${s.t?" · "+esc(s.t):""}</div>
     <div class="sh-s">Այսօր արել է՝ ${doneSubj.length?esc(doneSubj.join(", ")):"դեռ ոչինչ"} · ${k.ate?"կերել է":"դեռ չի կերել"}</div>
-    ${acts.length?`<div class="acts">${acts.map(a=>`<button class="btn full ${a[2]?"pri":""}" data-act="mark" data-kind="${a[0]}" data-kid="${esc(k.id)}">${esc(a[1])}</button>`).join("")}</div>`:""}
+    ${acts.length?`<div class="acts">${acts.map(a=>`<button class="btn full ${a[2]?"pri":""}" data-act="mark" data-kind="${a[0]}" data-kid="${esc(k.id)}"${a[3]?` data-subject="${esc(a[3])}"`:""}>${esc(a[1])}</button>`).join("")}</div>`:""}
     <div class="sh-sub">Այսօրվա օրը</div>
-    ${tl.length?`<ul class="tl">${tl.map(e=>`<li><time class="num">${hm(e.at)}</time><i class="k-${e.c}"></i><span>${esc(e.txt)}</span></li>`).join("")}</ul>`:`<div class="empty">Այսօր նշումներ դեռ չկան։</div>`}
+    ${tl.length?`<ul class="tl">${tl.map(e=>`<li><time class="num">${hm(e.at)}</time><i class="k-${e.c}"></i><span style="flex:1">${esc(e.txt)}</span>${(role==="owner"||role==="coord")&&e.id&&!String(e.id).startsWith("tmp")?`<button class="del" data-act="delmark" data-id="${esc(e.id)}" aria-label="Ջնջել">✕</button>`:""}</li>`).join("")}</ul>`:`<div class="empty">Այսօր նշումներ դեռ չկան։</div>`}
+    ${(role==="owner"||role==="coord")?`<div class="acts" style="margin-top:6px"><button class="btn full line" data-act="leave" data-kid="${esc(k.id)}" style="color:var(--red)">Այլևս չի հաճախում</button></div>`:""}
     <div class="acts"><button class="btn full line" data-act="close">Փակել</button></div>`;
 }
 let sheetOpenKey=null;
@@ -472,7 +493,7 @@ function renderSheet(D,now){
 
 /* ---------- tabs ---------- */
 function tabsFor(role,D,now){
-  const al=alerts(D,now).length,late=(S.routes||[]).filter(r=>rstat(r,now).st==="late").length;
+  const al=alerts(D,now).length,late=liveRoutes().filter(r=>rstat(r,now).st==="late").length;
   if(role==="owner")return[["now","Հիմա",IC.now,al],["road","Ճանապարհ",IC.road,late],["report","Ամփոփում",IC.report,0]];
   if(role==="coord")return[["lessons","Իմ դասերը",IC.lessons,0],["door","Գալ-գնալ",IC.door,0],["road","Ճանապարհ",IC.road,late],["now","Կենտրոն",IC.now,al]];
   return[];
@@ -509,7 +530,7 @@ function render(){
   const app=document.getElementById("app"),bar=document.getElementById("tabbar"),ae=document.activeElement;
   let keepQ=null;
   if(ae&&app.contains(ae)){if(ae.id==="q")keepQ=[ae.selectionStart,ae.selectionEnd];else if(ae.tagName==="INPUT"&&!(ae.id==="pin"&&S.busyPin))return;else if(ae.tagName==="SELECT")return}
-  const now=Date.now();
+  const now=NOW();
   if(S.phase!=="app"){header([]);bar.hidden=true;app.className="notabs";
     app.innerHTML=S.phase==="boot"?`<div class="empty">Բեռնվում է…</div>`:S.phase==="error"?`<div class="off">${esc(S.err||"Կապ չկա։")}</div><div style="height:12px"></div><button class="btn pri" data-act="reload">Փորձել նորից</button>`:loginHtml();
     renderSheet(null,now);return}
@@ -519,15 +540,25 @@ function render(){
   header(tabs);
   bar.hidden=!tabs.length;app.className=tabs.length?"":"notabs";
   bar.innerHTML=tabs.map(t=>`<button class="tab ${S.tab===t[0]?"on":""}" data-act="tab" data-v="${t[0]}"${S.tab===t[0]?' aria-current="page"':""}>${t[2]}<span>${t[1]}</span>${t[3]?`<span class="badge num">${t[3]}</span>`:""}</button>`).join("");
-  app.innerHTML=(S.offline?`<div class="off" style="margin-bottom:14px">Կապ չկա աղյուսակի հետ։ Նշումները կարող են չպահպանվել։</div>`:"")+screen(S.tab,D,now);
+  app.innerHTML=(S.offline?`<div class="off" style="margin-bottom:14px">Կապ չկա։ ${Q.get().length?Q.get().length+" նշում կուղարկվի, երբ կապը վերականգնվի։":"Ցույց է տրված վերջին տվյալները։"}</div>`:"")+screen(S.tab,D,now);
   if(keepQ){const q=document.getElementById("q");if(q){q.focus({preventScroll:true});try{q.setSelectionRange(keepQ[0],keepQ[1])}catch(e){}}}
   renderSheet(D,now);
 }
 
 /* ---------- api ---------- */
 async function api(fn,...args){
-  const r=await fetch(API,{method:"POST",body:JSON.stringify({fn,args}),redirect:"follow"});
-  const j=await r.json();if(!j.ok)throw new Error(j.error||"error");return j.data;
+  let r;try{r=await fetch(API,{method:"POST",body:JSON.stringify({fn,args}),redirect:"follow"})}catch(e){throw new Error("offline")}
+  let j;try{j=await r.json()}catch(e){throw new Error("offline")}
+  if(!j.ok)throw new Error(j.error||"error");return j.data;
+}
+/* очередь отметок без интернета */
+const Q={get:()=>{try{return JSON.parse(ls.get("vk-q")||"[]")}catch(e){return[]}},set:q=>ls.set("vk-q",q.length?JSON.stringify(q):null)};
+function queuedAsMarks(){return Q.get().map(q=>({id:q.tmp,kind:q.kind,kid:q.kid,staff:S.me,subject:q.subject||"",at:q.tapAt+(S.offset||0),day:S.day,pending:1}))}
+let flushing=false;
+async function flush(){
+  if(flushing||!S.code)return;const q=Q.get();if(!q.length)return;flushing=true;
+  try{for(const item of q){try{await api("api_mark",S.code,item.kind,item.kid,item.subject||"",item.tapAt,Date.now());Q.set(Q.get().filter(x=>x.tmp!==item.tmp))}catch(e){if(e.message==="offline")break;Q.set(Q.get().filter(x=>x.tmp!==item.tmp))}}}
+  finally{flushing=false}
 }
 let toastT;
 function toast(text,undo){
@@ -537,20 +568,27 @@ function toast(text,undo){
   const b=document.getElementById("undo");
   if(b)b.onclick=async()=>{const id=S.lastId;S.lastId=null;el.hidden=true;if(!id)return;S.marks=S.marks.filter(m=>m.id!==id);render();try{await api("api_undo",S.code,id)}catch(e){toast("Չհաջողվեց չեղարկել");refresh()}};
 }
-const KT={arrive:"եկավ",take:"ձեզ մոտ է",done:"արեց",stop:"չավարտեց",meal:"նստեց ուտելու",ate:"կերավ",play:"խաղասենյակում է",home:"գնաց տուն",pickup:"վերցված է դպրոցից",dropoff:"տարված է դպրոց"};
-async function mark(kind,kid){
+const KT={noschool:"այսօր դաս չկա",absent:"այսօր չի գալու",arrive:"եկավ",take:"ձեզ մոտ է",done:"արեց",stop:"չավարտեց",meal:"նստեց ուտելու",ate:"կերավ",play:"խաղասենյակում է",home:"գնաց տուն",pickup:"վերցված է դպրոցից",dropoff:"տարված է դպրոց"};
+async function mark(kind,kid,subject){
   const me=meS();if(!me)return;
-  const tmp={id:"tmp"+Date.now(),kind,kid,staff:S.me,subject:kind==="take"?(me.subject||""):"",at:Date.now(),day:dayKey(Date.now())};
+  if(kind==="take"&&!subject)subject=mySubjects()[0]||"";
+  const tapAt=Date.now();
+  const tmp={id:"tmp"+tapAt,kind,kid,staff:S.me,subject:kind==="take"?subject:"",at:NOW(),day:S.day};
   S.marks.push(tmp);if(S.sheet&&S.sheet.type==="kid"&&kind!=="take"&&kind!=="arrive")S.sheet=null;if(S.sheet&&S.sheet.type==="kid")S.sheet=null;render();
   try{navigator.vibrate&&navigator.vibrate(12)}catch(e){}
-  try{const r=await api("api_mark",S.code,kind,kid);tmp.id=r.id;tmp.at=r.at;S.lastId=r.id;toast(kidName(kid)+" — "+KT[kind],true)}
-  catch(e){S.marks=S.marks.filter(m=>m!==tmp);render();if(/bad_pin|locked/.test(e.message))logout("Կոդը այլևս չի գործում։ Մուտք գործեք նորից։");else toast("Չպահպանվեց։ Ստուգեք ինտերնետը։")}
+  try{const r=await api("api_mark",S.code,kind,kid,subject||"",tapAt,Date.now());tmp.id=r.id;tmp.at=r.at;S.lastId=r.id;toast(kid==="*"?KT[kind]:kidName(kid)+" — "+KT[kind],true)}
+  catch(e){
+    if(e.message==="offline"){const q=Q.get();q.push({tmp:tmp.id,kind,kid,subject:subject||"",tapAt});Q.set(q);tmp.pending=1;S.offline=true;render();toast("Կապ չկա։ Նշումը կուղարկվի, երբ կապը վերականգնվի։")}
+    else{S.marks=S.marks.filter(m=>m!==tmp);render();if(/bad_pin|locked/.test(e.message))logout("Կոդը այլևս չի գործում։ Մուտք գործեք նորից։");else toast(/no_right/.test(e.message)?"Այս նշումը ձեզ համար չէ։":"Չպահպանվեց։ Փորձեք նորից։")}}
 }
 let busy=false;
+function applyState(st,t0){
+  S.offset=st.serverNow-Math.round((t0+Date.now())/2);S.day=st.day;S.me=st.me.id;S.staff=st.staff.sort((a,b)=>a.order-b.order);S.kids=st.kids;S.settings=st.settings;
+  S.marks=st.marks.concat(queuedAsMarks());S.routes=st.routes||[];S.noSchool=!!st.noSchool;S.sheetUrl=st.sheetUrl||"";S.offline=Q.get().length>0;
+}
 async function refresh(){
   if(busy||!S.code||S.phase!=="app")return;busy=true;
-  try{const st=await api("api_state",S.code,dayKey(Date.now()));
-    S.me=st.me.id;S.staff=st.staff.sort((a,b)=>a.order-b.order);S.kids=st.kids;S.settings=st.settings;S.marks=st.marks;S.routes=st.routes||[];S.sheetUrl=st.sheetUrl||"";S.offline=false}
+  try{await flush();const t0=Date.now(),st=await api("api_state",S.code);applyState(st,t0)}
   catch(e){if(/bad_pin|locked/.test(e.message)){busy=false;logout("Կոդը այլևս չի գործում։ Մուտք գործեք նորից։");return}S.offline=true}
   finally{busy=false}
   render();
@@ -561,8 +599,8 @@ async function tryLogin(){
   if(pe)pe.blur();
   if(S.busyPin)return;if(!/^\d{6}$/.test(S.pin)){S.pinErr="Կոդը 6 թիվ է";render();return}
   S.busyPin=true;S.pinErr="";render();
-  try{const code=S.pin,st=await api("api_state",code,dayKey(Date.now()));
-    S.code=code;S.me=st.me.id;S.staff=st.staff.sort((a,b)=>a.order-b.order);S.kids=st.kids;S.settings=st.settings;S.marks=st.marks;S.routes=st.routes||[];S.sheetUrl=st.sheetUrl||"";
+  try{const code=S.pin,t0=Date.now(),st=await api("api_state",code);
+    S.code=code;applyState(st,t0);
     ls.set("vk-code",S.code);ls.set("vk-me",S.me);S.phase="app";S.busyPin=false;S.pin="";S.tab=null;render()}
   catch(e){S.busyPin=false;S.pin="";S.pinErr=/locked/.test(e.message)?"Շատ սխալ փորձեր։ Սպասեք 10 րոպե։":/bad_pin/.test(e.message)?"Կոդը սխալ է։ Ստուգեք Իլոնայի մոտ։":"Կապ չկա։ Փորձեք նորից։";render()}
 }
@@ -573,7 +611,11 @@ document.addEventListener("click",async e=>{
   if(a==="open"){S.sheet={type:"kid",kid:b.dataset.kid};render()}
   else if(a==="myroute"){S.sheet={type:"myroute"};render()}
   else if(a==="close"){S.sheet=null;render()}
-  else if(a==="mark")mark(b.dataset.kind,b.dataset.kid);
+  else if(a==="mark")mark(b.dataset.kind,b.dataset.kid,b.dataset.subject);
+  else if(a==="delmark"){if(!confirm("Ջնջե՞լ այս նշումը։"))return;const id=b.dataset.id;S.marks=S.marks.filter(m=>m.id!==id);render();try{await api("api_undo",S.code,id);toast("Նշումը ջնջված է")}catch(err){toast("Չհաջողվեց ջնջել");}refresh()}
+  else if(a==="noschool"){if(!confirm("Այսօր դպրոցներում դաս չկա՞։ Ճանապարհի ծանուցումները կանջատվեն այսօրվա համար։"))return;await mark("noschool","*");refresh()}
+  else if(a==="leave"){const k=kidById(b.dataset.kid);if(!k||!confirm(k.name+" այլևս չի՞ հաճախում։ Նա կհեռանա ցուցակներից, պատմությունը կմնա։"))return;S.sheet=null;try{await api("api_setActive",S.code,k.id,false);toast(k.name+" — հեռացված է ցուցակից")}catch(err){toast("Չհաջողվեց")}refresh()}
+  else if(a==="comeback"){try{await api("api_setActive",S.code,b.dataset.kid,true);toast("Վերադարձված է")}catch(err){toast("Չհաջողվեց")}refresh()}
   else if(a==="tab"){S.tab=b.dataset.v;S.q="";S.sheet=null;ls.set("vk-tab",S.tab);render();window.scrollTo(0,0)}
   else if(a==="filter"){S.filter=(S.filter===b.dataset.v&&b.classList.contains("nbox"))?"all":b.dataset.v;render()}
   else if(a==="login")tryLogin();
@@ -595,7 +637,7 @@ document.addEventListener("input",e=>{
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&S.sheet){S.sheet=null;render()}if(e.key==="Enter"&&e.target.id==="pin")tryLogin()});
 document.addEventListener("change",async e=>{const x=e.target;if(!x.dataset||!x.dataset.assign)return;
   const r=(S.routes||[]).find(y=>y.kid===x.dataset.kid&&y.kind===x.dataset.kind),old=r?r.staff:"";if(r)r.staff=x.value;x.blur();render();
-  try{await api("api_assign",S.code,dayKey(Date.now()),x.dataset.kid,x.dataset.kind,x.value);toast("Նշանակված է՝ "+sname(x.value))}catch(err){if(r)r.staff=old;render();toast("Չպահպանվեց")}});
+  try{await api("api_assign",S.code,S.day||dayKey(NOW()),x.dataset.kid,x.dataset.kind,x.value);toast("Նշանակված է՝ "+sname(x.value))}catch(err){if(r)r.staff=old;render();toast("Չպահպանվեց")}});
 window.addEventListener("scroll",()=>document.getElementById("top").classList.toggle("sh",window.scrollY>4),{passive:true});
 window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();S.installEvt=e;render()});
 
@@ -604,7 +646,9 @@ window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();S.installEv
   if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
   S.code=ls.get("vk-code")||"";S.me=ls.get("vk-me");S.tab=ls.get("vk-tab");
   if(S.code&&S.me){S.phase="app";S.phase="app";render();refresh()}else{S.phase="code";render()}
-  setInterval(()=>{if(!document.hidden)refresh();else render()},15000);
+  setInterval(()=>{if(!document.hidden)refresh()},30000);
+  setInterval(()=>{if(!document.hidden&&S.phase==="app")render()},60000);
+  window.addEventListener("online",()=>refresh());
   document.addEventListener("visibilitychange",()=>{if(!document.hidden)refresh()});
 })();
 </script>
