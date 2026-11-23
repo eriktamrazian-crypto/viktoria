@@ -484,6 +484,7 @@ function teamScreen(){
     <div class="team-acts">${x.active?`<button class="btn sm line" data-act="st-code" data-id="${esc(x.id)}">Նոր կոդ</button>${x.id!==S.me?`<button class="btn sm line" data-act="st-off" data-id="${esc(x.id)}" style="color:var(--red)">Անջատել</button>`:""}`:`<button class="btn sm line" data-act="st-on" data-id="${esc(x.id)}">Միացնել</button>`}</div></div>`;
   let h=`<div class="stack">`+sec("Աշխատակիցներ",on.length,panel(on.map(row).join(""))+`<p class="empty" style="font-size:14px">Կոդը տվեք աշխատակցին անձամբ։ «Նոր կոդ»՝ հինը անմիջապես դադարում է աշխատել։ «Անջատել»՝ մարդն այլևս չի կարող մտնել, նրա նշումները մնում են։</p>`);
   if(off.length)h+=sec("Անջատված",off.length,panel(off.map(row).join("")));
+  h+=sec("Ծանուցումներ",null,panel(`<div class="form" style="align-items:center"><span style="flex:1;min-width:200px;color:var(--ink-2)">Ստուգեք, որ ծանուցումները հասնում են այս հեռախոսին։</span><button class="btn line" data-act="push-test">Փորձնական ծանուցում</button></div>`));
   h+=sec("Նոր աշխատակից",null,panel(`<div class="form"><label>Անուն<input id="st-name" type="text" autocomplete="off" style="width:200px"></label>
     <label>Պաշտոն<select id="st-role" class="sel" style="max-width:none">${ROLE_OPT.map(r=>`<option value="${r[0]}">${r[1]}</option>`).join("")}</select></label>
     <label>Առարկաներ (ստորակետով)<input id="st-sub" type="text" autocomplete="off" style="width:240px" placeholder="Մայրենի, Գրականություն"></label>
@@ -697,6 +698,8 @@ document.addEventListener("click",async e=>{
   else if(a==="logout")logout();
   else if(a==="reload")location.reload();
   else if(a==="push-on")enablePush();
+  else if(a==="push-test"){if(!("Notification" in window)||Notification.permission!=="granted"){enablePush();return}
+    try{await subscribePush(false);const n=await api("api_pushTest",S.code);toast(n?"Ուղարկված է։ Ծանուցումը կգա մի քանի վայրկյանից։":"Այս հեռախոսը դեռ միացված չէ ծանուցումներին")}catch(e){toast("Չհաջողվեց ուղարկել")}}
   else if(a==="hint-x"){ls.set("vk-hint","1");render()}
   else if(a==="install"&&S.installEvt){S.installEvt.prompt();S.installEvt=null;ls.set("vk-hint","1");render()}
   else if(a==="week"){b.textContent="Հավաքում եմ…";try{S.week=await api("api_week",S.code);render()}catch(err){toast("Չհաջողվեց");b.textContent="Հավաքել 7 օրվա տվյալները"}}

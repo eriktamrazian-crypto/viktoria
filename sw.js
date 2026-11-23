@@ -1,4 +1,4 @@
-const CACHE = "viktoria-v14";
+const CACHE = "viktoria-v15";
 const API = "https://script.google.com/macros/s/AKfycbyq-9XatEqTnFvL1Fhn3V9BSM1RwRVRKiK1bjCJbarBvAYx8Z_fHdxRKb6n98E8fH8CBw/exec";
 const SHELL = ["./", "./index.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png", "./apple-touch-icon.png", "./fonts/Mardoto-Regular.ttf", "./fonts/Mardoto-Medium.ttf", "./fonts/Mardoto-Bold.ttf"];
 self.addEventListener("install", e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL))); self.skipWaiting(); });
