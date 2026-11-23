@@ -19,13 +19,14 @@
 @font-face{font-family:"Mardoto";src:url(fonts/Mardoto-Medium.ttf) format("truetype");font-weight:500 600;font-display:swap}
 @font-face{font-family:"Mardoto";src:url(fonts/Mardoto-Bold.ttf) format("truetype");font-weight:700;font-display:swap}
 :root{
-  --paper:#f7f7f2; --card:#ffffff; --ink:#2a2430; --ink-2:#5f5a66; --ink-3:#958f99; --line:#e7e6de; --wash:#f0f1ea;
+  --paper:#f3f4ef; --card:#ffffff; --ink:#1f2a1b; --ink-2:#646d61; --ink-3:#7d857a; --line:#e8eae3; --wash:#eef0e8;
   --brand:#b2347c; --brand-hover:#982a69; --brand-2:#fae7f1; --brand-ink:#7f1f57;
-  --green:#47801f; --green-hover:#3b6c19; --green-2:#e9f3dc; --green-ink:#355f14;
+  --green:#3f7a22; --green-hover:#356a1c; --green-2:#e3f1d3; --green-ink:#2f5f17; --hero:#2f5f17;
   --blue:#b2347c; --blue-2:#fae7f1; --amber:#94570c; --amber-2:#fbefdb; --violet:#7a4fa3; --violet-2:#f1eaf8;
   --red:#a8322a; --red-2:#fbe6e2; --sun:#f2b75c;
   --font:"Mardoto","Noto Sans Armenian",-apple-system,system-ui,sans-serif;
-  --r:16px; --tab:66px;
+  --r:20px; --tab:66px;
+  --c-class:#c2417f; --c-play:#4f8f22; --c-meal:#d48b1a; --c-road:#7a54a8; --c-warn:#a8620a; --c-urgent:#b8322a; --c-out:#8c9488;
   --ease-out:cubic-bezier(.23,1,.32,1); --ease-drawer:cubic-bezier(.32,.72,0,1);
   color-scheme:light;
 }
@@ -243,8 +244,145 @@ th{font-size:13px;color:var(--ink-3);font-weight:600;border-top:0}
 .form label{display:flex;flex-direction:column;gap:6px;font-size:14px;color:var(--ink-2)}
 .form input{border:0;border-radius:12px;background:var(--wash);min-height:48px;padding:0 14px;font-size:16px;width:140px}
 
+/* ===== стиль В (утверждён Эриком 23.11): зелёная шапка, цветные плитки, полосы тревог ===== */
+svg.ph{width:22px;height:22px;flex:none}
+.chev{width:16px;height:16px;color:#b9bfb5}
+body.inapp .top{display:none}
+body.inapp main{padding-top:0}
+.hero{margin:0 calc(-1 * max(18px,env(safe-area-inset-left,0px)));padding:calc(14px + env(safe-area-inset-top,0px)) 22px 72px;background:var(--hero);color:#fff;border-radius:0 0 30px 30px}
+.hero.flat{padding-bottom:24px}
+.hero.flat+*{margin-top:16px}
+.nbox b{white-space:nowrap;font-size:min(28px,6vw)}
+.hero-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.hero-top small{display:block;font-size:13.5px;opacity:.75;line-height:1.3}
+.hero-top b{display:block;font-size:21px;font-weight:700;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hero-top>div:first-child{min-width:0}
+.hacts{display:flex;gap:8px;flex:none}
+.hb2{position:relative;width:42px;height:42px;border:0;border-radius:13px;background:rgba(255,255,255,.14);color:#fff;display:grid;place-items:center}
+.hb2:active{transform:scale(.94)}
+.hb2 .bd{position:absolute;top:-4px;right:-4px;min-width:19px;height:19px;padding:0 5px;border-radius:10px;background:var(--brand);color:#fff;font-size:11px;font-weight:600;display:grid;place-items:center}
+.hb2 .bd.dot{min-width:10px;width:10px;height:10px;padding:0;top:-2px;right:-2px}
+.kpi{display:flex;align-items:flex-end;gap:14px;margin-top:20px}
+.kpi b{font-size:58px;font-weight:700;line-height:.9;letter-spacing:-.03em}
+.kpi span{font-size:15px;opacity:.88;line-height:1.3;padding-bottom:5px}
+.hero .hsub{font-size:15px;opacity:.85;margin-top:6px}
+.nowg{display:flex;flex-direction:column;gap:24px;min-width:0}.nowg>div{min-width:0}
+.ovl{position:relative;margin-top:-52px!important;background:#fff;border-radius:24px;box-shadow:0 12px 30px rgba(30,50,20,.12)}
+.tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;padding:10px}
+.tile{border:0;background:none;border-radius:16px;padding:8px 2px 7px;text-align:center;color:var(--ink);min-width:0}
+.tile .ti{width:46px;height:46px;border-radius:15px;margin:0 auto 6px;display:grid;place-items:center;color:#fff;background:var(--tc)}
+.tile .ti svg.ph{width:23px;height:23px}
+.tile b{display:block;font-size:21px;line-height:1.1}
+.tile .tl2{display:block;font-size:12px;color:var(--ink-2);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tile.on{background:color-mix(in srgb,var(--tc) 10%,#fff);box-shadow:inset 0 0 0 2px var(--tc)}
+.tile:active{transform:scale(.96)}
+.bans{display:flex;flex-direction:column;gap:8px}
+.ban{display:flex;align-items:center;gap:12px;width:100%;border:0;border-radius:18px;padding:12px 14px;text-align:left;color:#fff;font-size:15px;line-height:1.35;background:var(--c-warn)}
+.ban.u{background:var(--c-urgent)}
+.ban .ti{width:34px;height:34px;border-radius:11px;background:rgba(255,255,255,.2);display:grid;place-items:center;flex:none}
+.ban .ti svg.ph{width:19px;height:19px}
+.ban .bt{flex:1;min-width:0}
+.ban .bt b{display:block;font-weight:600}
+.ban .bt span{display:block;opacity:.92;font-size:14px}
+.ban time{font-weight:700;flex:none}
+.ban .chev{color:rgba(255,255,255,.85)}
+.ban:active{transform:scale(.985)}
+.calm{display:flex;align-items:center;gap:10px;background:#fff;border-radius:18px;padding:13px 14px;font-size:15.5px;font-weight:600;color:var(--green-ink)}
+.calm svg.ph{color:var(--green)}
+.tcards{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 calc(-1 * max(18px,env(safe-area-inset-left,0px)));padding:0 max(18px,env(safe-area-inset-left,0px)) 2px;scrollbar-width:none}
+.tcards::-webkit-scrollbar{display:none}
+.tc{flex:none;width:124px;background:#fff;border-radius:18px;padding:12px;scroll-snap-align:start}
+.tc .a{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:14px;margin-bottom:8px;background:color-mix(in srgb,var(--tc) 14%,#fff);color:var(--tc)}
+.tc b{display:block;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tc span{font-size:13px;color:var(--ink-2)}
+.tc .m{margin-top:8px;height:6px;border-radius:3px;background:var(--wash);overflow:hidden}.tc .m i{display:block;height:100%;border-radius:3px;background:var(--tc)}
+.tc.over .m i{background:var(--c-urgent)}.tc.over span{color:var(--c-urgent);font-weight:600}
+/* списки */
+.sec-h h2{font-size:17px}
+.sec-h .c{font-size:14px;color:var(--ink-3);font-weight:500}
+.panel{border-radius:var(--r);box-shadow:none;padding:2px 14px}
+.row{border-top-color:var(--line)}
+.av{background:var(--wash);color:#4c544d}
+.av.p-class,.av.s-class{background:#fde3ef;color:#8e2560}
+.av.p-play,.av.s-play{background:#e3f1d3;color:#2f5f17}
+.av.p-meal,.av.s-meal{background:#fdeed6;color:#93570e}
+.av.p-road,.av.s-road{background:#ece4f7;color:#6a4596}
+.av.s-bad{background:#fbe3e0;color:var(--c-urgent)}
+.rn{font-weight:600}
+.rs.w{color:#a8620a;font-weight:600}
+.pill{flex:none;border:0;height:36px;padding:0 15px;border-radius:12px;font-size:15px;font-weight:700;background:var(--green-2);color:var(--green-ink)}
+.pill.pri{background:var(--green);color:#fff}
+.pill:active{transform:scale(.96)}
+.rt.later{font-size:13.5px}
+.search{background:#fff;box-shadow:none;border-radius:14px;min-height:44px;padding-left:40px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='%237d857a'%3E%3Cpath d='M232.49,215.51,185,168a92.12,92.12,0,1,0-17,17l47.53,47.54a12,12,0,0,0,17-17ZM44,112a68,68,0,1,1,68,68A68.07,68.07,0,0,1,44,112Z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-size:18px;background-position:14px center}
+.btn{border-radius:14px}
+.btn.pri{background:var(--green)}
+.btn.line{background:var(--green-2);box-shadow:none;color:var(--green-ink)}
+.btn.soft{background:var(--green-2);color:var(--green-ink)}
+.nbox{border-radius:18px;box-shadow:none}
+.hint{box-shadow:none;border-radius:var(--r)}
+.ok{background:#fff;color:var(--green-ink);border-radius:18px}
+/* карточка «пора в школу» */
+.due2{display:flex;align-items:center;gap:11px;width:100%;border:0;text-align:left;padding:13px 12px 13px 13px;color:var(--ink);line-height:1.3}
+.due2 .ti{width:42px;height:42px;border-radius:15px;background:var(--c-urgent);color:#fff;display:grid;place-items:center;flex:none}
+.due2:not(.late) .ti{background:var(--c-road)}
+.due2 .dt{flex:1;min-width:0}
+.due2 .dt b{display:block;font-size:15.5px}
+.due2 .dt span{font-size:13.5px;color:var(--ink-2)}
+.due2 .go{flex:none;background:var(--c-urgent);color:#fff;border-radius:12px;height:36px;padding:0 12px;display:grid;place-items:center;font-weight:700;font-size:15px}
+.due2:not(.late) .go{background:var(--c-road)}
+/* таб-бар */
+.tabbar{background:#fff;box-shadow:0 -1px 0 var(--line)}
+.tab{font-size:11.5px;color:#9aa197}
+.tab svg.ph{width:52px;height:30px;padding:3px 14px;border-radius:12px;box-sizing:border-box}
+.tab.on{color:var(--green-ink)}
+.tab.on svg.ph{background:var(--green-2)}
+.tab .badge{background:var(--brand);left:calc(50% + 10px)}
+/* карточка ребёнка */
+.sheet:has(.kh){background:var(--paper)}
+.sheet:has(.kh) .grab{position:relative;z-index:2}
+.kh{margin:-29px -20px 0;padding:29px 20px 18px;background:#fff;border-radius:0 0 26px 26px;position:relative}
+.kwho{display:flex;align-items:center;gap:14px}
+.kwho .av{width:58px;height:58px;font-size:20px}
+.kwho h1{margin:0;font-size:22px;line-height:1.2;font-weight:700}
+.kwho p{margin:2px 0 0;font-size:14px;color:var(--ink-2)}
+.kx{margin-left:auto;align-self:flex-start;width:34px;height:34px;border:0;border-radius:50%;background:var(--paper);display:grid;place-items:center;color:var(--ink-2);flex:none}
+.kx svg.ph{width:16px;height:16px}
+.kst{display:flex;align-items:center;gap:12px;margin-top:16px;border-radius:18px;padding:12px 14px;background:color-mix(in srgb,var(--tc) 11%,#fff)}
+.kst .ti{width:42px;height:42px;border-radius:13px;background:var(--tc);color:#fff;display:grid;place-items:center;flex:none}
+.kst>div{flex:1;min-width:0}
+@media (max-width:360px){.kst{gap:10px;padding:12px}.kst .ti{width:38px;height:38px}.kst b{font-size:16px}.kst time{font-size:16px}.kh{padding-left:16px;padding-right:16px;margin-left:-20px;margin-right:-20px}}
+.kst b{display:block;font-size:17px}
+.kst span{font-size:13.5px;color:var(--ink-2)}
+.kst span.w{color:#a8620a;font-weight:600}
+.kst time{margin-left:auto;font-size:19px;white-space:nowrap;font-weight:700;color:color-mix(in srgb,var(--tc) 80%,#000);flex:none}
+.kacts{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.kacts .btn{min-height:52px;font-size:17px}
+.kacts .two2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.kacts .btn.soft{min-height:46px;font-size:15.5px}
+.kb{padding-top:18px}
+.ktl{list-style:none;margin:0;padding:2px 14px;background:#fff;border-radius:20px}
+.ktl li{display:flex;align-items:center;gap:12px;padding:10px 0;font-size:15px}
+.ktl li+li{border-top:1px solid var(--line)}
+.ktl .d{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;color:#fff;flex:none}
+.ktl .d svg.ph{width:16px;height:16px}
+.ktl .x2{flex:1;min-width:0;overflow-wrap:anywhere}
+.ktl time{color:var(--ink-3);font-size:14px;flex:none}
+.ktl .del{flex:none;border:0;background:var(--wash);color:var(--ink-3);border-radius:10px;width:32px;height:30px}
+.krows{margin-top:12px;background:#fff;border-radius:18px;overflow:hidden}
+.krow{display:flex;align-items:center;gap:12px;width:100%;min-height:54px;padding:0 14px;border:0;background:#fff;font-size:16px;font-weight:600;color:var(--ink);text-align:left;text-decoration:none;position:relative}
+.krow+.krow::before{content:"";position:absolute;top:0;left:62px;right:0;height:1px;background:var(--line)}
+.krow .d{width:36px;height:36px;border-radius:12px;background:var(--green-2);color:var(--green-ink);display:grid;place-items:center;flex:none}
+.krow .d svg.ph{width:18px;height:18px}
+.krow small{margin-left:auto;color:var(--ink-3);font-weight:500}
+.krow.danger{color:var(--c-urgent)}.krow.danger .d{background:#fbe3e0;color:var(--c-urgent)}
 /* desktop */
 @media (min-width:960px){
+  body.inapp .top{display:block}
+  .hero{margin:12px 0 0;border-radius:28px}
+  .hero .hacts{display:none}
+  .nowg{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);grid-template-areas:"al li" "te li";gap:24px 28px;align-items:start}.g-al{grid-area:al}.g-li{grid-area:li}.g-te{grid-area:te}
+  .tcards{margin:0;padding:0}
   .tabbar{display:none}
   main{padding-bottom:48px}
   .dtabs{display:flex;gap:4px;margin:0 auto}
@@ -270,17 +408,10 @@ th{font-size:13px;color:var(--ink-3);font-weight:600;border-top:0}
 const API="https://script.google.com/macros/s/AKfycbyq-9XatEqTnFvL1Fhn3V9BSM1RwRVRKiK1bjCJbarBvAYx8Z_fHdxRKb6n98E8fH8CBw/exec";
 
 /* ---------- icons ---------- */
-const IC={
-  now:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>',
-  road:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20 8.5 4M20 20 15.5 4M12 6v2.5M12 11v2.5M12 16v2.5"/></svg>',
-  report:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>',
-  lessons:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6.5C6.5 5 9.5 5 12 6.5 14.5 5 17.5 5 20 6.5V19c-2.5-1.5-5.5-1.5-8 0-2.5-1.5-5.5-1.5-8 0z"/><path d="M12 6.5V19"/></svg>',
-  pay:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="2.5"/><path d="M3 10h18M7 15h3"/></svg>',
-  team:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 19c.8-3.2 3-5 5.5-5s4.7 1.8 5.5 5"/><circle cx="17" cy="9" r="2.4"/><path d="M16 14.2c2.2.2 3.8 1.8 4.5 4.3"/></svg>',
-  door:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 20V5a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v15M4 20h16"/><circle cx="14.5" cy="12.5" r=".9" fill="currentColor"/></svg>',
-  chev:'<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>',
-  arrow:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>'
-};
+/* значки: Phosphor Icons (MIT), https://phosphoricons.com */
+const PH={"book": "<path d=\"M232,44H160a43.86,43.86,0,0,0-32,13.85A43.86,43.86,0,0,0,96,44H24A12,12,0,0,0,12,56V200a12,12,0,0,0,12,12H96a20,20,0,0,1,20,20,12,12,0,0,0,24,0,20,20,0,0,1,20-20h72a12,12,0,0,0,12-12V56A12,12,0,0,0,232,44ZM96,188H36V68H96a20,20,0,0,1,20,20V192.81A43.79,43.79,0,0,0,96,188Zm124,0H160a43.71,43.71,0,0,0-20,4.83V88a20,20,0,0,1,20-20h60Z\"/>", "bell": "<path d=\"M225.29,165.93C216.61,151,212,129.57,212,104a84,84,0,0,0-168,0c0,25.58-4.59,47-13.27,61.93A20.08,20.08,0,0,0,30.66,186,19.77,19.77,0,0,0,48,196H84.18a44,44,0,0,0,87.64,0H208a19.77,19.77,0,0,0,17.31-10A20.08,20.08,0,0,0,225.29,165.93ZM128,212a20,20,0,0,1-19.6-16h39.2A20,20,0,0,1,128,212ZM54.66,172C63.51,154,68,131.14,68,104a60,60,0,0,1,120,0c0,27.13,4.48,50,13.33,68Z\"/>", "lesson": "<path d=\"M232,44H160a43.86,43.86,0,0,0-32,13.85A43.86,43.86,0,0,0,96,44H24A12,12,0,0,0,12,56V200a12,12,0,0,0,12,12H96a20,20,0,0,1,20,20,12,12,0,0,0,24,0,20,20,0,0,1,20-20h72a12,12,0,0,0,12-12V56A12,12,0,0,0,232,44ZM96,188H36V68H96a20,20,0,0,1,20,20V192.81A43.79,43.79,0,0,0,96,188Zm124,0H160a43.71,43.71,0,0,0-20,4.83V88a20,20,0,0,1,20-20h60ZM164,96h32a12,12,0,0,1,0,24H164a12,12,0,0,1,0-24Zm44,52a12,12,0,0,1-12,12H164a12,12,0,0,1,0-24h32A12,12,0,0,1,208,148Z\"/>", "play": "<path d=\"M128,20A108,108,0,1,0,236,128,108.12,108.12,0,0,0,128,20ZM60,177.28A83.59,83.59,0,0,1,44.87,140H75.14A83.1,83.1,0,0,1,60,177.28ZM44.87,116A83.59,83.59,0,0,1,60,78.72,83.1,83.1,0,0,1,75.14,116ZM116,211.13a83.63,83.63,0,0,1-39-16.46A106.94,106.94,0,0,0,99.34,140H116ZM116,116H99.34A106.94,106.94,0,0,0,77,61.33a83.63,83.63,0,0,1,39-16.46Zm80-37.28A83.59,83.59,0,0,1,211.13,116H180.86A83.1,83.1,0,0,1,196,78.72ZM140,211.13V140h16.66A106.94,106.94,0,0,0,179,194.67,83.63,83.63,0,0,1,140,211.13ZM156.66,116H140V44.87a83.63,83.63,0,0,1,39,16.46A106.94,106.94,0,0,0,156.66,116ZM196,177.28A83.1,83.1,0,0,1,180.86,140h30.27A83.59,83.59,0,0,1,196,177.28Z\"/>", "meal": "<path d=\"M68,88V40a12,12,0,0,1,24,0V88a12,12,0,0,1-24,0ZM220,40V224a12,12,0,0,1-24,0V180H152a12,12,0,0,1-12-12,273.23,273.23,0,0,1,7.33-57.82C157.42,68.42,176.76,40.33,203.27,29A12,12,0,0,1,220,40ZM196,62.92C182.6,77,175,98,170.77,115.38A254.41,254.41,0,0,0,164.55,156H196ZM128,39A12,12,0,0,0,104,41l4,47.46a28,28,0,0,1-56,0L56,41A12,12,0,1,0,32,39L28,87c0,.34,0,.67,0,1a52.1,52.1,0,0,0,40,50.59V224a12,12,0,0,0,24,0V138.59A52.1,52.1,0,0,0,132,88c0-.33,0-.66,0-1Z\"/>", "road": "<path d=\"M253.11,104.18,207.54,51.09A19.94,19.94,0,0,0,192.26,44H32A20,20,0,0,0,12,64V176a20,20,0,0,0,20,20H46.06a36,36,0,0,0,67.88,0h40.12a36,36,0,0,0,67.88,0H236a20,20,0,0,0,20-20V112A12.05,12.05,0,0,0,253.11,104.18ZM217.89,100H176V68h14.42ZM104,100V68h48v32ZM80,68v32H36V68Zm0,128a12,12,0,1,1,12-12A12,12,0,0,1,80,196Zm108,0a12,12,0,1,1,12-12A12,12,0,0,1,188,196Zm33.94-24a36,36,0,0,0-67.88,0H113.94a36,36,0,0,0-67.88,0H36V124H232v48Z\"/>", "clock": "<path d=\"M128,20A108,108,0,1,0,236,128,108.12,108.12,0,0,0,128,20Zm0,192a84,84,0,1,1,84-84A84.09,84.09,0,0,1,128,212Zm68-84a12,12,0,0,1-12,12H128a12,12,0,0,1-12-12V72a12,12,0,0,1,24,0v44h44A12,12,0,0,1,196,128Z\"/>", "hour": "<path d=\"M204,75.64V40a20,20,0,0,0-20-20H72A20,20,0,0,0,52,40V76a20.1,20.1,0,0,0,8,16l48,36L60,164a20.1,20.1,0,0,0-8,16v36a20,20,0,0,0,20,20H184a20,20,0,0,0,20-20V180.36a20.13,20.13,0,0,0-7.94-16L147.9,128l48.16-36.4A20.13,20.13,0,0,0,204,75.64ZM180,44V72H76V44Zm-52,69L105.33,96h45.1Zm52,99H76V182l40-30v16a12,12,0,0,0,24,0V152.11l40,30.24Z\"/>", "chev": "<path d=\"M184.49,136.49l-80,80a12,12,0,0,1-17-17L159,128,87.51,56.49a12,12,0,1,1,17-17l80,80A12,12,0,0,1,184.49,136.49Z\"/>", "x": "<path d=\"M208.49,191.51a12,12,0,0,1-17,17L128,145,64.49,208.49a12,12,0,0,1-17-17L111,128,47.51,64.49a12,12,0,0,1,17-17L128,111l63.51-63.52a12,12,0,0,1,17,17L145,128Z\"/>", "phone": "<path d=\"M224,154.8l-47.09-21.11-.18-.08a19.94,19.94,0,0,0-19,1.75,13.08,13.08,0,0,0-1.12.84l-22.31,19c-13-7.05-26.43-20.37-33.49-33.21l19.06-22.66a11.76,11.76,0,0,0,.85-1.15,20,20,0,0,0,1.66-18.83,1.42,1.42,0,0,1-.08-.18L101.2,32A20.06,20.06,0,0,0,80.42,20.15,60.27,60.27,0,0,0,28,80c0,81.61,66.39,148,148,148a60.27,60.27,0,0,0,59.85-52.42A20.06,20.06,0,0,0,224,154.8ZM176,204A124.15,124.15,0,0,1,52,80,36.29,36.29,0,0,1,80.48,44.46l18.82,42L80.14,109.28a12,12,0,0,0-.86,1.16A20,20,0,0,0,78,130.08c9.42,19.28,28.83,38.56,48.31,48A20,20,0,0,0,146,176.63a11.63,11.63,0,0,0,1.11-.85l22.43-19.07,42,18.81A36.29,36.29,0,0,1,176,204Z\"/>", "search": "<path d=\"M232.49,215.51,185,168a92.12,92.12,0,1,0-17,17l47.53,47.54a12,12,0,0,0,17-17ZM44,112a68,68,0,1,1,68,68A68.07,68.07,0,0,1,44,112Z\"/>", "warn": "<path d=\"M240.26,186.1,152.81,34.23h0a28.74,28.74,0,0,0-49.62,0L15.74,186.1a27.45,27.45,0,0,0,0,27.71A28.31,28.31,0,0,0,40.55,228h174.9a28.31,28.31,0,0,0,24.79-14.19A27.45,27.45,0,0,0,240.26,186.1Zm-20.8,15.7a4.46,4.46,0,0,1-4,2.2H40.55a4.46,4.46,0,0,1-4-2.2,3.56,3.56,0,0,1,0-3.73L124,46.2a4.77,4.77,0,0,1,8,0l87.44,151.87A3.56,3.56,0,0,1,219.46,201.8ZM116,136V104a12,12,0,0,1,24,0v32a12,12,0,0,1-24,0Zm28,40a16,16,0,1,1-16-16A16,16,0,0,1,144,176Z\"/>", "ok": "<path d=\"M176.49,95.51a12,12,0,0,1,0,17l-56,56a12,12,0,0,1-17,0l-24-24a12,12,0,1,1,17-17L112,143l47.51-47.52A12,12,0,0,1,176.49,95.51ZM236,128A108,108,0,1,1,128,20,108.12,108.12,0,0,1,236,128Zm-24,0a84,84,0,1,0-84,84A84.09,84.09,0,0,0,212,128Z\"/>", "out": "<path d=\"M124,216a12,12,0,0,1-12,12H48a12,12,0,0,1-12-12V40A12,12,0,0,1,48,28h64a12,12,0,0,1,0,24H60V204h52A12,12,0,0,1,124,216Zm108.49-96.49-40-40a12,12,0,0,0-17,17L195,116H112a12,12,0,0,0,0,24h83l-19.52,19.51a12,12,0,0,0,17,17l40-40A12,12,0,0,0,232.49,119.51Z\"/>", "home": "<path d=\"M222.14,105.85l-80-80a20,20,0,0,0-28.28,0l-80,80A19.86,19.86,0,0,0,28,120v96a12,12,0,0,0,12,12h64a12,12,0,0,0,12-12V164h24v52a12,12,0,0,0,12,12h64a12,12,0,0,0,12-12V120A19.86,19.86,0,0,0,222.14,105.85ZM204,204H164V152a12,12,0,0,0-12-12H104a12,12,0,0,0-12,12v52H52V121.65l76-76,76,76Z\"/>", "homeF": "<path d=\"M224,120v96a8,8,0,0,1-8,8H160a8,8,0,0,1-8-8V164a4,4,0,0,0-4-4H108a4,4,0,0,0-4,4v52a8,8,0,0,1-8,8H40a8,8,0,0,1-8-8V120a16,16,0,0,1,4.69-11.31l80-80a16,16,0,0,1,22.62,0l80,80A16,16,0,0,1,224,120Z\"/>", "wallet": "<path d=\"M196,136a16,16,0,1,1-16-16A16,16,0,0,1,196,136Zm40-36v80a32,32,0,0,1-32,32H60a32,32,0,0,1-32-32V60.92A32,32,0,0,1,60,28H192a12,12,0,0,1,0,24H60a8,8,0,0,0-8,8.26v.08A8.32,8.32,0,0,0,60.48,68H204A32,32,0,0,1,236,100Zm-24,0a8,8,0,0,0-8-8H60.48A33.72,33.72,0,0,1,52,90.92V180a8,8,0,0,0,8,8H204a8,8,0,0,0,8-8Z\"/>", "walletF": "<path d=\"M216,64H56a8,8,0,0,1,0-16H192a8,8,0,0,0,0-16H56A24,24,0,0,0,32,56V184a24,24,0,0,0,24,24H216a16,16,0,0,0,16-16V80A16,16,0,0,0,216,64Zm-36,80a12,12,0,1,1,12-12A12,12,0,0,1,180,144Z\"/>", "chart": "<path d=\"M224,196h-4V40a12,12,0,0,0-12-12H152a12,12,0,0,0-12,12V76H96A12,12,0,0,0,84,88v36H48a12,12,0,0,0-12,12v60H32a12,12,0,0,0,0,24H224a12,12,0,0,0,0-24ZM164,52h32V196H164Zm-56,48h32v96H108ZM60,148H84v48H60Z\"/>", "chartF": "<path d=\"M232,208a8,8,0,0,1-8,8H32a8,8,0,0,1,0-16h8V136a8,8,0,0,1,8-8H72a8,8,0,0,1,8,8v64H96V88a8,8,0,0,1,8-8h32a8,8,0,0,1,8,8V200h16V40a8,8,0,0,1,8-8h40a8,8,0,0,1,8,8V200h8A8,8,0,0,1,232,208Z\"/>", "team": "<path d=\"M164.38,181.1a52,52,0,1,0-72.76,0,75.89,75.89,0,0,0-30,28.89,12,12,0,0,0,20.78,12,53,53,0,0,1,91.22,0,12,12,0,1,0,20.78-12A75.89,75.89,0,0,0,164.38,181.1ZM100,144a28,28,0,1,1,28,28A28,28,0,0,1,100,144Zm147.21,9.59a12,12,0,0,1-16.81-2.39c-8.33-11.09-19.85-19.59-29.33-21.64a12,12,0,0,1-1.82-22.91,20,20,0,1,0-24.78-28.3,12,12,0,1,1-21-11.6,44,44,0,1,1,73.28,48.35,92.18,92.18,0,0,1,22.85,21.69A12,12,0,0,1,247.21,153.59Zm-192.28-24c-9.48,2.05-21,10.55-29.33,21.65A12,12,0,0,1,6.41,136.79,92.37,92.37,0,0,1,29.26,115.1a44,44,0,1,1,73.28-48.35,12,12,0,1,1-21,11.6,20,20,0,1,0-24.78,28.3,12,12,0,0,1-1.82,22.91Z\"/>", "teamF": "<path d=\"M64.12,147.8a4,4,0,0,1-4,4.2H16a8,8,0,0,1-7.8-6.17,8.35,8.35,0,0,1,1.62-6.93A67.79,67.79,0,0,1,37,117.51a40,40,0,1,1,66.46-35.8,3.94,3.94,0,0,1-2.27,4.18A64.08,64.08,0,0,0,64,144C64,145.28,64,146.54,64.12,147.8Zm182-8.91A67.76,67.76,0,0,0,219,117.51a40,40,0,1,0-66.46-35.8,3.94,3.94,0,0,0,2.27,4.18A64.08,64.08,0,0,1,192,144c0,1.28,0,2.54-.12,3.8a4,4,0,0,0,4,4.2H240a8,8,0,0,0,7.8-6.17A8.33,8.33,0,0,0,246.17,138.89Zm-89,43.18a48,48,0,1,0-58.37,0A72.13,72.13,0,0,0,65.07,212,8,8,0,0,0,72,224H184a8,8,0,0,0,6.93-12A72.15,72.15,0,0,0,157.19,182.07Z\"/>", "roadF": "<path d=\"M254.07,106.79,208.53,53.73A16,16,0,0,0,196.26,48H32A16,16,0,0,0,16,64V176a16,16,0,0,0,16,16H49a32,32,0,0,0,62,0h50a32,32,0,0,0,62,0h17a16,16,0,0,0,16-16V112A8,8,0,0,0,254.07,106.79ZM32,104V64H88v40Zm48,96a16,16,0,1,1,16-16A16,16,0,0,1,80,200Zm80-96H104V64h56Zm32,96a16,16,0,1,1,16-16A16,16,0,0,1,192,200Zm-16-96V64h20.26l34.33,40Z\"/>", "student": "<path d=\"M227.79,52.62l-96-32a11.85,11.85,0,0,0-7.58,0l-96,32A12,12,0,0,0,20,63.37,6.05,6.05,0,0,0,20,64v80a12,12,0,0,0,24,0V80.65l23.71,7.9a67.92,67.92,0,0,0,18.42,85A100.36,100.36,0,0,0,46,209.44a12,12,0,1,0,20.1,13.11C80.37,200.59,103,188,128,188s47.63,12.59,61.95,34.55a12,12,0,1,0,20.1-13.11,100.36,100.36,0,0,0-40.18-35.92,67.92,67.92,0,0,0,18.42-85l39.5-13.17a12,12,0,0,0,0-22.76Zm-99.79-8L186.05,64,128,83.35,70,64ZM172,120A44,44,0,1,1,90.94,96.29l33.27,11.09a11.89,11.89,0,0,0,7.58,0l33.27-11.09A43.85,43.85,0,0,1,172,120Z\"/>", "studentF": "<path d=\"M226.53,56.41l-96-32a8,8,0,0,0-5.06,0l-96,32A8,8,0,0,0,24,64v80a8,8,0,0,0,16,0V75.1L73.59,86.29a64,64,0,0,0,20.65,88.05c-18,7.06-33.56,19.83-44.94,37.29a8,8,0,1,0,13.4,8.74C77.77,197.25,101.57,184,128,184s50.23,13.25,65.3,36.37a8,8,0,0,0,13.4-8.74c-11.38-17.46-27-30.23-44.94-37.29a64,64,0,0,0,20.65-88l44.12-14.7a8,8,0,0,0,0-15.18ZM176,120A48,48,0,1,1,89.35,91.55l36.12,12a8,8,0,0,0,5.06,0l36.12-12A47.89,47.89,0,0,1,176,120Z\"/>", "door": "<path d=\"M232,212H212V40a20,20,0,0,0-20-20H64A20,20,0,0,0,44,40V212H24a12,12,0,0,0,0,24H232a12,12,0,0,0,0-24Zm-44,0H172V44h16ZM68,44h80V212H68Zm68,84a16,16,0,1,1-16-16A16,16,0,0,1,136,128Z\"/>", "doorF": "<path d=\"M232,216H208V40a16,16,0,0,0-16-16H64A16,16,0,0,0,48,40V216H24a8,8,0,0,0,0,16H232a8,8,0,0,0,0-16Zm-64,0H64V40H168Zm-40-84a12,12,0,1,1,12,12A12,12,0,0,1,128,132Z\"/>", "arrive": "<path d=\"M144.49,136.49l-40,40a12,12,0,0,1-17-17L107,140H24a12,12,0,0,1,0-24h83L87.51,96.49a12,12,0,0,1,17-17l40,40A12,12,0,0,1,144.49,136.49ZM200,28H136a12,12,0,0,0,0,24h52V204H136a12,12,0,0,0,0,24h64a12,12,0,0,0,12-12V40A12,12,0,0,0,200,28Z\"/>", "plus": "<path d=\"M228,128a12,12,0,0,1-12,12H140v76a12,12,0,0,1-24,0V140H40a12,12,0,0,1,0-24h76V40a12,12,0,0,1,24,0v76h76A12,12,0,0,1,228,128Z\"/>", "school": "<path d=\"M249.8,85.49l-116-64a12,12,0,0,0-11.6,0l-116,64a12,12,0,0,0,0,21l21.8,12v47.76a19.89,19.89,0,0,0,5.09,13.32C46.63,194.7,77,220,128,220a136.88,136.88,0,0,0,40-5.75V240a12,12,0,0,0,24,0V204.12a119.53,119.53,0,0,0,30.91-24.51A19.89,19.89,0,0,0,228,166.29V118.53l21.8-12a12,12,0,0,0,0-21ZM128,45.71,219.16,96,186,114.3a1.88,1.88,0,0,1-.18-.12l-52-28.69a12,12,0,0,0-11.6,21l39,21.49L128,146.3,36.84,96ZM128,196c-40.42,0-64.65-19.07-76-31.27v-33l70.2,38.74a12,12,0,0,0,11.6,0L168,151.64v37.23A110.46,110.46,0,0,1,128,196Zm76-31.27a93.21,93.21,0,0,1-12,10.81V138.39l12-6.62Z\"/>", "leave": "<path d=\"M240,204H228V144a12,12,0,0,0,12.49-19.78L142.14,25.85a20,20,0,0,0-28.28,0L15.51,124.2A12,12,0,0,0,28,144v60H16a12,12,0,0,0,0,24H240a12,12,0,0,0,0-24ZM52,121.65l76-76,76,76V204H164V152a12,12,0,0,0-12-12H104a12,12,0,0,0-12,12v52H52ZM140,204H116V164h24Z\"/>", "user": "<path d=\"M234.38,210a123.36,123.36,0,0,0-60.78-53.23,76,76,0,1,0-91.2,0A123.36,123.36,0,0,0,21.62,210a12,12,0,1,0,20.77,12c18.12-31.32,50.12-50,85.61-50s67.49,18.69,85.61,50a12,12,0,0,0,20.77-12ZM76,96a52,52,0,1,1,52,52A52.06,52.06,0,0,1,76,96Z\"/>"};
+const ic=(n,c="")=>`<svg class="ph${c?" "+c:""}" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true">${PH[n]||""}</svg>`;
+const IC={chev:ic("chev","chev"),arrow:ic("chev")};
 
 /* ---------- state ---------- */
 const S={staffList:[],staff:[],kids:[],marks:[],routes:[],week:null,settings:{playMax:60,mealAfter:120,teacherMax:3,sessionMax:50},
@@ -336,10 +467,10 @@ function derive(marks){
 }
 function state(k,now){
   const st=S.settings;
-  if(k.place==="class"){const bad=now-k.since>st.sessionMax*60000;return {c:bad?"bad":"class",w:"Դասին · "+sname(k.teacher),t:dur(now-k.since)}}
+  if(k.place==="class"){const bad=now-k.since>st.sessionMax*60000;return {c:bad?"bad":"class",w:"Դասին, "+sname(k.teacher),t:dur(now-k.since)}}
   if(k.place==="play"){const bad=!Object.keys(k.done).length&&now-k.since>st.playMax*60000;return {c:bad?"bad":"play",w:"Խաղասենյակ",t:dur(now-k.since)}}
   if(k.place==="meal") return {c:"meal",w:"Ճաշ",t:dur(now-k.since)};
-  if(k.place==="road") return {c:"road",w:"Ճանապարհին · "+sname(k.escort),t:dur(now-k.since)};
+  if(k.place==="road") return {c:"road",w:"Ճանապարհին, "+sname(k.escort),t:dur(now-k.since)};
   if(k.place==="school") return {c:"out",w:"Դպրոցում",t:hm(k.since)+"-ից"};
   if(k.place==="home") return {c:"out",w:"Գնացել է տուն",t:hm(k.since)};
   if(k.place==="absent") return {c:"out",w:"Այսօր չի գալու",t:""};
@@ -370,23 +501,25 @@ function groupsOf(list){const g=[];list.forEach(r=>{const key=r.time+"|"+r.schoo
 function alerts(D,now){
   const out=[],st=S.settings;
   liveRoutes().forEach(r=>{if(rstat(r,now).st!=="late")return;
-    out.push({w:r.kind!=="pickup",kid:r.kid,txt:r.kind==="pickup"?`${kidName(r.kid)} — դասերն ավարտվել են ${r.time}-ին, չեն վերցրել · ${sname(r.staff)}`:`${kidName(r.kid)} — ${r.time}-ին պետք է տարվեր դպրոց · ${sname(r.staff)}`})});
+    out.push(r.kind==="pickup"?{u:1,kid:r.kid,t:kidName(r.kid),s:"Չեն վերցրել դպրոցից, գնում է՝ "+sname(r.staff),right:r.time,i:"clock"}:{u:1,kid:r.kid,t:kidName(r.kid),s:"Պետք էր տանել դպրոց, տանում է՝ "+sname(r.staff),right:r.time,i:"clock"})});
   D.kids.forEach(k=>{if(!k.inCenter)return;
-    if(k.place==="play"&&!Object.keys(k.done).length&&now-k.since>st.playMax*60000)out.push({kid:k.id,txt:`${k.name} — ${dur(now-k.since)} խաղասենյակում, դասեր չի արել`});
-    if(k.place==="class"&&now-k.since>st.sessionMax*60000)out.push({w:1,kid:k.id,txt:`${k.name} — ${dur(now-k.since)} դասին · ${sname(k.teacher)}`});
-    if(!k.ate&&k.place!=="meal"&&k.arrivedAt&&now-k.arrivedAt>st.mealAfter*60000)out.push({w:1,kid:k.id,txt:`${k.name} — կենտրոնում է ${hm(k.arrivedAt)}-ից, դեռ չի կերել`});
+    if(k.place==="play"&&!Object.keys(k.done).length&&now-k.since>st.playMax*60000)out.push({kid:k.id,t:k.name,s:dur(now-k.since)+" խաղում է, դասերը չի արել",i:"hour"});
+    if(k.place==="class"&&now-k.since>st.sessionMax*60000)out.push({kid:k.id,t:k.name,s:dur(now-k.since)+" դասին, "+sname(k.teacher),i:"hour"});
+    if(!k.ate&&k.place!=="meal"&&k.arrivedAt&&now-k.arrivedAt>st.mealAfter*60000)out.push({kid:k.id,t:k.name,s:"Կենտրոնում է "+hm(k.arrivedAt)+"-ից, դեռ չի կերել",i:"meal"});
   });
   S.staff.filter(s=>s.role==="teacher"||s.role==="coord").forEach(s=>{const n=D.kids.filter(k=>k.place==="class"&&k.teacher===s.id).length;
-    if(n>st.teacherMax)out.push({w:1,txt:`${s.name} — միաժամանակ ${n} երեխա (նորման՝ ${st.teacherMax})`})});
+    if(n>st.teacherMax)out.push({t:s.name,s:"Միաժամանակ "+n+" երեխա, նորման՝ "+st.teacherMax,i:"warn"})});
+  out.forEach(a=>a.txt=a.t+". "+a.s);
   return out;
 }
+const banner=a=>`<${a.kid?"button":"div"} class="ban${a.u?" u":""}"${a.kid?` data-act="open" data-kid="${esc(a.kid)}"`:""}><span class="ti">${ic(a.i||"warn")}</span><span class="bt"><b>${esc(a.t)}</b><span>${esc(a.s)}</span></span>${a.right?`<time class="num">${esc(a.right)}</time>`:""}${a.kid?IC.chev:""}</${a.kid?"button":"div"}>`;
 
 /* ---------- pieces ---------- */
 const matchQ=k=>{const q=S.q.trim().toLowerCase();return !q||k.name.toLowerCase().includes(q)};
 const search=()=>`<input class="search" id="q" type="search" placeholder="Որոնել անունով" value="${esc(S.q)}" autocomplete="off" enterkeyhint="search">`;
 function kidRow(k,now,opts={}){
   const s=state(k,now);
-  return `<button class="row" data-act="open" data-kid="${esc(k.id)}"><div class="av s-${s.c}">${esc(ini(k.name))}</div><div class="rm"><div class="rn">${esc(k.name)}</div><div class="rs${s.c==="bad"?" bad":""}">${esc(opts.sub||s.w)}</div></div><div class="rt num">${esc(opts.right??s.t)}</div>${IC.chev}</button>`;
+  return `<button class="row" data-act="open" data-kid="${esc(k.id)}"><div class="av ${s.c==="bad"?"s-bad":"p-"+k.place}">${esc(ini(k.name))}</div><div class="rm"><div class="rn">${esc(k.name)}</div><div class="rs${opts.subCls?" "+opts.subCls:s.c==="bad"?" bad":""}">${esc(opts.sub||s.w)}</div></div><div class="rt num">${esc(opts.right??s.t)}</div>${IC.chev}</button>`;
 }
 const sec=(title,count,body,extra="")=>`<section><div class="sec-h"><h2>${title}</h2>${count!=null?`<span class="c num">${count}</span>`:""}${extra}</div>${body}</section>`;
 const panel=inner=>`<div class="panel">${inner}</div>`;
@@ -396,7 +529,7 @@ function dueBanner(now){
   const mine=liveRoutes().filter(r=>r.staff===S.me).map(r=>({r,s:rstat(r,now)})).filter(x=>x.s.st==="now"||x.s.st==="late");
   if(!mine.length) return "";
   const r=mine[0].r,n=mine.filter(x=>x.r.time===r.time&&x.r.school===r.school&&x.r.kind===r.kind).length,late=mine.some(x=>x.s.st==="late");
-  return `<button class="due${late?" late":""}" data-act="myroute"><div><b>${r.kind==="pickup"?"Ժամն է գնալ դպրոց":"Ժամն է տանել դպրոց"}</b><span class="num">${esc(r.time)} · ${esc(r.school||"")} · ${n} երեխա</span></div>${IC.arrow}</button>`;
+  return `<button class="ovl due2${late?" late":""}" data-act="myroute"><span class="ti">${ic("road")}</span><span class="dt"><b>${r.kind==="pickup"?"Ժամն է գնալ դպրոց":"Ժամն է տանել դպրոց"}</b><span class="num">${esc(r.time)}, ${esc(r.school||"դպրոց")}, ${n} երեխա</span></span><span class="go">Բացել</span></button>`;
 }
 function pushCard(){
   const ios=/iphone|ipad|ipod/i.test(navigator.userAgent),standalone=window.matchMedia("(display-mode: standalone)").matches||navigator.standalone;
@@ -429,13 +562,22 @@ function installHint(){
 
 /* ---------- screens ---------- */
 function teacherScreen(D,now){
-  const me=meS(),subs=mySubjects(),subj=subs[0]||"";
+  const me=meS(),subs=mySubjects();
   const mine=D.kids.filter(k=>k.place==="class"&&k.teacher===me.id);
   const others=D.kids.filter(k=>!(k.place==="class"&&k.teacher===me.id)&&matchQ(k));
-  let h=`<div class="stack">${installHint()}${pushCard()}${dueBanner(now)}`;
-  h+=sec("Ինձ մոտ են",mine.length,mine.length?panel(mine.map(k=>{const bad=now-k.since>S.settings.sessionMax*60000;
-    return `<div class="row"><button class="av s-${bad?"bad":"class"}" data-act="open" data-kid="${esc(k.id)}" style="border:0" aria-label="${esc(k.name)}">${esc(ini(k.name))}</button><div class="rm" data-act="open" data-kid="${esc(k.id)}"><div class="rn">${esc(k.name)}</div><div class="rs${bad?" bad":""} num">${dur(now-k.since)}</div></div><button class="btn sm pri" data-act="mark" data-kind="done" data-kid="${esc(k.id)}">Արեց</button></div>`}).join("")):emptyP("Հիմա ձեզ մոտ ոչ ոք չկա։ Սեղմեք երեխայի անվան վրա ներքևում, որ վերցնեք։"));
-  h+=sec("Բոլոր երեխաները",null,search()+(others.length?panel(others.map(k=>{const d=subs.filter(x=>k.done[x]);return kidRow(k,now,{sub:d.length?state(k,now).w+" · "+d.join(", ")+"՝ արված":undefined})}).join("")):emptyP("Ոչ ոք չի գտնվել։")));
+  let h=`<div class="stack">${dueBanner(now)}${installHint()}${pushCard()}`;
+  h+=sec("Ինձ մոտ են",mine.length||null,mine.length?panel(mine.map(k=>{const bad=now-k.since>S.settings.sessionMax*60000;
+    return `<div class="row"><button class="av ${bad?"s-bad":"p-class"}" data-act="open" data-kid="${esc(k.id)}" style="border:0" aria-label="${esc(k.name)}">${esc(ini(k.name))}</button><div class="rm" data-act="open" data-kid="${esc(k.id)}"><div class="rn">${esc(k.name)}</div><div class="rs${bad?" bad":""} num">${subs.length>1&&k.subject?esc(k.subject)+", ":""}${dur(now-k.since)}</div></div><button class="pill pri" data-act="mark" data-kind="done" data-kid="${esc(k.id)}">Արեց</button></div>`}).join("")):emptyP("Հիմա ձեզ մոտ ոչ ոք չկա։ Ներքևում սեղմեք «Վերցնել»։"));
+  const rowFor=k=>{const s=state(k,now),d=subs.filter(x=>k.done[x]),left=subs.filter(x=>!k.done[x]);
+    let sub=k.place==="class"?[k.subject,sname(k.teacher)].filter(Boolean).join(", "):s.w;
+    if(k.inCenter&&k.place!=="class")sub+=d.length?", "+d.join(", ")+"՝ արված":"";
+    const warn=k.place==="play"&&s.c==="bad";
+    let right="";
+    if(k.place==="play"&&left.length===1)right=`<button class="pill" data-act="mark" data-kind="take" data-kid="${esc(k.id)}" data-subject="${esc(left[0])}">Վերցնել</button>`;
+    else if(k.place==="meal")right=`<div class="rt later">ճաշից հետո</div>`;
+    if(!right)return kidRow(k,now,{sub,subCls:warn?"w":""});
+    return `<div class="row"><div class="av ${warn?"s-bad":"p-"+k.place}" data-act="open" data-kid="${esc(k.id)}">${esc(ini(k.name))}</div><div class="rm" data-act="open" data-kid="${esc(k.id)}"><div class="rn">${esc(k.name)}</div><div class="rs${warn?" w":""}">${esc(warn?"Խաղում է, դասերը չի արել":sub)}</div></div>${right}</div>`};
+  h+=sec("Բոլոր երեխաները",null,search()+(others.length?panel(others.map(rowFor).join("")):emptyP("Ոչ ոք չի գտնվել։")));
   return h+`</div>`;
 }
 function doorScreen(D,now){
@@ -465,19 +607,29 @@ function routesScreen(D,now,assign){
   });
   return `<div class="stack">${sec("Այսօրվա ճանապարհը",list.length,panel(body))}${toggle}</div>`;
 }
+const PLACES=[["class","Դասին"],["play","Խաղում"],["meal","Ճաշում"],["road","Ճանապարհին"],["school","Դպրոցում"],["none","Դեռ չեն եկել"],["absent","Այսօր չեն գալու"],["home","Գնացել են տուն"]];
+const TILES=[["class","Դասին","lesson","c-class"],["play","Խաղում","play","c-play"],["meal","Ճաշում","meal","c-meal"],["road","Ճամփին","road","c-road"]];
+function placeRow(k,now){const s=state(k,now);let sub=s.w,subCls="";
+  if(k.place==="class")sub=[k.subject,sname(k.teacher)].filter(Boolean).join(", ");
+  if(k.place==="play"||k.place==="meal"){const d=Object.keys(k.done);sub=d.length?"Արել է՝ "+d.join(", "):"Դասերը չի արել";if(!d.length&&k.place==="play"&&s.c==="bad")subCls="w"}
+  if(k.place==="road")sub="Տանում է՝ "+sname(k.escort);
+  return kidRow(k,now,{sub,subCls})}
 function nowScreen(D,now){
-  const inC=D.kids.filter(k=>k.inCenter),al=alerts(D,now);
-  const N=[["center","Կենտրոնում",inC.length,""],["class","Դասին",inC.filter(k=>k.place==="class").length,"k-class"],["play","Խաղասենյակ",inC.filter(k=>k.place==="play").length,"k-play"],["meal","Ճաշ",inC.filter(k=>k.place==="meal").length,"k-meal"]];
-  const nums=`<div class="nums">${N.map(n=>`<button class="nbox ${n[3]} ${S.filter===n[0]?"on":""}" data-act="filter" data-v="${n[0]}"><span>${n[1]}</span><b class="num">${n[2]}</b></button>`).join("")}</div>`;
-  const alertsH=sec("Ուշադրություն",al.length||null,al.length?`<div class="alerts">${al.map(a=>`<button class="al${a.w?" w":""}" ${a.kid?`data-act="open" data-kid="${esc(a.kid)}"`:""}><i></i><span>${esc(a.txt)}</span></button>`).join("")}</div>`:`<div class="ok">Հիմա ամեն ինչ կարգին է։</div>`);
+  const al=alerts(D,now),f=["class","play","meal","road"].includes(S.filter)?S.filter:"";
+  const cnt=v=>D.kids.filter(k=>k.place===v&&(v==="road"||k.inCenter)).length;
+  const tiles=`<div class="ovl tiles">${TILES.map(([v,l,i,c])=>`<button class="tile${f===v?" on":""}" data-act="filter" data-v="${v}" style="--tc:var(--${c})" aria-pressed="${f===v}"><span class="ti">${ic(i)}</span><b class="num">${cnt(v)}</b><span class="tl2">${l}</span></button>`).join("")}</div>`;
+  const alH=sec("Ուշադրություն",null,al.length?`<div class="bans">${al.map(banner).join("")}</div>`:`<div class="calm">${ic("ok")}Հիմա ամեն ինչ կարգին է</div>`);
+  const q=S.q.trim(),list=D.kids.filter(matchQ);S.exp=S.exp||{};
+  let groups="";
+  PLACES.filter(([p])=>!f||p===f).forEach(([p,name])=>{const ks=list.filter(k=>k.place===p);if(!ks.length)return;
+    const lim=q||f||S.exp[p]||ks.length<=6?ks.length:5;
+    groups+=sec(name,ks.length,panel(ks.slice(0,lim).map(k=>placeRow(k,now)).join("")+(lim<ks.length?`<button class="row" data-act="expand" data-v="${p}"><span class="rm" style="color:var(--green);font-weight:600">Եվս ${ks.length-lim} երեխա</span>${IC.chev}</button>`:"")))});
+  const listH=`<div id="kidlist" style="scroll-margin-top:16px">${search()}</div>`+(groups||emptyP(q?"Ոչ ոք չի գտնվել։":f?"Հիմա այստեղ ոչ ոք չկա։":"Երեխաներ դեռ չկան։"));
+  const tcol=["c-class","c-play","c-road","c-meal"];
   const teachers=workers().filter(s=>s.role==="teacher"||s.role==="coord");
-  const teachH=sec("Մանկավարժները",null,panel(teachers.map(s=>{const n=D.kids.filter(k=>k.place==="class"&&k.teacher===s.id).length;
-    return `<div class="row"><div class="av s-${n>S.settings.teacherMax?"bad":n?"class":"out"}">${esc(ini(s.name))}</div><div class="rm"><div class="rn">${esc(s.name)}</div><div class="rs">${esc(s.subject||"")}</div></div><div class="rt num">${n} երեխա</div></div>`}).join("")));
-  const F=[["all","Բոլորը"],["center","Կենտրոնում"],["class","Դասին"],["play","Խաղասենյակ"],["meal","Ճաշ"],["road","Ճանապարհին"],["school","Դպրոցում"],["none","Չեն եկել"],["home","Գնացել են"]];
-  const list=D.kids.filter(k=>(S.filter==="all"||(S.filter==="center"?k.inCenter:k.place===S.filter))&&matchQ(k));
-  const FN={all:"Ով որտեղ է",center:"Կենտրոնում",class:"Դասին",play:"Խաղասենյակում",meal:"Ճաշի",road:"Ճանապարհին",school:"Դպրոցում",none:"Դեռ չեն եկել",home:"Գնացել են"};
-  const listH=`<div id="kidlist" style="scroll-margin-top:80px"></div>`+sec(FN[S.filter]||"Ով որտեղ է",list.length,search()+`<div class="chips">${F.map(f=>`<button class="chip ${S.filter===f[0]?"on":""}" data-act="filter" data-v="${f[0]}">${f[1]}</button>`).join("")}</div>`+(list.length?panel(list.map(k=>kidRow(k,now)).join("")):emptyP("Այս ցուցակում ոչ ոք չկա։")));
-  return `<div class="stack">${installHint()}${pushCard()}<div class="two"><div class="stack">${nums}${alertsH}${teachH}</div><div class="stack">${listH}</div></div></div>`;
+  const teachH=teachers.length?sec("Մանկավարժները",null,`<div class="tcards">${teachers.map((s,i)=>{const n=D.kids.filter(k=>k.place==="class"&&k.teacher===s.id).length,mx=S.settings.teacherMax||3;
+    return `<div class="tc${n>mx?" over":""}" style="--tc:var(--${tcol[i%4]})"><div class="a">${esc(ini(s.name).slice(0,1))}</div><b>${esc(s.name)}</b><span class="num">${n?n+" երեխա":"ազատ է"}</span><div class="m"><i style="width:${Math.min(100,Math.round(n/mx*100))}%"></i></div></div>`}).join("")}</div>`):"";
+  return `<div class="stack">${tiles}${installHint()}${pushCard()}<div class="nowg"><div class="g-al">${alH}</div><div class="g-li stack">${listH}</div>${teachH?`<div class="g-te">${teachH}</div>`:""}</div></div>`;
 }
 function cookScreen(D,now){
   const eating=D.kids.filter(k=>k.place==="meal"),notYet=D.kids.filter(k=>k.inCenter&&!k.ate&&k.place!=="meal"),ate=D.kids.filter(k=>k.ate);
@@ -679,8 +831,8 @@ function sheetHtml(D,now){
   const drop=myRoutes.find(r=>r.kind==="dropoff"&&rstat(r,now).st!=="done");
   if(role==="teacher"||role==="coord"){
     if(k.place==="class"&&k.teacher===me.id){acts.push(["done","Արեց",1]);acts.push(["stop","Չավարտեց"])}
-    else if(k.inCenter){const other=k.place==="class"?" · հիմա՝ "+sname(k.teacher):"";
-      subs.filter(x=>!k.done[x]).forEach((x,i)=>acts.push(["take","Վերցնել ինձ մոտ · "+x+other,i===0,x]))}
+    else if(k.inCenter){const other=k.place==="class"?" (հիմա՝ "+sname(k.teacher)+")":"";
+      subs.filter(x=>!k.done[x]).forEach((x,i)=>acts.push(["take","Վերցնել ինձ մոտ, "+x+other,i===0,x]))}
     if(pick&&!k.inCenter&&k.place!=="road")acts.push(["pickup","Վերցրի դպրոցից",!acts.length]);
     if(k.place==="road")acts.push(["arrive","Բերեցի կենտրոն",1]);
     if(drop&&k.inCenter)acts.push(["dropoff","Տարա դպրոց"]);
@@ -690,18 +842,27 @@ function sheetHtml(D,now){
     if(!k.inCenter&&k.place==="none")acts.push(["absent","Այսօր չի գալու"]);
     if(k.inCenter&&k.place!=="play"&&k.place!=="class")acts.push(["play","Խաղասենյակ"]);
   }
-  if(role!=="cook"&&k.inCenter)acts.push(["home","Գնաց տուն · հանձնել"]);
+  if(role!=="cook"&&k.inCenter)acts.push(["home","Գնաց տուն"]);
   if(role==="cook"&&k.inCenter){if(k.place!=="meal")acts.push(["meal","Նստեց ուտելու",1]);else acts.push(["ate","Կերավ",1])}
-  const tl=timeline(k,now);
+  const tl=timeline(k,now).slice().reverse();
   const doneSubj=Object.keys(k.done);
-  return `<div class="sh-h"><div class="av s-${s.c}">${esc(ini(k.name))}</div><div><div class="sh-n">${esc(k.name)}</div><div class="sh-s">${esc(grade(k))}${k.school?" · "+esc(k.school):""}</div></div></div>
-    <div class="sh-s" style="margin-top:10px"><b style="color:var(--ink)">${esc(s.w)}</b>${s.t?" · "+esc(s.t):""}</div>
-    <div class="sh-s">Այսօր արել է՝ ${doneSubj.length?esc(doneSubj.join(", ")):"դեռ ոչինչ"} · ${k.ate?"կերել է":"դեռ չի կերել"}</div>
-    ${acts.length?`<div class="acts">${acts.map(a=>`<button class="btn full ${a[2]?"pri":""}" data-act="${a[0]==="home"||a[0]==="arrive"?"handover":"mark"}" data-kind="${a[0]}" data-kid="${esc(k.id)}"${a[3]?` data-subject="${esc(a[3])}"`:""}>${esc(a[1])}</button>`).join("")}</div>`:""}
-    <div class="sh-sub">Այսօրվա օրը</div>
-    ${tl.length?`<ul class="tl">${tl.map(e=>`<li><time class="num">${hm(e.at)}</time><i class="k-${e.c}"></i><span style="flex:1">${esc(e.txt)}</span>${(role==="owner"||role==="coord")&&e.id&&!String(e.id).startsWith("tmp")?`<button class="del" data-act="delmark" data-id="${esc(e.id)}" aria-label="Ջնջել">✕</button>`:""}</li>`).join("")}</ul>`:`<div class="empty">Այսօր նշումներ դեռ չկան։</div>`}
-    ${(role==="owner"||role==="coord")?`<div class="acts" style="margin-top:6px"><button class="btn full line" data-act="kid-edit" data-kid="${esc(k.id)}">Խմբագրել քարտը</button>${(S.contacts[k.id]||[]).filter(c=>c.phone).map(c=>`<a class="btn full line" href="tel:${esc(c.phone.replace(/[^\d+]/g,""))}">Զանգ · ${esc(c.name)}${c.rel?" ("+esc(c.rel)+")":""}</a>`).join("")}<button class="btn full line" data-act="leave" data-kid="${esc(k.id)}" style="color:var(--red)">Այլևս չի հաճախում</button></div>`:""}
-    <div class="acts"><button class="btn full line" data-act="close">Փակել</button></div>`;
+  const PC={class:"c-class",play:"c-play",meal:"c-meal",road:"c-road"},PI={class:"lesson",play:"play",meal:"meal",road:"road",school:"school",home:"leave",none:"user",absent:"user"};
+  const pc=PC[k.place]||"c-out";
+  const pri=acts.find(x=>x[2])||acts[0],rest=acts.filter(x=>x!==pri);
+  const actBtn=(x,cls)=>`<button class="btn full ${cls}" data-act="${x[0]==="home"||x[0]==="arrive"?"handover":"mark"}" data-kind="${x[0]}" data-kid="${esc(k.id)}"${x[3]?` data-subject="${esc(x[3])}"`:""}>${esc(x[1])}</button>`;
+  const restH=rest.length===2&&rest.every(x=>x[1].length<=16)?`<div class="two2">${rest.map(x=>actBtn(x,"soft")).join("")}</div>`:rest.map(x=>actBtn(x,"soft")).join("");
+  const canEdit=role==="owner"||role==="coord";
+  const phones=(S.contacts[k.id]||[]).filter(c=>c.phone);
+  const subLine=k.inCenter?(doneSubj.length?"Արել է՝ "+doneSubj.join(", "):"Դասերը դեռ չի արել")+(k.ate?", կերել է":", դեռ չի կերել"):(k.place==="class"?"":"");
+  const warnSub=k.inCenter&&!doneSubj.length&&k.place==="play";
+  const tlIcon=e=>e.txt.startsWith("Եկավ")?"arrive":({class:"lesson",play:"play",meal:"meal",road:"road"}[e.c]||"leave");
+  return `<div class="kh"><div class="kwho"><div class="av ${s.c==="bad"?"s-bad":"p-"+k.place}">${esc(ini(k.name))}</div><div><h1>${esc(k.name)}</h1><p>${esc([grade(k),k.school].filter(Boolean).join(", "))}</p></div><button class="kx" data-act="close" aria-label="Փակել">${ic("x")}</button></div>
+    <div class="kst" style="--tc:var(--${pc})"><span class="ti">${ic(PI[k.place]||"user")}</span><div><b>${esc(s.w)}</b>${subLine?`<span class="${warnSub?"w":""}">${esc(subLine)}</span>`:""}</div>${s.t?`<time class="num">${esc(s.t)}</time>`:""}</div>
+    ${pri?`<div class="kacts">${actBtn(pri,"pri")}${restH}</div>`:""}</div>
+    <div class="kb"><div class="sec-h"><h2>Այսօր</h2></div>
+    ${tl.length?`<ul class="ktl">${tl.map(e=>`<li><span class="d" style="background:var(--${({class:"c-class",play:"c-play",meal:"c-meal",road:"c-road"}[e.c]||"c-out")})">${ic(tlIcon(e))}</span><span class="x2">${esc(e.txt.replace(/ · /g,", "))}</span><time class="num">${hm(e.at)}</time>${canEdit&&e.id&&!String(e.id).startsWith("tmp")?`<button class="del" data-act="delmark" data-id="${esc(e.id)}" aria-label="Ջնջել">✕</button>`:""}</li>`).join("")}</ul>`:`<div class="panel"><div class="empty">Այսօր նշումներ դեռ չկան։</div></div>`}
+    ${phones.length||canEdit?`<div class="krows">${phones.map(c=>`<a class="krow" href="tel:${esc(c.phone.replace(/[^\d+]/g,""))}"><span class="d">${ic("phone")}</span>Զանգել${c.rel?" ("+esc(c.rel)+")":""}<small>${esc(c.name)}</small></a>`).join("")}${canEdit?`<button class="krow" data-act="kid-edit" data-kid="${esc(k.id)}"><span class="d">${ic("user")}</span>Խմբագրել քարտը</button><button class="krow danger" data-act="leave" data-kid="${esc(k.id)}"><span class="d">${ic("out")}</span>Այլևս չի հաճախում</button>`:""}</div>`:""}
+    <div style="height:10px"></div></div>`;
 }
 let sheetOpenKey=null,sheetSub=null;
 function renderSheet(D,now){
@@ -718,9 +879,21 @@ function renderSheet(D,now){
 /* ---------- tabs ---------- */
 function tabsFor(role,D,now){
   const al=alerts(D,now).length,late=liveRoutes().filter(r=>rstat(r,now).st==="late").length;
-  if(role==="owner")return[["now","Հիմա",IC.now,al],["road","Ճամփա",IC.road,late],["pay","Վճար",IC.pay,0],["report","Ամփոփ",IC.report,0],["team","Թիմ",IC.team,0]];
-  if(role==="coord")return[["lessons","Դասեր",IC.lessons,0],["door","Գալ-գնալ",IC.door,0],["road","Ճամփա",IC.road,late],["pay","Վճար",IC.pay,0],["now","Կենտրոն",IC.now,al]];
+  if(role==="owner")return[["now","Հիմա","home",al],["road","Ճամփա","road",late],["pay","Վճար","wallet",0],["report","Ամփոփ","chart",0],["team","Թիմ","team",0]];
+  if(role==="coord")return[["lessons","Դասեր","student",0],["door","Գալ-գնալ","door",0],["road","Ճամփա","road",late],["pay","Վճար","wallet",0],["now","Կենտրոն","home",al]];
   return[];
+}
+const WDF=["Կիրակի","Երկուշաբթի","Երեքշաբթի","Չորեքշաբթի","Հինգշաբթի","Ուրբաթ","Շաբաթ"],MG=["հունվարի","փետրվարի","մարտի","ապրիլի","մայիսի","հունիսի","հուլիսի","օգոստոսի","սեպտեմբերի","հոկտեմբերի","նոյեմբերի","դեկտեմբերի"];
+const dateHy=t=>{const d=new Date(t);return WDF[d.getDay()]+", "+d.getDate()+" "+MG[d.getMonth()]};
+const TT={road:"Ճանապարհ",pay:"Վճարումներ",report:"Ամփոփում",team:"Թիմ",door:"Գալ-գնալ"};
+function heroFor(tab,D,now){
+  const me=meS(),r=me.role;let l1,title=me.name,kpi=null,ovl=false,sub="";
+  if(r==="teacher"||(r==="coord"&&tab==="lessons")){l1=mySubjects().join(", ")||ROLE[r];kpi=[D.kids.filter(k=>k.place==="class"&&k.teacher===me.id).length,"երեխա հիմա<br>ձեզ մոտ է"];ovl=!!dueBanner(now)}
+  else if(r==="cook"){l1="Խոհանոց";kpi=[D.kids.filter(k=>k.inCenter&&!k.ate&&k.place!=="meal").length,"երեխա դեռ<br>չի կերել"]}
+  else if(tab==="now"){l1=dateHy(now);kpi=[D.kids.filter(k=>k.inCenter).length,"երեխա հիմա<br>կենտրոնում է"];ovl=true}
+  else{l1=me.name;title=TT[tab]||me.name;sub=dateHy(now)}
+  const acts=`<div class="hacts"><button class="hb2" data-act="docs" aria-label="Փաստաթղթեր">${ic("book")}${S.docsUnread?`<span class="bd dot"></span>`:""}</button><button class="hb2" data-act="inbox" aria-label="Ծանուցումներ">${ic("bell")}${S.unread?`<span class="bd num${S.unread>(S.unreadSeen||0)?" pop":""}">${S.unread>99?"99+":S.unread}</span>`:""}</button><button class="hb2" data-act="logout" aria-label="Ելք">${ic("out")}</button></div>`;
+  return `<section class="hero${ovl?"":" flat"}"><div class="hero-top"><div><small>${esc(l1)}</small><b>${esc(title)}</b></div>${acts}</div>${kpi?`<div class="kpi"><b class="num">${kpi[0]}</b><span>${kpi[1]}</span></div>`:sub?`<div class="hsub">${esc(sub)}</div>`:""}</section>`;
 }
 function screen(tab,D,now){
   const role=meS().role;
@@ -742,7 +915,7 @@ function header(tabs){
   if(me&&S.phase==="app"){
     h=`<div class="me"><div class="av s-play">${esc(ini(me.name))}</div><div class="me-t"><div class="me-n">${esc(me.name)}</div><div class="me-r">${esc(roleLine(me))}</div></div></div>`;
     if(tabs.length)h+=`<div class="dtabs">${tabs.map(t=>`<button class="dtab ${S.tab===t[0]?"on":""}" data-act="tab" data-v="${t[0]}">${t[1]}${t[3]?`<span class="badge num">${t[3]}</span>`:""}</button>`).join("")}</div>`;
-    h+=`<button class="hbtn" data-act="docs" aria-label="Փաստաթղթեր"><svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4.5h9a3 3 0 0 1 3 3V20H8a3 3 0 0 1-3-3z"/><path d="M17 7.5h2V20h-2"/><path d="M8.5 9h5M8.5 12.5h5"/></svg>${S.docsUnread?`<span class="dot"></span>`:""}</button><button class="bell" data-act="inbox" aria-label="Ծանուցումներ${S.unread?" · "+S.unread+" նոր":""}"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg>${S.unread?`<span class="badge num${S.unread>(S.unreadSeen||0)?" pop":""}">${S.unread>99?"99+":S.unread}</span>`:""}</button><button class="out" data-act="logout">Ելք</button>`;
+    h+=`<button class="hbtn" data-act="docs" aria-label="Փաստաթղթեր">${ic("book")}${S.docsUnread?`<span class="dot"></span>`:""}</button><button class="bell" data-act="inbox" aria-label="Ծանուցումներ${S.unread?" · "+S.unread+" նոր":""}">${ic("bell")}${S.unread?`<span class="badge num${S.unread>(S.unreadSeen||0)?" pop":""}">${S.unread>99?"99+":S.unread}</span>`:""}</button><button class="out" data-act="logout">Ելք</button>`;
   }else h=`<div class="me"><img src="icon-192.png" alt="" width="36" height="36" style="border-radius:9px"><div class="me-t"><div class="me-n">Վիկտորյա</div><div class="me-r">ուսումնական կենտրոն</div></div></div>`;
   document.getElementById("hdr").innerHTML=h;
 }
@@ -764,7 +937,7 @@ function render(){
   if(ae&&sb&&sb.contains(ae)&&/^(INPUT|SELECT|TEXTAREA)$/.test(ae.tagName))return;
   if(ae&&app.contains(ae)){if(ae.id==="q")keepQ=[ae.selectionStart,ae.selectionEnd];else if(ae.tagName==="INPUT"&&!(ae.id==="pin"&&S.busyPin))return;else if(ae.tagName==="SELECT")return}
   const now=NOW();
-  if(S.phase!=="app"){header([]);bar.hidden=true;app.className="notabs";
+  if(S.phase!=="app"){document.body.classList.remove("inapp");{const tc=document.querySelector('meta[name="theme-color"]');if(tc)tc.content="#f3f4ef"}header([]);bar.hidden=true;app.className="notabs";
     app.innerHTML=S.phase==="boot"?`<div class="empty">Բեռնվում է…</div>`:S.phase==="error"?`<div class="off">${esc(S.err||"Կապ չկա։")}</div><div style="height:12px"></div><button class="btn pri" data-act="reload">Փորձել նորից</button>`:loginHtml();
     renderSheet(null,now);return}
   if(!meS()){header([]);bar.hidden=true;app.className="notabs";app.innerHTML=`<div class="skel" style="padding-top:18px"><i class="h"></i><i></i><i></i><i></i><i></i></div>`;return}
@@ -772,9 +945,10 @@ function render(){
   if(tabs.length&&!tabs.some(t=>t[0]===S.tab))S.tab=tabs[0][0];
   header(tabs);
   bar.hidden=!tabs.length;app.className=tabs.length?"":"notabs";
-  bar.innerHTML=tabs.map(t=>`<button class="tab ${S.tab===t[0]?"on":""}" data-act="tab" data-v="${t[0]}"${S.tab===t[0]?' aria-current="page"':""}>${t[2]}<span>${t[1]}</span>${t[3]?`<span class="badge num">${t[3]}</span>`:""}</button>`).join("");
+  bar.innerHTML=tabs.map(t=>`<button class="tab ${S.tab===t[0]?"on":""}" data-act="tab" data-v="${t[0]}"${S.tab===t[0]?' aria-current="page"':""}>${ic(S.tab===t[0]?t[2]+"F":t[2])}<span>${t[1]}</span>${t[3]?`<span class="badge num">${t[3]}</span>`:""}</button>`).join("");
   if(lastTabShown!==S.tab){lastTabShown=S.tab;app.classList.remove("tab-in");void app.offsetWidth;app.classList.add("tab-in")}
-  app.innerHTML=(S.offline?`<div class="off" style="margin-bottom:14px">Կապ չկա։ ${Q.get().length?Q.get().length+" նշում կուղարկվի, երբ կապը վերականգնվի։":"Ցույց է տրված վերջին տվյալները։"}</div>`:"")+screen(S.tab,D,now);
+  document.body.classList.add("inapp");const tc=document.querySelector('meta[name="theme-color"]');if(tc)tc.content="#2f5f17";
+  app.innerHTML=heroFor(S.tab,D,now)+(S.offline?`<div class="off" style="margin:14px 0">Կապ չկա։ ${Q.get().length?Q.get().length+" նշում կուղարկվի, երբ կապը վերականգնվի։":"Ցույց է տրված վերջին տվյալները։"}</div>`:"")+screen(S.tab,D,now);
   if(keepQ){const q=document.getElementById("q");if(q){q.focus({preventScroll:true});try{q.setSelectionRange(keepQ[0],keepQ[1])}catch(e){}}}
   renderSheet(D,now);
 }
@@ -898,12 +1072,13 @@ async function act(e,b,a){
     try{const c=await api("api_staffAdd",S.code,name,r.value,sb.value);S.admin=null;toast(name+" ավելացված է։ Կոդ՝ "+c);refresh();render()}catch(err){toast("Չհաջողվեց")}}
   else if(a==="comeback"){try{await api("api_setActive",S.code,b.dataset.kid,true);toast("Վերադարձված է")}catch(err){toast("Չհաջողվեց")}refresh()}
   else if(a==="tab"){S.tab=b.dataset.v;S.q="";S.sheet=null;ls.set("vk-tab",S.tab);render();window.scrollTo(0,0)}
-  else if(a==="filter"){const tile=b.classList.contains("nbox");S.filter=(S.filter===b.dataset.v&&tile)?"all":b.dataset.v;render();
+  else if(a==="expand"){S.exp=S.exp||{};S.exp[b.dataset.v]=1;render()}
+  else if(a==="filter"){const tile=b.classList.contains("nbox")||b.classList.contains("tile");S.filter=(S.filter===b.dataset.v&&tile)?"all":b.dataset.v;render();
     if(tile){const l=document.getElementById("kidlist");if(l&&window.innerWidth<960)l.scrollIntoView({behavior:"smooth",block:"start"})}}
   else if(a==="login")tryLogin();
   else if(a==="pin-key"){if(S.pin.length<8){S.pin+=b.dataset.v;S.pinErr="";pinUpdate()}}
   else if(a==="pin-del"){S.pin=S.pin.slice(0,-1);S.pinErr="";pinUpdate()}
-  else if(a==="logout")logout();
+  else if(a==="logout"){if(confirm("Դուրս գա՞լ հավելվածից։"))logout()}
   else if(a==="reload")location.reload();
   else if(a==="push-on")enablePush();
   else if(a==="handover"){S.sheet={type:"handover",kid:b.dataset.kid,kind:b.dataset.kind,other:false};render()}
