@@ -53,7 +53,10 @@ button{cursor:pointer}
 /* layout */
 main{max-width:1120px;margin:0 auto;padding:8px max(18px,env(safe-area-inset-right,0px)) calc(var(--tab) + 32px + env(safe-area-inset-bottom,0px)) max(18px,env(safe-area-inset-left,0px))}
 main.notabs{padding-bottom:calc(32px + env(safe-area-inset-bottom,0px))}
-.stack{display:flex;flex-direction:column;gap:22px}
+.stack{display:flex;flex-direction:column;gap:22px;min-width:0}
+.stack>*,.two>*,section{min-width:0}
+.row.wrap{flex-wrap:wrap}
+@media (max-width:520px){.row.wrap>.sel,.row.wrap>.btn{flex:1 1 calc(100% - 52px);margin-left:52px;max-width:none}}
 .sec-h{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin:0 0 6px}
 .sec-h h2{font-size:19px;font-weight:700;margin:0;letter-spacing:-.005em}
 .sec-h .c{font-size:14px;color:var(--ink-3);font-weight:500}
@@ -115,7 +118,7 @@ button.row:active{background:var(--wash)}
 .chip.on{background:var(--green);color:#fff;box-shadow:none}
 
 /* route groups */
-.grp{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:14px 0 4px;border-top:1px solid var(--line)}
+.grp{display:flex;flex-direction:column;gap:2px;padding:14px 0 4px;border-top:1px solid var(--line)}
 .grp:first-child{border-top:0}
 .grp b{font-size:16px}
 .grp span{font-size:14px;color:var(--ink-2)}
@@ -359,7 +362,7 @@ function routesScreen(D,now,assign){
     g.items.forEach(r=>{const k=kidById(r.kid);if(!k)return;const s=rstat(r,now);
       const sel=assign?`<select class="sel" data-assign="1" data-kid="${esc(r.kid)}" data-kind="${r.kind}" aria-label="Ով է գնում · ${esc(k.name)}"><option value="">ոչ ոք</option>${people.map(p=>`<option value="${esc(p.id)}"${p.id===r.staff?" selected":""}>${esc(p.name)}</option>`).join("")}</select>`:`<div class="rt">${esc(sname(r.staff))}</div>`;
       const c=s.st==="late"?"bad":s.st==="done"?"play":"road";
-      body+=`<div class="row"><div class="av s-${c}">${esc(ini(k.name))}</div><div class="rm" data-act="open" data-kid="${esc(k.id)}"><div class="rn">${esc(k.name)}</div><div class="rs${s.st==="late"?" bad":""}">${esc(rword(r,s)||(r.kind==="pickup"?"Դեռ դպրոցում է":"Կենտրոնում է"))}</div></div>${sel}</div>`});
+      body+=`<div class="row wrap"><div class="av s-${c}">${esc(ini(k.name))}</div><div class="rm" data-act="open" data-kid="${esc(k.id)}"><div class="rn">${esc(k.name)}</div><div class="rs${s.st==="late"?" bad":""}">${esc(rword(r,s)||(r.kind==="pickup"?"Դեռ դպրոցում է":"Կենտրոնում է"))}</div></div>${sel}</div>`});
   });
   return `<div class="stack">${sec("Այսօրվա ճանապարհը",list.length,panel(body))}</div>`;
 }
@@ -379,8 +382,8 @@ function nowScreen(D,now){
 function cookScreen(D,now){
   const eating=D.kids.filter(k=>k.place==="meal"),notYet=D.kids.filter(k=>k.inCenter&&!k.ate&&k.place!=="meal"),ate=D.kids.filter(k=>k.ate);
   let h=`<div class="stack">${installHint()}<div class="nums"><div class="nbox k-meal"><span>Դեռ չեն կերել</span><b class="num">${notYet.length}</b></div><div class="nbox k-meal"><span>Ուտում են</span><b class="num">${eating.length}</b></div><div class="nbox k-play"><span>Կերել են</span><b class="num">${ate.length}</b></div><div class="nbox"><span>Կենտրոնում</span><b class="num">${D.kids.filter(k=>k.inCenter).length}</b></div></div>`;
-  h+=sec("Ուտում են",eating.length,eating.length?panel(eating.map(k=>`<div class="row"><div class="av s-meal">${esc(ini(k.name))}</div><div class="rm"><div class="rn">${esc(k.name)}</div><div class="rs num">${dur(now-k.since)}</div></div><button class="btn sm pri" data-act="mark" data-kind="ate" data-kid="${esc(k.id)}">Կերավ</button></div>`).join("")):emptyP("Սեղանի շուրջ հիմա ոչ ոք չկա։"));
-  h+=sec("Դեռ չեն կերել",notYet.length,notYet.length?panel(notYet.map(k=>`<div class="row"><div class="av s-${state(k,now).c}">${esc(ini(k.name))}</div><div class="rm"><div class="rn">${esc(k.name)}</div><div class="rs">${esc(state(k,now).w)}</div></div><button class="btn sm" data-act="mark" data-kind="meal" data-kid="${esc(k.id)}">Նստեց ուտելու</button></div>`).join("")):emptyP("Կենտրոնում բոլորը կերել են։"));
+  h+=sec("Ուտում են",eating.length,eating.length?panel(eating.map(k=>`<div class="row wrap"><div class="av s-meal">${esc(ini(k.name))}</div><div class="rm"><div class="rn">${esc(k.name)}</div><div class="rs num">${dur(now-k.since)}</div></div><button class="btn sm pri" data-act="mark" data-kind="ate" data-kid="${esc(k.id)}">Կերավ</button></div>`).join("")):emptyP("Սեղանի շուրջ հիմա ոչ ոք չկա։"));
+  h+=sec("Դեռ չեն կերել",notYet.length,notYet.length?panel(notYet.map(k=>`<div class="row wrap"><div class="av s-${state(k,now).c}">${esc(ini(k.name))}</div><div class="rm"><div class="rn">${esc(k.name)}</div><div class="rs">${esc(state(k,now).w)}</div></div><button class="btn sm" data-act="mark" data-kind="meal" data-kid="${esc(k.id)}">Նստեց ուտելու</button></div>`).join("")):emptyP("Կենտրոնում բոլորը կերել են։"));
   return h+`</div>`;
 }
 function report(sessions,now){
@@ -470,7 +473,7 @@ function renderSheet(D,now){
 /* ---------- tabs ---------- */
 function tabsFor(role,D,now){
   const al=alerts(D,now).length,late=(S.routes||[]).filter(r=>rstat(r,now).st==="late").length;
-  if(role==="owner")return[["now","Հիմա",IC.now,al],["road","Ճանապարհ",IC.road,late],["report","Հաշվետվություն",IC.report,0]];
+  if(role==="owner")return[["now","Հիմա",IC.now,al],["road","Ճանապարհ",IC.road,late],["report","Ամփոփում",IC.report,0]];
   if(role==="coord")return[["lessons","Իմ դասերը",IC.lessons,0],["door","Գալ-գնալ",IC.door,0],["road","Ճանապարհ",IC.road,late],["now","Կենտրոն",IC.now,al]];
   return[];
 }
