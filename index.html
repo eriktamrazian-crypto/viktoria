@@ -192,6 +192,11 @@ button.row:active{background:var(--wash)}
 .toast{animation:tin .22s var(--ease-out);transition:opacity .16s ease-out}
 .toast.bye{opacity:0}
 .row.flash{animation:flash 1.1s ease-out;border-radius:12px}
+.busy{pointer-events:none;opacity:.55}
+.btn.busy{opacity:1;position:relative;color:transparent!important}
+.btn.busy::after{content:"";position:absolute;left:50%;top:50%;width:20px;height:20px;margin:-10px 0 0 -10px;border-radius:50%;border:2.5px solid var(--line);border-top-color:var(--green);animation:spin .7s linear infinite}
+.btn.pri.busy::after{border-color:rgba(255,255,255,.4);border-top-color:#fff}
+@keyframes spin{to{transform:rotate(360deg)}}
 .dots.shake{animation:shake .38s ease-out}
 .badge.pop,.dot.pop{animation:pop .3s var(--ease-out)}
 button,.btn,.row,.tab,.chip,.nbox,.key{transition:background-color .15s ease,transform .12s var(--ease-out),box-shadow .15s ease}
@@ -593,12 +598,19 @@ function payHtml(){
 }
 
 /* ---------- документы ---------- */
+function isOwner(){const m=meS();return !!m&&m.role==="owner"}
+function docsUnreadN(){return isOwner()?0:(S.docs||[]).filter(d=>!d.readAt).length}
+/* Илоне: кто из сотрудников прочитал документ (кнопки «Կարդացել եմ» у неё нет) */
+function docWho(d){const r=S.docReads;if(!r)return null;const meta=r.docs.find(x=>x.id===d.id);if(!meta)return null;
+  const team=(S.staff||[]).filter(x=>x.active!==false&&x.role!=="owner"&&(meta.roles.includes("all")||meta.roles.includes(x.role)));
+  const rd=x=>(r.reads[x.id]||{})[d.id+"|"+meta.version];
+  return {yes:team.filter(rd),no:team.filter(x=>!rd(x)),n:team.length}}
 function docsHtml(){
   const l=S.docs;
   if(!l)return `<div class="sh-n">Փաստաթղթեր</div><div class="skel"><i></i><i></i><i></i><i></i></div>`;
   const groups=[];l.forEach(d=>{let g=groups.find(x=>x.n===d.group);if(!g){g={n:d.group,items:[]};groups.push(g)}g.items.push(d)});
-  return `<div class="sh-n">Փաստաթղթեր</div><div class="sh-s" style="margin-bottom:8px">Կարդացեք ձեր հրահանգները և սեղմեք «Կարդացել եմ»։</div>
-    ${l.length?groups.map(g=>`<div class="sh-sub">${esc(g.n||"")}</div>`+g.items.map(d=>`<button class="row" data-act="doc-open" data-id="${esc(d.id)}"><div class="av s-${d.readAt?"play":"meal"}">${d.readAt?"✓":"!"}</div><div class="rm"><div class="rn">${esc(d.title.split(" — ")[0])}</div><div class="rs">${d.readAt?"Կարդացել եք · "+new Date(d.readAt).toLocaleDateString("ru-RU"):"Դեռ չեք կարդացել"}</div></div>${IC.chev}</button>`).join("")).join(""):`<div class="empty">Փաստաթղթեր դեռ չկան։</div>`}
+  return `<div class="sh-n">Փաստաթղթեր</div><div class="sh-s" style="margin-bottom:8px">${isOwner()?"Կենտրոնի բոլոր փաստաթղթերը և ով է դրանք կարդացել։":"Կարդացեք ձեր հրահանգները և սեղմեք «Կարդացել եմ»։"}</div>
+    ${l.length?groups.map(g=>`<div class="sh-sub">${esc(g.n||"")}</div>`+g.items.map(d=>`<button class="row" data-act="doc-open" data-id="${esc(d.id)}">${isOwner()?(()=>{const w=docWho(d);const all=w&&w.n&&w.yes.length===w.n;return `<div class="av s-${!w?"out":all?"play":"meal"}">${!w?"…":w.yes.length+"/"+w.n}</div><div class="rm"><div class="rn">${esc(d.title.split(" — ")[0])}</div><div class="rs">${!w?"Ստուգում եմ…":!w.n?"Աշխատակից չկա այս դերով":all?"Բոլորը կարդացել են":"Կարդացել է "+w.yes.length+" աշխատակից "+w.n+"-ից"}</div></div>`})():`<div class="av s-${d.readAt?"play":"meal"}">${d.readAt?"✓":"!"}</div><div class="rm"><div class="rn">${esc(d.title.split(" — ")[0])}</div><div class="rs">${d.readAt?"Կարդացել եք · "+new Date(d.readAt).toLocaleDateString("ru-RU"):"Դեռ չեք կարդացել"}</div></div>`}${IC.chev}</button>`).join("")).join(""):`<div class="empty">Փաստաթղթեր դեռ չկան։</div>`}
     <div class="acts"><button class="btn full line" data-act="close">Փակել</button></div>`;
 }
 const DOCC=(()=>{try{return JSON.parse(localStorage.getItem("vk-docs")||"{}")}catch(e){return {}}})();
@@ -611,7 +623,7 @@ function docHtml(){
   if(!d)return `<div class="skel" aria-label="Բեռնվում է…"><i class="h"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>`;
   const meta=(S.docs||[]).find(x=>x.id===d.id)||{};
   return `<button class="back" data-act="docs">← Բոլոր փաստաթղթերը</button><div class="doc">${cleanHtml(d.html)}</div>
-    <div class="acts">${meta.readAt?`<div class="ok">Կարդացել եք · ${new Date(meta.readAt).toLocaleDateString("ru-RU")}</div>`:`<button class="btn full pri" data-act="doc-read" data-id="${esc(d.id)}">Կարդացել եմ</button>`}<button class="btn full line" data-act="close">Փակել</button></div>`;
+    <div class="acts">${isOwner()?(()=>{const w=docWho(d);if(!w)return "";if(!w.n)return `<div class="sh-s">Այս փաստաթուղթը դեռ ոչ մեկին չի վերաբերում։</div>`;return (w.yes.length?`<div class="ok">Կարդացել են՝ ${w.yes.map(x=>esc(x.name)).join(", ")}</div>`:"")+(w.no.length?`<div class="al w"><i></i><span>Դեռ չեն կարդացել՝ ${w.no.map(x=>esc(x.name)).join(", ")}</span></div>`:"")})():meta.readAt?`<div class="ok">Կարդացել եք · ${new Date(meta.readAt).toLocaleDateString("ru-RU")}</div>`:`<button class="btn full pri" data-act="doc-read" data-id="${esc(d.id)}">Կարդացել եմ</button>`}<button class="btn full line" data-act="close">Փակել</button></div>`;
 }
 function cleanHtml(h){const t=document.createElement("template");t.innerHTML=h;const ok=new Set(["H1","H2","H3","H4","P","UL","OL","LI","B","STRONG","I","EM","TABLE","THEAD","TBODY","TR","TH","TD","BR","HR"]);
   const walk=n=>{[...n.childNodes].forEach(c=>{if(c.nodeType===1){if(/^(SCRIPT|STYLE|IFRAME|OBJECT|EMBED|TEMPLATE)$/.test(c.tagName)){c.remove();return}if(!ok.has(c.tagName)){c.replaceWith(...c.childNodes);walk(n);return}[...c.attributes].forEach(a=>c.removeAttribute(a.name));walk(c)}})};walk(t.content);
@@ -817,7 +829,7 @@ function setBadge(n){try{if(navigator.setAppBadge){n?navigator.setAppBadge(n):na
 function sigOf(st){return JSON.stringify([st.contacts,st.unread,st.me&&st.me.id,st.kids,st.staff,st.settings,st.marks,st.routes,st.noSchool])}
 function applyState(st,t0){
   const was=S.me;
-  if(!S.docsTried){S.docsTried=1;setTimeout(()=>api("api_docs",S.code).then(l=>{S.docs=l;S.docsUnread=l.filter(d=>!d.readAt).length;render();docPrefetch()}).catch(()=>{}),800)}
+  if(!S.docsTried){S.docsTried=1;setTimeout(()=>api("api_docs",S.code).then(l=>{S.docs=l;S.docsUnread=docsUnreadN();render();docPrefetch()}).catch(()=>{}),800)}
   S.offset=st.serverNow-Math.round((t0+Date.now())/2);S.day=st.day;S.me=st.me.id;S.staff=st.staff.sort((a,b)=>a.order-b.order);S.kids=st.kids;S.settings=st.settings;
   S.unread=st.unread||0;setBadge(S.unread);S.contacts=st.contacts||{};
   S.marks=st.marks.concat(queuedAsMarks());S.routes=st.routes||[];S.noSchool=!!st.noSchool;S.sheetUrl=st.sheetUrl||"";S.offline=Q.get().length>0;
@@ -843,8 +855,16 @@ async function tryLogin(){
 }
 
 /* ---------- events ---------- */
+/* Кнопки, которые ждут ответа сервера: сразу показывают «идёт», повторные нажатия не отправляются */
+const SLOW=new Set(["pay-save","pay-promise","pay-del","doc-read","push-test","week","save-settings","add-kid","kid-save","st-code","st-off","st-on","st-add","leave","back","delmark","noschool","noschool-off","absent","absent-off","assign","comeback"]);
+const inFlight=new Set();
 document.addEventListener("click",async e=>{
   const b=e.target.closest("[data-act]");if(!b)return;const a=b.dataset.act;
+  if(SLOW.has(a)){const key=a+"|"+(b.dataset.id||b.dataset.kid||"");if(inFlight.has(key))return;inFlight.add(key);
+    b.classList.add("busy");b.setAttribute("aria-busy","true");
+    try{await act(e,b,a)}finally{inFlight.delete(key);b.classList.remove("busy");b.removeAttribute("aria-busy")}return}
+  return act(e,b,a)});
+async function act(e,b,a){
   if(a==="open"){S.sheet={type:"kid",kid:b.dataset.kid};render()}
   else if(a==="myroute"){S.sheet={type:"myroute"};render()}
   else if(a==="inbox"){S.inbox=null;S.sheet={type:"inbox"};render();
@@ -896,12 +916,14 @@ document.addEventListener("click",async e=>{
     document.activeElement&&document.activeElement.blur();
     try{await api("api_pay",S.code,S.sheet.kid,S.payMonth,0,"promise",dd+"."+mm);S.pay=await api("api_payments",S.code,S.payMonth);toast("Նշված է");render()}catch(err){toast("Չգրանցվեց")}}
   else if(a==="pay-del"){if(!confirm("Ջնջե՞լ այս վճարը։"))return;try{await api("api_payDelete",S.code,b.dataset.id);S.pay=await api("api_payments",S.code,S.payMonth);render()}catch(err){toast("Չհաջողվեց")}}
-  else if(a==="docs"){S.sheet={type:"docs"};render();try{S.docs=await api("api_docs",S.code);S.docsUnread=S.docs.filter(d=>!d.readAt).length;render();docPrefetch()}catch(err){if(!S.docs)S.docs=[];render();if(!S.docs.length)toast("Չհաջողվեց բեռնել")}}
+  else if(a==="docs"){S.sheet={type:"docs"};render();if(isOwner())api("api_docReads",S.code).then(r=>{S.docReads=r;render()}).catch(()=>{});try{S.docs=await api("api_docs",S.code);S.docsUnread=docsUnreadN();render();docPrefetch()}catch(err){if(!S.docs)S.docs=[];render();if(!S.docs.length)toast("Չհաջողվեց բեռնել")}}
   else if(a==="doc-open"){const id=b.dataset.id,meta=(S.docs||[]).find(x=>x.id===id)||{},c=DOCC[id];
     S.doc=c?{id,title:meta.title,version:c.v,html:c.html}:null;S.sheet={type:"doc",kid:id};render();
     if(c&&c.v===meta.version)return;
     try{const d=await api("api_doc",S.code,id);DOCC[id]={v:d.version,html:d.html};docCacheSave();if(S.sheet&&S.sheet.kid===id){S.doc=d;render()}}catch(err){if(!c){toast("Չհաջողվեց բեռնել");S.sheet={type:"docs"};render()}}}
-  else if(a==="doc-read"){try{const t=await api("api_docRead",S.code,b.dataset.id);const d=(S.docs||[]).find(x=>x.id===b.dataset.id);if(d)d.readAt=t;S.docsUnread=(S.docs||[]).filter(x=>!x.readAt).length;toast("Նշված է՝ կարդացել եք");render()}catch(err){toast("Չհաջողվեց")}}
+  else if(a==="doc-read"){const id=b.dataset.id,d=(S.docs||[]).find(x=>x.id===id);if(!d||d.readAt)return;
+    d.readAt=Date.now();S.docsUnread=docsUnreadN();render();toast("Նշված է՝ կարդացել եք");
+    try{d.readAt=await api("api_docRead",S.code,id)}catch(err){d.readAt=0;S.docsUnread=docsUnreadN();render();toast("Չհաջողվեց նշել։ Փորձեք նորից։")}}
   else if(a==="push-test"){if(!("Notification" in window)||Notification.permission!=="granted"){enablePush();return}
     try{await subscribePush(false);const n=await api("api_pushTest",S.code);toast(n?"Ուղարկված է։ Ծանուցումը կգա մի քանի վայրկյանից։":"Այս հեռախոսը դեռ միացված չէ ծանուցումներին")}catch(e){toast("Չհաջողվեց ուղարկել")}}
   else if(a==="hint-x"){ls.set("vk-hint","1");render()}
@@ -911,7 +933,7 @@ document.addEventListener("click",async e=>{
     document.activeElement&&document.activeElement.blur();try{await api("api_settings",S.code,st);S.settings=st;toast("Պահպանված է");render()}catch(err){toast("Չպահպանվեց")}}
   else if(a==="add-kid"){const n=document.getElementById("new-name"),g=document.getElementById("new-grade"),er=document.getElementById("new-err");const name=n.value.trim();
     if(name.length<2){er.textContent="Գրեք երեխայի անունը";n.focus();return}n.blur();try{await api("api_addKid",S.code,name,g.value);toast(name+" — ավելացված է");refresh()}catch(err){toast("Չպահպանվեց")}}
-});
+}
 document.addEventListener("input",e=>{
   const t=e.target;if(S.edit&&t.dataset){if(t.dataset.f){S.edit[t.dataset.f]=t.value}else if(t.dataset.c!==undefined&&t.dataset.k){S.edit.contacts[Number(t.dataset.c)][t.dataset.k]=t.value}else if(t.dataset.t){(S.edit[t.dataset.t]=S.edit[t.dataset.t]||[])[Number(t.dataset.i)]=t.value}}
   if(e.target.id==="q"){S.q=e.target.value;render()}
