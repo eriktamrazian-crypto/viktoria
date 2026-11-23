@@ -134,8 +134,9 @@ button.row:active{background:var(--wash)}
 
 /* tab bar */
 .tabbar{position:fixed;z-index:20;left:0;right:0;bottom:0;background:rgba(255,255,255,.96);backdrop-filter:saturate(1.4) blur(12px);-webkit-backdrop-filter:saturate(1.4) blur(12px);box-shadow:0 -1px 0 var(--line);display:flex;padding:0 max(8px,env(safe-area-inset-right,0px)) env(safe-area-inset-bottom,0px) max(8px,env(safe-area-inset-left,0px))}
-.tab{flex:1;border:0;background:none;min-height:var(--tab);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:13px;font-weight:600;color:var(--ink-3);position:relative}
+.tab{flex:1;min-width:0;border:0;background:none;min-height:var(--tab);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:13px;font-weight:600;color:var(--ink-3);position:relative}
 .tab svg{width:24px;height:24px}
+.tab span:not(.badge){white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;font-size:12px}
 .tab.on{color:var(--green)}
 .badge{position:absolute;top:8px;left:calc(50% + 8px);min-width:20px;height:20px;border-radius:10px;background:var(--red);color:#fff;font-size:12px;font-weight:600;display:grid;place-items:center;padding:0 6px}
 
@@ -159,6 +160,20 @@ button.row:active{background:var(--wash)}
 .code-l{font-size:14px;color:var(--ink-2);margin-top:4px}.code-l b{color:var(--ink);font-size:17px;letter-spacing:.08em}
 .team-acts{display:flex;gap:8px;flex-wrap:wrap;margin-left:auto}
 @media (max-width:520px){.team-acts{margin-left:52px;width:calc(100% - 52px)}.team-acts .btn{flex:1}}
+.kform{display:flex;flex-direction:column;gap:10px}
+.kform label{display:flex;flex-direction:column;gap:6px;font-size:14px;color:var(--ink-2)}
+.kform input,.crow input,.sched input{border:0;border-radius:12px;background:var(--wash);min-height:46px;padding:0 12px;font-size:16px;width:100%;min-width:0}
+.kform .sel{max-width:none;width:100%;min-height:46px}
+.two-f{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.crow{display:grid;grid-template-columns:1.2fr 1fr 1.2fr 36px;gap:6px;align-items:center}
+@media (max-width:480px){.crow{grid-template-columns:1fr 1fr 36px}.crow input[data-k="phone"]{grid-column:1 / 3}}
+.crow .del{flex:none;border:0;background:var(--wash);color:var(--ink-3);border-radius:10px;width:36px;height:36px}
+.sched{display:grid;grid-template-columns:44px 1fr 1fr;gap:6px 10px;align-items:center}
+.monthbar{display:flex;align-items:center;justify-content:space-between;gap:12px}.monthbar b{font-size:18px}
+.doc{font-size:16px;line-height:1.6}.doc h1{font-size:21px;line-height:1.3;margin:6px 0 10px}.doc h2{font-size:18px;margin:18px 0 6px}.doc h3{font-size:16px;margin:14px 0 4px}
+.doc p{margin:8px 0}.doc ul,.doc ol{padding-left:22px;margin:6px 0}.doc li{margin:4px 0}.doc table{font-size:14px}.doc td,.doc th{white-space:normal;vertical-align:top;min-width:90px}
+.hbtn{position:relative;border:0;background:transparent;color:var(--ink-2);width:44px;height:44px;border-radius:12px;display:grid;place-items:center;flex:none}
+.hbtn:hover{background:var(--wash)}.hbtn .dot{position:absolute;top:9px;right:9px;width:9px;height:9px;border-radius:50%;background:var(--brand)}
 .tl .del{flex:none;border:0;background:var(--wash);color:var(--ink-3);border-radius:10px;width:36px;height:32px;margin-left:6px}
 @media (prefers-reduced-motion:reduce){.scrim,.sheet{transition:none}.btn:active{transform:none}}
 
@@ -169,7 +184,7 @@ button.row:active{background:var(--wash)}
 .code{display:flex;gap:10px;justify-content:center;margin:18px 0 8px}
 .code span{width:44px;height:56px;border-radius:12px;background:var(--card);box-shadow:inset 0 0 0 1.5px var(--line);display:grid;place-items:center;font-size:26px;font-weight:600}
 .code span.f{box-shadow:inset 0 0 0 2px var(--green)}
-.dots{display:flex;gap:14px;justify-content:center;margin:22px 0 6px}
+.dots{display:flex;gap:10px;justify-content:center;margin:22px 0 6px}
 .dots span{width:16px;height:16px;border-radius:50%;box-shadow:inset 0 0 0 2px var(--ink-3)}
 .dots span.on{background:var(--green);box-shadow:none}
 .keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:10px auto 18px;max-width:320px}
@@ -231,6 +246,7 @@ const IC={
   road:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20 8.5 4M20 20 15.5 4M12 6v2.5M12 11v2.5M12 16v2.5"/></svg>',
   report:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>',
   lessons:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6.5C6.5 5 9.5 5 12 6.5 14.5 5 17.5 5 20 6.5V19c-2.5-1.5-5.5-1.5-8 0-2.5-1.5-5.5-1.5-8 0z"/><path d="M12 6.5V19"/></svg>',
+  pay:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="2.5"/><path d="M3 10h18M7 15h3"/></svg>',
   team:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 19c.8-3.2 3-5 5.5-5s4.7 1.8 5.5 5"/><circle cx="17" cy="9" r="2.4"/><path d="M16 14.2c2.2.2 3.8 1.8 4.5 4.3"/></svg>',
   door:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 20V5a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v15M4 20h16"/><circle cx="14.5" cy="12.5" r=".9" fill="currentColor"/></svg>',
   chev:'<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>',
@@ -304,7 +320,7 @@ function timeline(k,now){
   return k.events.filter(e=>!e.hide).map(e=>{
     if(e.sess){const s=e.sess,end=s.end||now,r=s.result==="done"?" · արեց":s.result==="not_done"?" · չավարտեց":s.end?"":" · հիմա";
       return {at:e.at,id:e.id,c:"class",txt:`${s.subject||"Դաս"} · ${sname(s.teacher)} · ${dur(end-s.start)}${r}`}}
-    const m=e.m,T={arrive:["play","Եկավ կենտրոն"],meal:["meal","Նստեց ուտելու"],ate:["meal","Կերավ"],play:["play","Խաղասենյակ"],home:["out","Գնաց տուն"],pickup:["road","Դպրոցից վերցրեց՝ "+sname(m.staff)],dropoff:["road","Տարավ դպրոց՝ "+sname(m.staff)],absent:["out","Այսօր չի գալու · նշեց "+sname(m.staff)]}[m.kind]||["out",m.kind];
+    const m=e.m,W=m.who?" · "+m.who:"",T={arrive:["play","Եկավ կենտրոն"+W],meal:["meal","Նստեց ուտելու"],ate:["meal","Կերավ"],play:["play","Խաղասենյակ"],home:["out","Գնաց տուն"+W],pickup:["road","Դպրոցից վերցրեց՝ "+sname(m.staff)],dropoff:["road","Տարավ դպրոց՝ "+sname(m.staff)],absent:["out","Այսօր չի գալու · նշեց "+sname(m.staff)]}[m.kind]||["out",m.kind];
     return {at:m.at,id:e.id,c:T[0],txt:T[1]};
   });
 }
@@ -397,6 +413,7 @@ function doorScreen(D,now){
   const notYet=D.kids.filter(k=>!k.arrivedAt&&k.place!=="road"&&!k.absent&&matchQ(k)),inC=D.kids.filter(k=>k.inCenter&&matchQ(k)),gone=D.kids.filter(k=>k.place==="home"&&matchQ(k)),abs=D.kids.filter(k=>k.absent&&matchQ(k));
   const came=D.kids.filter(k=>k.arrivedAt).length;
   let h=`<div class="stack"><div class="nums"><div class="nbox"><span>Այսօր եկել են</span><b class="num">${came}/${D.kids.length-D.kids.filter(k=>k.absent).length}</b></div><div class="nbox k-play"><span>Կենտրոնում</span><b class="num">${D.kids.filter(k=>k.inCenter).length}</b></div><div class="nbox k-road"><span>Ճանապարհին</span><b class="num">${D.kids.filter(k=>k.place==="road").length}</b></div><div class="nbox"><span>Գնացել են</span><b class="num">${D.kids.filter(k=>k.place==="home").length}</b></div></div>${search()}`;
+  if(meS().role==="coord"||meS().role==="owner")h+=`<button class="btn line full" data-act="kid-new">+ Նոր երեխա</button>`;
   h+=sec("Դեռ չեն եկել",notYet.length,notYet.length?panel(notYet.map(k=>kidRow(k,now)).join("")):emptyP("Այսօր բոլորը եկել են։"));
   h+=sec("Կենտրոնում",inC.length,inC.length?panel(inC.map(k=>kidRow(k,now,{right:hm(k.arrivedAt)+"-ից"})).join("")):emptyP("Հիմա կենտրոնում ոչ ոք չկա։"));
   if(abs.length)h+=sec("Այսօր չեն գալու",abs.length,panel(abs.map(k=>kidRow(k,now)).join("")));
@@ -474,19 +491,112 @@ function reportScreen(D,now){
       <label>Երեխա մանկավարժի մոտ միաժամանակ<input id="set-teacherMax" type="number" inputmode="numeric" min="1" step="1" value="${st.teacherMax}"></label>
       <label>Պարապմունքը երկար է, ր<input id="set-sessionMax" type="number" inputmode="numeric" min="10" step="5" value="${st.sessionMax}"></label>
       <button class="btn pri" data-act="save-settings">Պահպանել</button></div>`));
-    h+=sec("Նոր երեխա",null,panel(`<div class="form"><label>Անուն ազգանուն<input id="new-name" type="text" autocomplete="off" style="width:220px"></label><label>Դասարան<input id="new-grade" type="number" inputmode="numeric" min="1" max="12" value="1" style="width:100px"></label><button class="btn" data-act="add-kid">Ավելացնել</button></div><div class="err" id="new-err" style="text-align:left"></div>`));
+    h+=sec("Նոր երեխա",null,panel(`<div class="form"><span style="flex:1;min-width:180px;color:var(--ink-2)">Անուն, դպրոց, ծնողներ, վճար և ժամանակացույց՝ մեկ քարտում։</span><button class="btn pri" data-act="kid-new">Ավելացնել երեխա</button></div>`));
     if(S.sheetUrl)h+=sec("Աղյուսակ",null,panel(`<div class="form" style="align-items:center"><span style="color:var(--ink-2);flex:1;min-width:200px">Աշխատակիցների կոդերը, դպրոցները և դասացուցակը փոխվում են աղյուսակում։</span><a class="btn line" href="${esc(S.sheetUrl)}" target="_blank" rel="noopener">Բացել աղյուսակը</a></div>`));
   }
   return h+`</div>`;
 }
 
+/* ---------- передача ребёнка (журнал приёма-передачи) ---------- */
+function handoverHtml(){
+  const h=S.sheet,k=kidById(h.kid)||{},cs=S.contacts[h.kid]||[],home=h.kind==="home";
+  const btn=(label,who)=>`<button class="btn full" data-act="ho-pick" data-who="${esc(who)}">${esc(label)}</button>`;
+  let opts=cs.map(c=>btn(c.name+(c.rel?" · "+c.rel:""),c.name+(c.rel?" ("+c.rel+")":""))).join("");
+  if(!home)opts+=btn("Մանկավարժը՝ դպրոցից","Մանկավարժ՝ դպրոցից")+btn("Ինքն է եկել","Ինքն է եկել");
+  return `<div class="sh-n">${esc(k.name||"")}</div><div class="sh-s" style="margin-bottom:12px">${home?"Ու՞մ եք հանձնում երեխային":"Ո՞վ է բերել երեխային"}</div>
+    ${cs.length?"":`<div class="off" style="margin-bottom:10px">Վստահելի անձինք դեռ նշված չեն։ Իլոնան կամ Թամարան կարող են ավելացնել երեխայի քարտում։</div>`}
+    <div class="acts" style="margin-top:0">${opts}
+    ${h.other?`<div class="form" style="padding:6px 0"><label style="flex:1">Անուն և ով է երեխային<input id="ho-name" type="text" autocomplete="off" style="width:100%" placeholder="Օրինակ՝ Անի, մորաքույր"></label></div>
+      <button class="btn full pri" data-act="ho-other-ok" style="background:var(--red)">Հաստատել${home?" և զգուշացնել":""}</button>`
+    :`<button class="btn full line" data-act="ho-other" style="color:var(--red)">Ուրիշ մարդ${home?" է եկել":""}</button>`}
+    <button class="btn full line" data-act="close">Չեղարկել</button></div>
+    <p class="sh-s">Ժամը դնում է համակարգը։ Գրառումը մնում է ընդունման-հանձնման մատյանում։</p>`;
+}
+
+/* ---------- карточка ребёнка: редактор ---------- */
+const WD=["Երկ","Երք","Չրք","Հնգ","Ուրբ","Շբթ"];
+function kidEditHtml(){
+  const e=S.edit;if(!e)return `<div class="empty">Բեռնվում է…</div>`;
+  const people=workers().filter(s=>s.role!=="cook");
+  const opt=(v)=>`<option value="">—</option>`+people.map(p=>`<option value="${esc(p.id)}"${p.id===v?" selected":""}>${esc(p.name)}</option>`).join("");
+  const f=(id,label,val,extra)=>`<label>${label}<input data-f="${id}" type="text" value="${esc(val||"")}" autocomplete="off"${extra||""}></label>`;
+  let h=`<div class="sh-n" style="margin-bottom:8px">${e.id?"Երեխայի քարտ":"Նոր երեխա"}</div><div class="kform">
+    ${f("name","Անուն ազգանուն",e.name)}
+    <div class="two-f">${f("grade","Դասարան",e.grade,' inputmode="numeric"')}<label>Հերթափոխ<select data-f="shift" class="sel"><option value="2"${e.shift!=="1"?" selected":""}>2-րդ</option><option value="1"${e.shift==="1"?" selected":""}>1-ին</option></select></label></div>
+    ${f("school","Դպրոց",e.school)}
+    <div class="two-f"><label>Վերցնում է դպրոցից<select data-f="pick" class="sel">${opt(e.pick)}</select></label><label>Տանում է դպրոց<select data-f="drop" class="sel">${opt(e.drop)}</select></label></div>
+    <div class="two-f">${f("tariff","Ամսական վճար, դր",e.tariff,' inputmode="numeric"')}${f("extra","Տաքսի / հավելում, դր",e.extra,' inputmode="numeric"')}</div>
+    <div class="sh-sub">Ծնողներ և վստահելի անձինք</div>`;
+  (e.contacts||[]).forEach((c,i)=>{h+=`<div class="crow"><input data-c="${i}" data-k="name" type="text" placeholder="Անուն" value="${esc(c.name||"")}"><input data-c="${i}" data-k="rel" type="text" placeholder="Ով է (մայր, հայր…)" value="${esc(c.rel||"")}"><input data-c="${i}" data-k="phone" type="tel" placeholder="Հեռախոս" value="${esc(c.phone||"")}"><button class="del" data-act="c-del" data-i="${i}" aria-label="Ջնջել">✕</button></div>`});
+  h+=`<button class="btn full line" data-act="c-add">+ Ավելացնել անձ</button>
+    <div class="sh-sub">Դպրոցի ժամանակացույց</div><div class="sched"><span></span><span class="sh-s">Դասերն ավարտվում են</span><span class="sh-s">${e.shift==="1"?"Դպրոց՝ մինչև":""}</span>`;
+  WD.forEach((d,i)=>{h+=`<span class="sh-s">${d}</span><input data-t="end" data-i="${i}" type="time" value="${esc((e.end||[])[i]||"")}">${e.shift==="1"?`<input data-t="to" data-i="${i}" type="time" value="${esc((e.to||[])[i]||"")}">`:"<span></span>"}`});
+  h+=`</div><div class="err" id="ke-err"></div><div class="acts"><button class="btn full pri" data-act="kid-save">Պահպանել</button><button class="btn full line" data-act="close">Չեղարկել</button></div></div>`;
+  return h;
+}
+
+/* ---------- оплаты ---------- */
+const MONTHS=["հունվար","փետրվար","մարտ","ապրիլ","մայիս","հունիս","հուլիս","օգոստոս","սեպտեմբեր","հոկտեմբեր","նոյեմբեր","դեկտեմբեր"];
+const money=n=>Math.round(n||0).toLocaleString("ru-RU").replace(/\u00a0/g," ");
+const curMonth=()=>{const d=new Date(NOW());return d.getFullYear()+"-"+pad(d.getMonth()+1)};
+const monthName=m=>{const [y,mm]=m.split("-");return MONTHS[Number(mm)-1]+" "+y};
+function payScreen(){
+  const m=S.payMonth||(S.payMonth=curMonth());
+  if(!S.pay||S.pay.month!==m){if(!S.payLoading){S.payLoading=1;api("api_payments",S.code,m).then(r=>{S.pay=r;S.payLoading=0;render()}).catch(()=>{S.payLoading=0;S.payErr=1;render()})}
+    return `<div class="stack">${sec("Վճարումներ · "+monthName(m),null,emptyP(S.payErr?"Չհաջողվեց բեռնել։":"Բեռնվում է…"))}</div>`}
+  const ks=S.pay.kids.slice().sort((a,b)=>(b.due-b.paid)-(a.due-a.paid)||a.name.localeCompare(b.name,"hy"));
+  const due=ks.reduce((a,k)=>a+k.due,0),paid=ks.reduce((a,k)=>a+k.paid,0),debt=ks.reduce((a,k)=>a+Math.max(0,k.due-k.paid),0);
+  const noTar=ks.filter(k=>!k.due).length;
+  let h=`<div class="stack"><div class="monthbar"><button class="btn sm line" data-act="pm" data-d="-1" aria-label="Նախորդ ամիս">‹</button><b>${esc(monthName(m))}</b><button class="btn sm line" data-act="pm" data-d="1" aria-label="Հաջորդ ամիս">›</button></div>
+    <div class="nums" style="grid-template-columns:repeat(3,minmax(0,1fr))"><div class="nbox"><span>Պետք է</span><b class="num" style="font-size:20px">${money(due)}</b></div><div class="nbox k-play"><span>Վճարված</span><b class="num" style="font-size:20px">${money(paid)}</b></div><div class="nbox"><span>Պարտք</span><b class="num" style="font-size:20px;color:var(--red)">${money(debt)}</b></div></div>`;
+  if(noTar)h+=`<div class="off">${noTar} երեխայի ամսական վճարը նշված չէ։ Նշեք երեխայի քարտում։</div>`;
+  h+=sec("Երեխաներ",ks.length,panel(ks.map(k=>{const rest=k.due-k.paid;const st=!k.due?["out","վճարը նշված չէ"]:rest<=0?["play","վճարված է"]:k.paid>0?["meal","վճարել է "+money(k.paid)+" · պարտք "+money(rest)]:["bad","պարտք "+money(rest)];
+    return `<button class="row" data-act="pay-open" data-kid="${esc(k.id)}"><div class="av s-${st[0]}">${esc(ini(k.name))}</div><div class="rm"><div class="rn">${esc(k.name)}</div><div class="rs num" style="color:var(--${st[0]==="bad"?"red":st[0]==="play"?"green-ink":st[0]==="meal"?"amber":"ink-2"})">${st[1]}</div>${k.promise?`<div class="rs">խոստացել են՝ ${esc(k.promise)}</div>`:""}</div>${IC.chev}</button>`}).join("")));
+  return h+`</div>`;
+}
+function payHtml(){
+  const k=(S.pay&&S.pay.kids.find(x=>x.id===S.sheet.kid))||{};const rest=Math.max(0,(k.due||0)-(k.paid||0));
+  return `<div class="sh-n">${esc(k.name||"")}</div><div class="sh-s">${esc(monthName(S.payMonth))} · պետք է ${money(k.due)} · վճարված ${money(k.paid)}${rest?" · <b style=\"color:var(--red)\">պարտք "+money(rest)+"</b>":""}</div>
+    ${(k.contacts||[]).filter(c=>c.phone).map(c=>`<a class="btn full line" style="margin-top:10px" href="tel:${esc(c.phone.replace(/[^\d+]/g,""))}">Զանգ · ${esc(c.name)}${c.rel?" ("+esc(c.rel)+")":""} · ${esc(c.phone)}</a>`).join("")}
+    <div class="sh-sub">Գրանցել վճար</div>
+    <div class="form"><label>Գումար, դր<input id="pay-amt" type="text" inputmode="numeric" value="${rest||""}" autocomplete="off"></label>
+    <label>Ինչպես<select id="pay-m" class="sel"><option value="cash">Կանխիկ</option><option value="transfer">Փոխանցում</option></select></label></div>
+    <button class="btn full pri" data-act="pay-save">Գրանցել վճարը</button>
+    <div class="sh-sub">Խոստացել են վճարել մինչև</div>
+    <div class="form"><label>Ամսաթիվ<input id="pay-prom" type="date" autocomplete="off"></label><button class="btn line" data-act="pay-promise">Նշել</button></div>
+    ${(k.pays||[]).length?`<div class="sh-sub">Այս ամսվա վճարներ</div>${k.pays.map(p=>`<div class="row"><div class="rm"><div class="rn num">${money(p.amount)} դր</div><div class="rs">${esc(new Date(p.at).toLocaleDateString("ru-RU"))} · ${p.method==="transfer"?"փոխանցում":"կանխիկ"} · ${esc(p.by||"")}</div></div>${meS().role==="owner"?`<button class="del" data-act="pay-del" data-id="${esc(p.id)}" aria-label="Ջնջել">✕</button>`:""}</div>`).join("")}`:""}
+    <div class="acts"><button class="btn full line" data-act="close">Փակել</button></div>`;
+}
+
+/* ---------- документы ---------- */
+function docsHtml(){
+  const l=S.docs;
+  if(!l)return `<div class="sh-n">Փաստաթղթեր</div><div class="empty">Բեռնվում է…</div>`;
+  const groups=[];l.forEach(d=>{let g=groups.find(x=>x.n===d.group);if(!g){g={n:d.group,items:[]};groups.push(g)}g.items.push(d)});
+  return `<div class="sh-n">Փաստաթղթեր</div><div class="sh-s" style="margin-bottom:8px">Կարդացեք ձեր հրահանգները և սեղմեք «Կարդացել եմ»։</div>
+    ${l.length?groups.map(g=>`<div class="sh-sub">${esc(g.n||"")}</div>`+g.items.map(d=>`<button class="row" data-act="doc-open" data-id="${esc(d.id)}"><div class="av s-${d.readAt?"play":"meal"}">${d.readAt?"✓":"!"}</div><div class="rm"><div class="rn">${esc(d.title.split(" — ")[0])}</div><div class="rs">${d.readAt?"Կարդացել եք · "+new Date(d.readAt).toLocaleDateString("ru-RU"):"Դեռ չեք կարդացել"}</div></div>${IC.chev}</button>`).join("")).join(""):`<div class="empty">Փաստաթղթեր դեռ չկան։</div>`}
+    <div class="acts"><button class="btn full line" data-act="close">Փակել</button></div>`;
+}
+function docHtml(){
+  const d=S.doc;
+  if(!d)return `<div class="empty">Բեռնվում է…</div>`;
+  const meta=(S.docs||[]).find(x=>x.id===d.id)||{};
+  return `<button class="back" data-act="docs">← Բոլոր փաստաթղթերը</button><div class="doc">${cleanHtml(d.html)}</div>
+    <div class="acts">${meta.readAt?`<div class="ok">Կարդացել եք · ${new Date(meta.readAt).toLocaleDateString("ru-RU")}</div>`:`<button class="btn full pri" data-act="doc-read" data-id="${esc(d.id)}">Կարդացել եմ</button>`}<button class="btn full line" data-act="close">Փակել</button></div>`;
+}
+function cleanHtml(h){const t=document.createElement("template");t.innerHTML=h;const ok=new Set(["H1","H2","H3","H4","P","UL","OL","LI","B","STRONG","I","EM","TABLE","THEAD","TBODY","TR","TH","TD","BR","HR"]);
+  const walk=n=>{[...n.childNodes].forEach(c=>{if(c.nodeType===1){if(/^(SCRIPT|STYLE|IFRAME|OBJECT|EMBED|TEMPLATE)$/.test(c.tagName)){c.remove();return}if(!ok.has(c.tagName)){c.replaceWith(...c.childNodes);walk(n);return}[...c.attributes].forEach(a=>c.removeAttribute(a.name));walk(c)}})};walk(t.content);
+  t.content.querySelectorAll("table").forEach(tb=>{const w=document.createElement("div");w.className="tbl";tb.replaceWith(w);w.appendChild(tb)});
+  return t.innerHTML}
+
 /* ---------- сотрудники (только Илона) ---------- */
 const ROLE_OPT=[["teacher","Մանկավարժ"],["coord","Համակարգող"],["cook","Խոհարար"]];
 function teamScreen(){
-  if(!S.admin){if(!S.adminLoading){S.adminLoading=1;api("api_staffAdmin",S.code).then(l=>{S.admin=l;S.adminLoading=0;render()}).catch(()=>{S.adminLoading=0;S.adminErr=1;render()})}
+  if(!S.admin){if(!S.adminLoading){S.adminLoading=1;Promise.all([api("api_staffAdmin",S.code),api("api_docReads",S.code).catch(()=>null)]).then(([l,r])=>{S.admin=l;S.docReads=r;S.adminLoading=0;render()}).catch(()=>{S.adminLoading=0;S.adminErr=1;render()})}
     return `<div class="stack">${sec("Աշխատակիցներ",null,emptyP(S.adminErr?"Չհաջողվեց բեռնել։ Փորձեք նորից։":"Բեռնվում է…"))}</div>`}
+  if(!Array.isArray(S.admin))return `<div class="stack">${sec("Աշխատակիցներ",null,emptyP("Չհաջողվեց բեռնել։"))}</div>`;
   const on=S.admin.filter(x=>x.active),off=S.admin.filter(x=>!x.active);
-  const row=x=>`<div class="row wrap"><div class="av s-${x.active?"play":"out"}">${esc(ini(x.name))}</div><div class="rm"><div class="rn">${esc(x.name)}</div><div class="rs">${esc(ROLE[x.role]||"")}${x.subjects?" · "+esc(x.subjects):""}</div>${x.active?`<div class="code-l num">Կոդ՝ <b>${esc(x.code)}</b></div>`:""}</div>
+  const row=x=>`<div class="row wrap"><div class="av s-${x.active?"play":"out"}">${esc(ini(x.name))}</div><div class="rm"><div class="rn">${esc(x.name)}</div><div class="rs">${esc(ROLE[x.role]||"")}${x.subjects?" · "+esc(x.subjects):""}</div>${x.active?`<div class="code-l num">Կոդ՝ <b>${esc(x.code)}</b></div>`:""}${x.active&&S.docReads?(()=>{const ds=S.docReads.docs.filter(d=>x.role==="owner"||d.roles.includes("all")||d.roles.includes(x.role));const rd=S.docReads.reads[x.id]||{};const n=ds.filter(d=>rd[d.id+"|"+d.version]).length;return `<div class="rs">Փաստաթղթեր՝ կարդացել է ${n}/${ds.length}</div>`})():""}</div>
     <div class="team-acts">${x.active?`<button class="btn sm line" data-act="st-code" data-id="${esc(x.id)}">Նոր կոդ</button>${x.id!==S.me?`<button class="btn sm line" data-act="st-off" data-id="${esc(x.id)}" style="color:var(--red)">Անջատել</button>`:""}`:`<button class="btn sm line" data-act="st-on" data-id="${esc(x.id)}">Միացնել</button>`}</div></div>`;
   let h=`<div class="stack">`+sec("Աշխատակիցներ",on.length,panel(on.map(row).join(""))+`<p class="empty" style="font-size:14px">Կոդը տվեք աշխատակցին անձամբ։ «Նոր կոդ»՝ հինը անմիջապես դադարում է աշխատել։ «Անջատել»՝ մարդն այլևս չի կարող մտնել, նրա նշումները մնում են։</p>`);
   if(off.length)h+=sec("Անջատված",off.length,panel(off.map(row).join("")));
@@ -501,6 +611,11 @@ function teamScreen(){
 /* ---------- sheet (child card) ---------- */
 function sheetHtml(D,now){
   const sh=S.sheet;if(!sh)return"";
+  if(sh.type==="handover")return handoverHtml();
+  if(sh.type==="kidEdit")return kidEditHtml();
+  if(sh.type==="pay")return payHtml();
+  if(sh.type==="docs")return docsHtml();
+  if(sh.type==="doc")return docHtml();
   if(sh.type==="inbox"){
     const list=S.inbox;
     const fmt=t=>{const d=new Date(t),td=dayKey(NOW())===dayKey(t);return (td?"":pad(d.getDate())+"."+pad(d.getMonth()+1)+" ")+hm(t)};
@@ -531,18 +646,19 @@ function sheetHtml(D,now){
   if(role==="coord"||role==="owner"){
     if(!k.inCenter&&k.place!=="road")acts.push(["arrive","Եկավ կենտրոն",!acts.some(a=>a[2])]);
     if(!k.inCenter&&k.place==="none")acts.push(["absent","Այսօր չի գալու"]);
-    if(k.inCenter){if(k.place!=="play"&&k.place!=="class")acts.push(["play","Խաղասենյակ"]);acts.push(["home","Գնաց տուն"])}
+    if(k.inCenter&&k.place!=="play"&&k.place!=="class")acts.push(["play","Խաղասենյակ"]);
   }
+  if(role!=="cook"&&k.inCenter)acts.push(["home","Գնաց տուն · հանձնել"]);
   if(role==="cook"&&k.inCenter){if(k.place!=="meal")acts.push(["meal","Նստեց ուտելու",1]);else acts.push(["ate","Կերավ",1])}
   const tl=timeline(k,now);
   const doneSubj=Object.keys(k.done);
   return `<div class="sh-h"><div class="av s-${s.c}">${esc(ini(k.name))}</div><div><div class="sh-n">${esc(k.name)}</div><div class="sh-s">${esc(grade(k))}${k.school?" · "+esc(k.school):""}</div></div></div>
     <div class="sh-s" style="margin-top:10px"><b style="color:var(--ink)">${esc(s.w)}</b>${s.t?" · "+esc(s.t):""}</div>
     <div class="sh-s">Այսօր արել է՝ ${doneSubj.length?esc(doneSubj.join(", ")):"դեռ ոչինչ"} · ${k.ate?"կերել է":"դեռ չի կերել"}</div>
-    ${acts.length?`<div class="acts">${acts.map(a=>`<button class="btn full ${a[2]?"pri":""}" data-act="mark" data-kind="${a[0]}" data-kid="${esc(k.id)}"${a[3]?` data-subject="${esc(a[3])}"`:""}>${esc(a[1])}</button>`).join("")}</div>`:""}
+    ${acts.length?`<div class="acts">${acts.map(a=>`<button class="btn full ${a[2]?"pri":""}" data-act="${a[0]==="home"||a[0]==="arrive"?"handover":"mark"}" data-kind="${a[0]}" data-kid="${esc(k.id)}"${a[3]?` data-subject="${esc(a[3])}"`:""}>${esc(a[1])}</button>`).join("")}</div>`:""}
     <div class="sh-sub">Այսօրվա օրը</div>
     ${tl.length?`<ul class="tl">${tl.map(e=>`<li><time class="num">${hm(e.at)}</time><i class="k-${e.c}"></i><span style="flex:1">${esc(e.txt)}</span>${(role==="owner"||role==="coord")&&e.id&&!String(e.id).startsWith("tmp")?`<button class="del" data-act="delmark" data-id="${esc(e.id)}" aria-label="Ջնջել">✕</button>`:""}</li>`).join("")}</ul>`:`<div class="empty">Այսօր նշումներ դեռ չկան։</div>`}
-    ${(role==="owner"||role==="coord")?`<div class="acts" style="margin-top:6px"><button class="btn full line" data-act="leave" data-kid="${esc(k.id)}" style="color:var(--red)">Այլևս չի հաճախում</button></div>`:""}
+    ${(role==="owner"||role==="coord")?`<div class="acts" style="margin-top:6px"><button class="btn full line" data-act="kid-edit" data-kid="${esc(k.id)}">Խմբագրել քարտը</button>${(S.contacts[k.id]||[]).filter(c=>c.phone).map(c=>`<a class="btn full line" href="tel:${esc(c.phone.replace(/[^\d+]/g,""))}">Զանգ · ${esc(c.name)}${c.rel?" ("+esc(c.rel)+")":""}</a>`).join("")}<button class="btn full line" data-act="leave" data-kid="${esc(k.id)}" style="color:var(--red)">Այլևս չի հաճախում</button></div>`:""}
     <div class="acts"><button class="btn full line" data-act="close">Փակել</button></div>`;
 }
 let sheetOpenKey=null;
@@ -560,8 +676,8 @@ function renderSheet(D,now){
 /* ---------- tabs ---------- */
 function tabsFor(role,D,now){
   const al=alerts(D,now).length,late=liveRoutes().filter(r=>rstat(r,now).st==="late").length;
-  if(role==="owner")return[["now","Հիմա",IC.now,al],["road","Ճանապարհ",IC.road,late],["report","Ամփոփում",IC.report,0],["team","Թիմ",IC.team,0]];
-  if(role==="coord")return[["lessons","Իմ դասերը",IC.lessons,0],["door","Գալ-գնալ",IC.door,0],["road","Ճանապարհ",IC.road,late],["now","Կենտրոն",IC.now,al]];
+  if(role==="owner")return[["now","Հիմա",IC.now,al],["road","Ճամփա",IC.road,late],["pay","Վճար",IC.pay,0],["report","Ամփոփ",IC.report,0],["team","Թիմ",IC.team,0]];
+  if(role==="coord")return[["lessons","Դասեր",IC.lessons,0],["door","Գալ-գնալ",IC.door,0],["road","Ճամփա",IC.road,late],["pay","Վճար",IC.pay,0],["now","Կենտրոն",IC.now,al]];
   return[];
 }
 function screen(tab,D,now){
@@ -573,6 +689,7 @@ function screen(tab,D,now){
   if(tab==="road")return routesScreen(D,now,true);
   if(tab==="report")return reportScreen(D,now);
   if(tab==="team")return teamScreen();
+  if(tab==="pay")return payScreen();
   return nowScreen(D,now);
 }
 
@@ -583,14 +700,14 @@ function header(tabs){
   if(me&&S.phase==="app"){
     h=`<div class="me"><div class="av s-play">${esc(ini(me.name))}</div><div class="me-t"><div class="me-n">${esc(me.name)}</div><div class="me-r">${esc(roleLine(me))}</div></div></div>`;
     if(tabs.length)h+=`<div class="dtabs">${tabs.map(t=>`<button class="dtab ${S.tab===t[0]?"on":""}" data-act="tab" data-v="${t[0]}">${t[1]}${t[3]?`<span class="badge num">${t[3]}</span>`:""}</button>`).join("")}</div>`;
-    h+=`<button class="bell" data-act="inbox" aria-label="Ծանուցումներ${S.unread?" · "+S.unread+" նոր":""}"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg>${S.unread?`<span class="badge num">${S.unread>99?"99+":S.unread}</span>`:""}</button><button class="out" data-act="logout">Ելք</button>`;
+    h+=`<button class="hbtn" data-act="docs" aria-label="Փաստաթղթեր"><svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4.5h9a3 3 0 0 1 3 3V20H8a3 3 0 0 1-3-3z"/><path d="M17 7.5h2V20h-2"/><path d="M8.5 9h5M8.5 12.5h5"/></svg>${S.docsUnread?`<span class="dot"></span>`:""}</button><button class="bell" data-act="inbox" aria-label="Ծանուցումներ${S.unread?" · "+S.unread+" նոր":""}"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg>${S.unread?`<span class="badge num">${S.unread>99?"99+":S.unread}</span>`:""}</button><button class="out" data-act="logout">Ելք</button>`;
   }else h=`<div class="me"><img src="icon-192.png" alt="" width="36" height="36" style="border-radius:9px"><div class="me-t"><div class="me-n">Վիկտորյա</div><div class="me-r">ուսումնական կենտրոն</div></div></div>`;
   document.getElementById("hdr").innerHTML=h;
 }
-function pinDots(){return [0,1,2,3,4,5].map(i=>`<span class="${i<S.pin.length?"on":""}"></span>`).join("")}
+function pinDots(){return [0,1,2,3,4,5,6,7].map(i=>`<span class="${i<S.pin.length?"on":""}"></span>`).join("")}
 function loginHtml(){
   const keys=["1","2","3","4","5","6","7","8","9","","0","del"];
-  return `<div class="login"><h1>Մուտք</h1><p>Մուտքագրեք ձեր անձնական կոդը։ Կոդը տալիս է Իլոնան։</p>
+  return `<div class="login"><h1>Մուտք</h1><p>Մուտքագրեք ձեր անձնական կոդը (6 կամ 8 թիվ)։ Կոդը տալիս է Իլոնան։</p>
     <div class="dots" id="dots" aria-live="polite" aria-label="Մուտքագրված է ${S.pin.length} թիվ">${pinDots()}</div>
     <div class="err" id="pin-err">${esc(S.pinErr)}</div>
     <div class="keypad">${keys.map(k=>k===""?`<span></span>`:k==="del"?`<button class="key del" data-act="pin-del" aria-label="Ջնջել">⌫</button>`:`<button class="key" data-act="pin-key" data-v="${k}">${k}</button>`).join("")}</div>
@@ -600,6 +717,8 @@ function pinUpdate(){const d=document.getElementById("dots");if(d){d.innerHTML=p
 function render(){
   const app=document.getElementById("app"),bar=document.getElementById("tabbar"),ae=document.activeElement;
   let keepQ=null;
+  const sb=document.getElementById("sheetbox");
+  if(ae&&sb&&sb.contains(ae)&&/^(INPUT|SELECT|TEXTAREA)$/.test(ae.tagName))return;
   if(ae&&app.contains(ae)){if(ae.id==="q")keepQ=[ae.selectionStart,ae.selectionEnd];else if(ae.tagName==="INPUT"&&!(ae.id==="pin"&&S.busyPin))return;else if(ae.tagName==="SELECT")return}
   const now=NOW();
   if(S.phase!=="app"){header([]);bar.hidden=true;app.className="notabs";
@@ -640,14 +759,14 @@ function toast(text,undo){
   if(b)b.onclick=async()=>{const id=S.lastId;S.lastId=null;el.hidden=true;if(!id)return;S.marks=S.marks.filter(m=>m.id!==id);render();try{await api("api_undo",S.code,id)}catch(e){toast("Չհաջողվեց չեղարկել");refresh()}};
 }
 const KT={noschool:"այսօր դաս չկա",absent:"այսօր չի գալու",arrive:"եկավ",take:"ձեզ մոտ է",done:"արեց",stop:"չավարտեց",meal:"նստեց ուտելու",ate:"կերավ",play:"խաղասենյակում է",home:"գնաց տուն",pickup:"վերցված է դպրոցից",dropoff:"տարված է դպրոց"};
-async function mark(kind,kid,subject){
+async function mark(kind,kid,subject,who,other){
   const me=meS();if(!me)return;
   if(kind==="take"&&!subject)subject=mySubjects()[0]||"";
   const tapAt=Date.now();
-  const tmp={id:"tmp"+tapAt,kind,kid,staff:S.me,subject:kind==="take"?subject:"",at:NOW(),day:S.day};
+  const tmp={id:"tmp"+tapAt,kind,kid,staff:S.me,subject:kind==="take"?subject:"",at:NOW(),day:S.day,who:(other?"⚠ ":"")+(who||"")};
   S.marks.push(tmp);if(S.sheet&&S.sheet.type==="kid"&&kind!=="take"&&kind!=="arrive")S.sheet=null;if(S.sheet&&S.sheet.type==="kid")S.sheet=null;render();
   try{navigator.vibrate&&navigator.vibrate(12)}catch(e){}
-  try{const r=await api("api_mark",S.code,kind,kid,subject||"",tapAt,Date.now());tmp.id=r.id;tmp.at=r.at;S.lastId=r.id;toast(kid==="*"?KT[kind]:kidName(kid)+" — "+KT[kind],true)}
+  try{const r=await api("api_mark",S.code,kind,kid,subject||"",tapAt,Date.now(),who||"",other?1:0);tmp.id=r.id;tmp.at=r.at;S.lastId=r.id;toast(kid==="*"?KT[kind]:kidName(kid)+" — "+KT[kind],true)}
   catch(e){
     if(e.message==="offline"){const q=Q.get();q.push({tmp:tmp.id,kind,kid,subject:subject||"",tapAt});Q.set(q);tmp.pending=1;S.offline=true;render();toast("Կապ չկա։ Նշումը կուղարկվի, երբ կապը վերականգնվի։")}
     else{S.marks=S.marks.filter(m=>m!==tmp);render();if(/bad_pin|locked/.test(e.message))logout("Կոդը այլևս չի գործում։ Մուտք գործեք նորից։");else toast(/no_right/.test(e.message)?"Այս նշումը ձեզ համար չէ։":"Չպահպանվեց։ Փորձեք նորից։")}}
@@ -655,11 +774,12 @@ async function mark(kind,kid,subject){
 let busy=false;
 let lastSig="";
 function setBadge(n){try{if(navigator.setAppBadge){n?navigator.setAppBadge(n):navigator.clearAppBadge()}}catch(e){}}
-function sigOf(st){return JSON.stringify([st.unread,st.me&&st.me.id,st.kids,st.staff,st.settings,st.marks,st.routes,st.noSchool])}
+function sigOf(st){return JSON.stringify([st.contacts,st.unread,st.me&&st.me.id,st.kids,st.staff,st.settings,st.marks,st.routes,st.noSchool])}
 function applyState(st,t0){
   const was=S.me;
+  if(!S.docsTried){S.docsTried=1;setTimeout(()=>api("api_docs",S.code).then(l=>{S.docs=l;S.docsUnread=l.filter(d=>!d.readAt).length;render()}).catch(()=>{}),800)}
   S.offset=st.serverNow-Math.round((t0+Date.now())/2);S.day=st.day;S.me=st.me.id;S.staff=st.staff.sort((a,b)=>a.order-b.order);S.kids=st.kids;S.settings=st.settings;
-  S.unread=st.unread||0;setBadge(S.unread);
+  S.unread=st.unread||0;setBadge(S.unread);S.contacts=st.contacts||{};
   S.marks=st.marks.concat(queuedAsMarks());S.routes=st.routes||[];S.noSchool=!!st.noSchool;S.sheetUrl=st.sheetUrl||"";S.offline=Q.get().length>0;
   try{if(("Notification" in window)&&Notification.permission==="granted"&&ls.get("vk-push-me")!==S.me&&"PushManager" in window&&!S.subTry){S.subTry=1;subscribePush(false).catch(()=>{}).finally(()=>{setTimeout(()=>{S.subTry=0},120000)})}}catch(e){}
 }
@@ -671,9 +791,9 @@ async function refresh(){
   finally{busy=false}
   if(changed)render();
 }
-function logout(msg){S.code="";S.me=null;S.pin="";S.pinErr=msg||"";S.sheet=null;S.week=null;S.tab=null;S.marks=[];S.staff=[];ls.set("vk-code",null);ls.set("vk-me",null);ls.set("vk-tab",null);S.phase="code";render()}
+function logout(msg){S.docs=null;S.docsTried=0;S.docsUnread=0;S.pay=null;S.admin=null;S.code="";S.me=null;S.pin="";S.pinErr=msg||"";S.sheet=null;S.week=null;S.tab=null;S.marks=[];S.staff=[];ls.set("vk-code",null);ls.set("vk-me",null);ls.set("vk-tab",null);S.phase="code";render()}
 async function tryLogin(){
-  if(S.busyPin)return;if(!/^\d{6}$/.test(S.pin)){S.pinErr="Կոդը 6 թիվ է";render();return}
+  if(S.busyPin)return;if(!/^(\d{6}|\d{8})$/.test(S.pin)){S.pinErr="Կոդը 6 կամ 8 թիվ է";pinUpdate();return}
   S.busyPin=true;S.pinErr="";render();
   try{const code=S.pin,t0=Date.now(),st=await api("api_state",code);
     S.code=code;applyState(st,t0);
@@ -708,11 +828,36 @@ document.addEventListener("click",async e=>{
   else if(a==="filter"){const tile=b.classList.contains("nbox");S.filter=(S.filter===b.dataset.v&&tile)?"all":b.dataset.v;render();
     if(tile){const l=document.getElementById("kidlist");if(l&&window.innerWidth<960)l.scrollIntoView({behavior:"smooth",block:"start"})}}
   else if(a==="login")tryLogin();
-  else if(a==="pin-key"){if(S.pin.length<6){S.pin+=b.dataset.v;S.pinErr="";pinUpdate()}}
+  else if(a==="pin-key"){if(S.pin.length<8){S.pin+=b.dataset.v;S.pinErr="";pinUpdate()}}
   else if(a==="pin-del"){S.pin=S.pin.slice(0,-1);S.pinErr="";pinUpdate()}
   else if(a==="logout")logout();
   else if(a==="reload")location.reload();
   else if(a==="push-on")enablePush();
+  else if(a==="handover"){S.sheet={type:"handover",kid:b.dataset.kid,kind:b.dataset.kind,other:false};render()}
+  else if(a==="ho-pick"){const h=S.sheet;S.sheet=null;mark(h.kind,h.kid,"",b.dataset.who,false)}
+  else if(a==="ho-other"){S.sheet.other=true;render();setTimeout(()=>document.getElementById("ho-name")?.focus(),50)}
+  else if(a==="ho-other-ok"){const n=(document.getElementById("ho-name")||{}).value||"";if(n.trim().length<2){toast("Գրեք անունը և ով է երեխային");return}
+    const h=S.sheet;document.activeElement&&document.activeElement.blur();S.sheet=null;mark(h.kind,h.kid,"",n.trim(),true)}
+  else if(a==="kid-new"){S.edit={id:"",name:"",grade:"",school:"",shift:"2",pick:"",drop:"",tariff:"",extra:"",contacts:[{name:"",rel:"մայր",phone:""}],end:[],to:[]};S.sheet={type:"kidEdit"};render()}
+  else if(a==="kid-edit"){S.edit=null;S.sheet={type:"kidEdit",kid:b.dataset.kid};render();
+    try{const k=await api("api_kidGet",S.code,b.dataset.kid);S.edit={...k,shift:String(k.shift||"2")==="1"?"1":"2",contacts:k.contacts.length?k.contacts.map(c=>({name:c.name,rel:c.rel,phone:c.phone})):[{name:"",rel:"մայր",phone:""}]};render()}catch(err){toast("Չհաջողվեց բեռնել քարտը");S.sheet=null;render()}}
+  else if(a==="c-add"){S.edit.contacts.push({name:"",rel:"",phone:""});render()}
+  else if(a==="c-del"){S.edit.contacts.splice(Number(b.dataset.i),1);render()}
+  else if(a==="kid-save"){const e=S.edit;if(!e||String(e.name||"").trim().length<2){const er=document.getElementById("ke-err");if(er)er.textContent="Գրեք երեխայի անունը";return}
+    b.disabled=true;b.textContent="Պահպանում եմ…";
+    try{await api("api_kidSave",S.code,e);toast("Քարտը պահպանված է");S.sheet=null;S.edit=null;S.pay=null;lastSig="";render();refresh()}catch(err){b.disabled=false;b.textContent="Պահպանել";toast("Չպահպանվեց")}}
+  else if(a==="pm"){const [y,m]=S.payMonth.split("-").map(Number);const d=new Date(y,m-1+Number(b.dataset.d),1);S.payMonth=d.getFullYear()+"-"+pad(d.getMonth()+1);S.pay=null;render()}
+  else if(a==="pay-open"){S.sheet={type:"pay",kid:b.dataset.kid};render()}
+  else if(a==="pay-save"){const amt=Number(String((document.getElementById("pay-amt")||{}).value||"").replace(/\D/g,""));if(!amt){toast("Գրեք գումարը");return}
+    const m=(document.getElementById("pay-m")||{}).value||"cash";document.activeElement&&document.activeElement.blur();
+    try{await api("api_pay",S.code,S.sheet.kid,S.payMonth,amt,m,"");S.pay=await api("api_payments",S.code,S.payMonth);toast("Վճարը գրանցված է՝ "+money(amt)+" դր");render()}catch(err){toast("Չգրանցվեց")}}
+  else if(a==="pay-promise"){const v=(document.getElementById("pay-prom")||{}).value;if(!v){toast("Ընտրեք ամսաթիվը");return}const [y,mm,dd]=v.split("-");
+    document.activeElement&&document.activeElement.blur();
+    try{await api("api_pay",S.code,S.sheet.kid,S.payMonth,0,"promise",dd+"."+mm);S.pay=await api("api_payments",S.code,S.payMonth);toast("Նշված է");render()}catch(err){toast("Չգրանցվեց")}}
+  else if(a==="pay-del"){if(!confirm("Ջնջե՞լ այս վճարը։"))return;try{await api("api_payDelete",S.code,b.dataset.id);S.pay=await api("api_payments",S.code,S.payMonth);render()}catch(err){toast("Չհաջողվեց")}}
+  else if(a==="docs"){S.sheet={type:"docs"};render();try{S.docs=await api("api_docs",S.code);S.docsUnread=S.docs.filter(d=>!d.readAt).length;render()}catch(err){S.docs=[];render();toast("Չհաջողվեց բեռնել")}}
+  else if(a==="doc-open"){S.doc=null;S.sheet={type:"doc",kid:b.dataset.id};render();try{S.doc=await api("api_doc",S.code,b.dataset.id);render();const sh=document.querySelector("#sheetbox .sheet");if(sh)sh.scrollTop=0}catch(err){toast("Չհաջողվեց բեռնել");S.sheet={type:"docs"};render()}}
+  else if(a==="doc-read"){try{const t=await api("api_docRead",S.code,b.dataset.id);const d=(S.docs||[]).find(x=>x.id===b.dataset.id);if(d)d.readAt=t;S.docsUnread=(S.docs||[]).filter(x=>!x.readAt).length;toast("Նշված է՝ կարդացել եք");render()}catch(err){toast("Չհաջողվեց")}}
   else if(a==="push-test"){if(!("Notification" in window)||Notification.permission!=="granted"){enablePush();return}
     try{await subscribePush(false);const n=await api("api_pushTest",S.code);toast(n?"Ուղարկված է։ Ծանուցումը կգա մի քանի վայրկյանից։":"Այս հեռախոսը դեռ միացված չէ ծանուցումներին")}catch(e){toast("Չհաջողվեց ուղարկել")}}
   else if(a==="hint-x"){ls.set("vk-hint","1");render()}
@@ -724,11 +869,12 @@ document.addEventListener("click",async e=>{
     if(name.length<2){er.textContent="Գրեք երեխայի անունը";n.focus();return}n.blur();try{await api("api_addKid",S.code,name,g.value);toast(name+" — ավելացված է");refresh()}catch(err){toast("Չպահպանվեց")}}
 });
 document.addEventListener("input",e=>{
+  const t=e.target;if(S.edit&&t.dataset){if(t.dataset.f){S.edit[t.dataset.f]=t.value}else if(t.dataset.c!==undefined&&t.dataset.k){S.edit.contacts[Number(t.dataset.c)][t.dataset.k]=t.value}else if(t.dataset.t){(S.edit[t.dataset.t]=S.edit[t.dataset.t]||[])[Number(t.dataset.i)]=t.value}}
   if(e.target.id==="q"){S.q=e.target.value;render()}
   else if(e.target.id==="new-name"){const er=document.getElementById("new-err");if(er)er.textContent=""}
 });
-document.addEventListener("keydown",e=>{if(e.key==="Escape"&&S.sheet){S.sheet=null;render()}if(S.phase==="code"){if(/^[0-9]$/.test(e.key)&&S.pin.length<6){S.pin+=e.key;S.pinErr="";pinUpdate()}else if(e.key==="Backspace"){S.pin=S.pin.slice(0,-1);pinUpdate()}else if(e.key==="Enter")tryLogin()}});
-document.addEventListener("change",async e=>{const x=e.target;if(!x.dataset||!x.dataset.assign)return;
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&S.sheet){S.sheet=null;render()}if(S.phase==="code"){if(/^[0-9]$/.test(e.key)&&S.pin.length<8){S.pin+=e.key;S.pinErr="";pinUpdate()}else if(e.key==="Backspace"){S.pin=S.pin.slice(0,-1);pinUpdate()}else if(e.key==="Enter")tryLogin()}});
+document.addEventListener("change",async e=>{const x=e.target;if(S.edit&&x.dataset&&x.dataset.f){S.edit[x.dataset.f]=x.value;if(x.dataset.f==="shift"){x.blur();render()}return}if(x.dataset&&x.dataset.t&&S.edit){(S.edit[x.dataset.t]=S.edit[x.dataset.t]||[])[Number(x.dataset.i)]=x.value;return}if(!x.dataset||!x.dataset.assign)return;
   const r=(S.routes||[]).find(y=>y.kid===x.dataset.kid&&y.kind===x.dataset.kind),old=r?r.staff:"";if(r)r.staff=x.value;x.blur();render();
   try{await api("api_assign",S.code,S.day||dayKey(NOW()),x.dataset.kid,x.dataset.kind,x.value);toast("Նշանակված է՝ "+sname(x.value))}catch(err){if(r)r.staff=old;render();toast("Չպահպանվեց")}});
 window.addEventListener("scroll",()=>document.getElementById("top").classList.toggle("sh",window.scrollY>4),{passive:true});
