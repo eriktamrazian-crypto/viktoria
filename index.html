@@ -171,11 +171,19 @@ button.row:active{background:var(--wash)}
 .sched{display:grid;grid-template-columns:44px 1fr 1fr;gap:6px 10px;align-items:center}
 .monthbar{display:flex;align-items:center;justify-content:space-between;gap:12px}.monthbar b{font-size:18px}
 .doc{font-size:16px;line-height:1.6}.doc h1{font-size:21px;line-height:1.3;margin:6px 0 10px}.doc h2{font-size:18px;margin:18px 0 6px}.doc h3{font-size:16px;margin:14px 0 4px}
-.doc p{margin:8px 0}.doc ul,.doc ol{padding-left:22px;margin:6px 0}.doc li{margin:4px 0}.doc table{font-size:14px}.doc td,.doc th{white-space:normal;vertical-align:top;min-width:90px}
+.doc h4{font-size:15px;margin:14px 0 2px;color:var(--green)}.doc p{margin:8px 0}.doc ul,.doc ol{padding-left:22px;margin:6px 0}.doc li{margin:4px 0}.doc table{font-size:14px}.doc td,.doc th{white-space:normal;vertical-align:top;min-width:90px}
 .hbtn{position:relative;border:0;background:transparent;color:var(--ink-2);width:44px;height:44px;border-radius:12px;display:grid;place-items:center;flex:none}
 .hbtn:hover{background:var(--wash)}.hbtn .dot{position:absolute;top:9px;right:9px;width:9px;height:9px;border-radius:50%;background:var(--brand)}
 .tl .del{flex:none;border:0;background:var(--wash);color:var(--ink-3);border-radius:10px;width:36px;height:32px;margin-left:6px}
-@media (prefers-reduced-motion:reduce){.scrim,.sheet{transition:none}.btn:active{transform:none}}
+.skel{display:grid;gap:10px;padding:6px 0 18px}.skel i{display:block;height:14px;border-radius:7px;background:linear-gradient(90deg,var(--wash) 0%,var(--line) 50%,var(--wash) 100%);background-size:200% 100%;animation:sk 1.2s linear infinite}.skel i.h{height:22px;width:70%;margin-bottom:6px}.skel i:nth-child(3n){width:85%}.skel i:nth-child(4n){width:60%}
+@keyframes sk{to{background-position:-200% 0}}
+.sheet.drag{transition:none}
+.grab{touch-action:none;cursor:grab;position:relative}.grab::before{content:"";position:absolute;inset:-14px -60px}
+@keyframes fin{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.fade-in{animation:fin .22s cubic-bezier(.2,.8,.2,1)}
+.toast{animation:fin .2s cubic-bezier(.2,.8,.2,1)}
+button,.btn,.row,.tab,.chip{transition:background-color .15s,transform .12s,box-shadow .15s}
+@media (prefers-reduced-motion:reduce){.scrim,.sheet{transition:none}.btn:active{transform:none}.fade-in,.toast,.skel i{animation:none}}
 
 /* login */
 .login{max-width:440px;margin:0 auto;padding-top:4vh}
@@ -571,15 +579,20 @@ function payHtml(){
 /* ---------- документы ---------- */
 function docsHtml(){
   const l=S.docs;
-  if(!l)return `<div class="sh-n">Փաստաթղթեր</div><div class="empty">Բեռնվում է…</div>`;
+  if(!l)return `<div class="sh-n">Փաստաթղթեր</div><div class="skel"><i></i><i></i><i></i><i></i></div>`;
   const groups=[];l.forEach(d=>{let g=groups.find(x=>x.n===d.group);if(!g){g={n:d.group,items:[]};groups.push(g)}g.items.push(d)});
   return `<div class="sh-n">Փաստաթղթեր</div><div class="sh-s" style="margin-bottom:8px">Կարդացեք ձեր հրահանգները և սեղմեք «Կարդացել եմ»։</div>
     ${l.length?groups.map(g=>`<div class="sh-sub">${esc(g.n||"")}</div>`+g.items.map(d=>`<button class="row" data-act="doc-open" data-id="${esc(d.id)}"><div class="av s-${d.readAt?"play":"meal"}">${d.readAt?"✓":"!"}</div><div class="rm"><div class="rn">${esc(d.title.split(" — ")[0])}</div><div class="rs">${d.readAt?"Կարդացել եք · "+new Date(d.readAt).toLocaleDateString("ru-RU"):"Դեռ չեք կարդացել"}</div></div>${IC.chev}</button>`).join("")).join(""):`<div class="empty">Փաստաթղթեր դեռ չկան։</div>`}
     <div class="acts"><button class="btn full line" data-act="close">Փակել</button></div>`;
 }
+const DOCC=(()=>{try{return JSON.parse(localStorage.getItem("vk-docs")||"{}")}catch(e){return {}}})();
+function docCacheSave(){try{localStorage.setItem("vk-docs",JSON.stringify(DOCC))}catch(e){}}
+function docPrefetch(){const l=S.docs||[];const miss=l.filter(d=>!DOCC[d.id]||DOCC[d.id].v!==d.version).map(d=>d.id);
+  if(!miss.length||S.docFetching)return;S.docFetching=1;
+  api("api_docBodies",S.code,miss).then(r=>{r.forEach(d=>DOCC[d.id]={v:d.version,html:d.html});docCacheSave();S.docFetching=0}).catch(()=>{S.docFetching=0})}
 function docHtml(){
   const d=S.doc;
-  if(!d)return `<div class="empty">Բեռնվում է…</div>`;
+  if(!d)return `<div class="skel" aria-label="Բեռնվում է…"><i class="h"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>`;
   const meta=(S.docs||[]).find(x=>x.id===d.id)||{};
   return `<button class="back" data-act="docs">← Բոլոր փաստաթղթերը</button><div class="doc">${cleanHtml(d.html)}</div>
     <div class="acts">${meta.readAt?`<div class="ok">Կարդացել եք · ${new Date(meta.readAt).toLocaleDateString("ru-RU")}</div>`:`<button class="btn full pri" data-act="doc-read" data-id="${esc(d.id)}">Կարդացել եմ</button>`}<button class="btn full line" data-act="close">Փակել</button></div>`;
@@ -661,15 +674,15 @@ function sheetHtml(D,now){
     ${(role==="owner"||role==="coord")?`<div class="acts" style="margin-top:6px"><button class="btn full line" data-act="kid-edit" data-kid="${esc(k.id)}">Խմբագրել քարտը</button>${(S.contacts[k.id]||[]).filter(c=>c.phone).map(c=>`<a class="btn full line" href="tel:${esc(c.phone.replace(/[^\d+]/g,""))}">Զանգ · ${esc(c.name)}${c.rel?" ("+esc(c.rel)+")":""}</a>`).join("")}<button class="btn full line" data-act="leave" data-kid="${esc(k.id)}" style="color:var(--red)">Այլևս չի հաճախում</button></div>`:""}
     <div class="acts"><button class="btn full line" data-act="close">Փակել</button></div>`;
 }
-let sheetOpenKey=null;
+let sheetOpenKey=null,sheetSub=null;
 function renderSheet(D,now){
   const box=document.getElementById("sheetbox");
   if(!S.sheet){if(sheetOpenKey){const sc=box.querySelector(".scrim"),sh=box.querySelector(".sheet");if(sc)sc.classList.remove("in");if(sh)sh.classList.remove("in");setTimeout(()=>{if(!S.sheet)box.innerHTML=""},260);sheetOpenKey=null}return}
-  const key=S.sheet.type+"|"+(S.sheet.kid||"");
+  const key=(S.sheet.type==="doc"||S.sheet.type==="docs")?"docs|":S.sheet.type+"|"+(S.sheet.kid||"");const sub=S.sheet.type+"|"+(S.sheet.kid||"");
   const inner=sheetHtml(D,now);
-  if(sheetOpenKey===key){const sh=box.querySelector(".sheet");if(sh){const st=sh.scrollTop;sh.innerHTML=`<div class="grab"></div>`+inner;sh.scrollTop=st}return}
+  if(sheetOpenKey===key){const sh=box.querySelector(".sheet");if(sh){const swap=sheetSub!==sub;sheetSub=sub;const st=sh.scrollTop;sh.innerHTML=`<div class="grab"></div>`+(swap?`<div class="fade-in">${inner}</div>`:inner);sh.scrollTop=swap?0:st}return}
   box.innerHTML=`<div class="scrim" data-act="close"></div><div class="sheet" role="dialog" aria-modal="true"><div class="grab"></div>${inner}</div>`;
-  sheetOpenKey=key;
+  sheetOpenKey=key;sheetSub=sub;
   requestAnimationFrame(()=>requestAnimationFrame(()=>{box.querySelector(".scrim")?.classList.add("in");box.querySelector(".sheet")?.classList.add("in")}));
 }
 
@@ -714,6 +727,7 @@ function loginHtml(){
     <button class="btn full pri" id="login-btn" data-act="login" ${S.busyPin?"disabled":""}>${S.busyPin?"Ստուգում եմ…":"Մուտք"}</button></div>`;
 }
 function pinUpdate(){const d=document.getElementById("dots");if(d){d.innerHTML=pinDots();d.setAttribute("aria-label","Մուտքագրված է "+S.pin.length+" թիվ")}const er=document.getElementById("pin-err");if(er)er.textContent=S.pinErr||""}
+let lastTabShown=null;
 function render(){
   const app=document.getElementById("app"),bar=document.getElementById("tabbar"),ae=document.activeElement;
   let keepQ=null;
@@ -730,6 +744,7 @@ function render(){
   header(tabs);
   bar.hidden=!tabs.length;app.className=tabs.length?"":"notabs";
   bar.innerHTML=tabs.map(t=>`<button class="tab ${S.tab===t[0]?"on":""}" data-act="tab" data-v="${t[0]}"${S.tab===t[0]?' aria-current="page"':""}>${t[2]}<span>${t[1]}</span>${t[3]?`<span class="badge num">${t[3]}</span>`:""}</button>`).join("");
+  if(lastTabShown!==S.tab){lastTabShown=S.tab;app.classList.remove("fade-in");void app.offsetWidth;app.classList.add("fade-in")}
   app.innerHTML=(S.offline?`<div class="off" style="margin-bottom:14px">Կապ չկա։ ${Q.get().length?Q.get().length+" նշում կուղարկվի, երբ կապը վերականգնվի։":"Ցույց է տրված վերջին տվյալները։"}</div>`:"")+screen(S.tab,D,now);
   if(keepQ){const q=document.getElementById("q");if(q){q.focus({preventScroll:true});try{q.setSelectionRange(keepQ[0],keepQ[1])}catch(e){}}}
   renderSheet(D,now);
@@ -777,7 +792,7 @@ function setBadge(n){try{if(navigator.setAppBadge){n?navigator.setAppBadge(n):na
 function sigOf(st){return JSON.stringify([st.contacts,st.unread,st.me&&st.me.id,st.kids,st.staff,st.settings,st.marks,st.routes,st.noSchool])}
 function applyState(st,t0){
   const was=S.me;
-  if(!S.docsTried){S.docsTried=1;setTimeout(()=>api("api_docs",S.code).then(l=>{S.docs=l;S.docsUnread=l.filter(d=>!d.readAt).length;render()}).catch(()=>{}),800)}
+  if(!S.docsTried){S.docsTried=1;setTimeout(()=>api("api_docs",S.code).then(l=>{S.docs=l;S.docsUnread=l.filter(d=>!d.readAt).length;render();docPrefetch()}).catch(()=>{}),800)}
   S.offset=st.serverNow-Math.round((t0+Date.now())/2);S.day=st.day;S.me=st.me.id;S.staff=st.staff.sort((a,b)=>a.order-b.order);S.kids=st.kids;S.settings=st.settings;
   S.unread=st.unread||0;setBadge(S.unread);S.contacts=st.contacts||{};
   S.marks=st.marks.concat(queuedAsMarks());S.routes=st.routes||[];S.noSchool=!!st.noSchool;S.sheetUrl=st.sheetUrl||"";S.offline=Q.get().length>0;
@@ -855,8 +870,11 @@ document.addEventListener("click",async e=>{
     document.activeElement&&document.activeElement.blur();
     try{await api("api_pay",S.code,S.sheet.kid,S.payMonth,0,"promise",dd+"."+mm);S.pay=await api("api_payments",S.code,S.payMonth);toast("Նշված է");render()}catch(err){toast("Չգրանցվեց")}}
   else if(a==="pay-del"){if(!confirm("Ջնջե՞լ այս վճարը։"))return;try{await api("api_payDelete",S.code,b.dataset.id);S.pay=await api("api_payments",S.code,S.payMonth);render()}catch(err){toast("Չհաջողվեց")}}
-  else if(a==="docs"){S.sheet={type:"docs"};render();try{S.docs=await api("api_docs",S.code);S.docsUnread=S.docs.filter(d=>!d.readAt).length;render()}catch(err){S.docs=[];render();toast("Չհաջողվեց բեռնել")}}
-  else if(a==="doc-open"){S.doc=null;S.sheet={type:"doc",kid:b.dataset.id};render();try{S.doc=await api("api_doc",S.code,b.dataset.id);render();const sh=document.querySelector("#sheetbox .sheet");if(sh)sh.scrollTop=0}catch(err){toast("Չհաջողվեց բեռնել");S.sheet={type:"docs"};render()}}
+  else if(a==="docs"){S.sheet={type:"docs"};render();try{S.docs=await api("api_docs",S.code);S.docsUnread=S.docs.filter(d=>!d.readAt).length;render();docPrefetch()}catch(err){if(!S.docs)S.docs=[];render();if(!S.docs.length)toast("Չհաջողվեց բեռնել")}}
+  else if(a==="doc-open"){const id=b.dataset.id,meta=(S.docs||[]).find(x=>x.id===id)||{},c=DOCC[id];
+    S.doc=c?{id,title:meta.title,version:c.v,html:c.html}:null;S.sheet={type:"doc",kid:id};render();
+    if(c&&c.v===meta.version)return;
+    try{const d=await api("api_doc",S.code,id);DOCC[id]={v:d.version,html:d.html};docCacheSave();if(S.sheet&&S.sheet.kid===id){S.doc=d;render()}}catch(err){if(!c){toast("Չհաջողվեց բեռնել");S.sheet={type:"docs"};render()}}}
   else if(a==="doc-read"){try{const t=await api("api_docRead",S.code,b.dataset.id);const d=(S.docs||[]).find(x=>x.id===b.dataset.id);if(d)d.readAt=t;S.docsUnread=(S.docs||[]).filter(x=>!x.readAt).length;toast("Նշված է՝ կարդացել եք");render()}catch(err){toast("Չհաջողվեց")}}
   else if(a==="push-test"){if(!("Notification" in window)||Notification.permission!=="granted"){enablePush();return}
     try{await subscribePush(false);const n=await api("api_pushTest",S.code);toast(n?"Ուղարկված է։ Ծանուցումը կգա մի քանի վայրկյանից։":"Այս հեռախոսը դեռ միացված չէ ծանուցումներին")}catch(e){toast("Չհաջողվեց ուղարկել")}}
@@ -873,6 +891,20 @@ document.addEventListener("input",e=>{
   if(e.target.id==="q"){S.q=e.target.value;render()}
   else if(e.target.id==="new-name"){const er=document.getElementById("new-err");if(er)er.textContent=""}
 });
+/* свайп вниз закрывает лист (на телефоне) */
+(()=>{let y0=0,dy=0,t0=0,sh=null,on=false;const box=document.getElementById("sheetbox");
+  const mobile=()=>!matchMedia("(min-width:960px)").matches;
+  box.addEventListener("touchstart",e=>{if(!mobile())return;const s=e.target.closest(".sheet");if(!s||e.touches.length>1)return;
+    if(e.target.closest("input,select,textarea,.tbl"))return;
+    if(!e.target.closest(".grab")&&s.scrollTop>0)return;sh=s;y0=e.touches[0].clientY;dy=0;t0=Date.now();on=false},{passive:true});
+  box.addEventListener("touchmove",e=>{if(!sh)return;const d=e.touches[0].clientY-y0;
+    if(!on){if(d<6){if(d<-6)sh=null;return}if(sh.scrollTop>0){sh=null;return}on=true;sh.classList.add("drag")}
+    dy=Math.max(0,d);sh.style.transform=`translateY(${dy}px)`;const sc=box.querySelector(".scrim");if(sc)sc.style.opacity=String(Math.max(0,1-dy/400));if(e.cancelable)e.preventDefault()},{passive:false});
+  const end=()=>{if(!sh)return;const s=sh;sh=null;if(!on)return;on=false;s.classList.remove("drag");const sc=box.querySelector(".scrim");
+    const fast=dy>40&&dy/(Date.now()-t0)>0.5;
+    if(dy>110||fast){s.style.transform="translateY(100%)";if(sc)sc.style.opacity="0";setTimeout(()=>{s.style.transform="";if(sc)sc.style.opacity="";S.sheet=null;render()},230)}
+    else{s.style.transform="";if(sc)sc.style.opacity=""}};
+  box.addEventListener("touchend",end);box.addEventListener("touchcancel",end)})();
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&S.sheet){S.sheet=null;render()}if(S.phase==="code"){if(/^[0-9]$/.test(e.key)&&S.pin.length<8){S.pin+=e.key;S.pinErr="";pinUpdate()}else if(e.key==="Backspace"){S.pin=S.pin.slice(0,-1);pinUpdate()}else if(e.key==="Enter")tryLogin()}});
 document.addEventListener("change",async e=>{const x=e.target;if(S.edit&&x.dataset&&x.dataset.f){S.edit[x.dataset.f]=x.value;if(x.dataset.f==="shift"){x.blur();render()}return}if(x.dataset&&x.dataset.t&&S.edit){(S.edit[x.dataset.t]=S.edit[x.dataset.t]||[])[Number(x.dataset.i)]=x.value;return}if(!x.dataset||!x.dataset.assign)return;
   const r=(S.routes||[]).find(y=>y.kid===x.dataset.kid&&y.kind===x.dataset.kind),old=r?r.staff:"";if(r)r.staff=x.value;x.blur();render();
