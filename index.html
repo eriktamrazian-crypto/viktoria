@@ -158,7 +158,7 @@ button.row:active{background:var(--wash)}
 .code{display:flex;gap:10px;justify-content:center;margin:18px 0 8px}
 .code span{width:44px;height:56px;border-radius:12px;background:var(--card);box-shadow:inset 0 0 0 1.5px var(--line);display:grid;place-items:center;font-size:26px;font-weight:600}
 .code span.f{box-shadow:inset 0 0 0 2px var(--green)}
-.pinfield{display:block;width:100%;border:0;border-radius:14px;background:var(--card);box-shadow:inset 0 0 0 1.5px var(--line);min-height:64px;padding:0 16px;font-size:28px;letter-spacing:.45em;text-align:center;margin:6px 0 4px}
+.pinfield{-webkit-text-security:disc;text-security:disc;display:block;width:100%;border:0;border-radius:14px;background:var(--card);box-shadow:inset 0 0 0 1.5px var(--line);min-height:64px;padding:0 16px;font-size:28px;letter-spacing:.45em;text-align:center;margin:6px 0 4px}
 .pinfield:focus{outline:none;box-shadow:inset 0 0 0 2px var(--green)}
 .pinfield::placeholder{color:var(--ink-3);letter-spacing:.45em}
 .err{color:var(--red);font-size:15px;min-height:22px;text-align:center}
@@ -333,6 +333,28 @@ function dueBanner(now){
   const r=mine[0].r,n=mine.filter(x=>x.r.time===r.time&&x.r.school===r.school&&x.r.kind===r.kind).length,late=mine.some(x=>x.s.st==="late");
   return `<button class="due${late?" late":""}" data-act="myroute"><div><b>${r.kind==="pickup"?"Ժամն է գնալ դպրոց":"Ժամն է տանել դպրոց"}</b><span class="num">${esc(r.time)} · ${esc(r.school||"")} · ${n} երեխա</span></div>${IC.arrow}</button>`;
 }
+function pushCard(){
+  const ios=/iphone|ipad|ipod/i.test(navigator.userAgent),standalone=window.matchMedia("(display-mode: standalone)").matches||navigator.standalone;
+  if(!("Notification" in window)||!("serviceWorker" in navigator)||!("PushManager" in window)){
+    return ios&&!standalone?`<div class="hint"><img src="icon-192.png" alt=""><div><b>Ծանուցումներ</b>Ծանուցումներ ստանալու համար նախ ավելացրեք հավելվածը գլխավոր էկրանին և բացեք այնտեղից։</div></div>`:"";}
+  if(Notification.permission==="denied")return `<div class="hint"><img src="icon-192.png" alt=""><div><b>Ծանուցումներն անջատված են</b>Միացրեք դրանք հեռախոսի կարգավորումներում՝ Վիկտորյա հավելվածի համար։</div></div>`;
+  if(Notification.permission==="granted"&&ls.get("vk-push-me")===S.me)return "";
+  return `<div class="hint"><img src="icon-192.png" alt=""><div><b>Միացրեք ծանուցումները</b>Կիմանաք, երբ է ժամը գնալ դպրոց${meS()&&meS().role!=="teacher"?", և եթե ինչ-որ բան այն չէ":""}։<div style="margin-top:10px"><button class="btn sm pri" data-act="push-on">Միացնել</button></div></div></div>`;
+}
+const b64uToU8=s=>{const p="=".repeat((4-s.length%4)%4),b=atob((s+p).replace(/-/g,"+").replace(/_/g,"/"));return Uint8Array.from(b,c=>c.charCodeAt(0))};
+async function subscribePush(test){
+  const reg=await navigator.serviceWorker.ready;
+  let sub=await reg.pushManager.getSubscription();
+  if(!sub){const key=await api("api_vapidKey");sub=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:b64uToU8(key)})}
+  await api("api_pushSubscribe",S.code,sub.endpoint);ls.set("vk-push-me",S.me);
+  if(test)await api("api_pushTest",S.code);
+}
+async function enablePush(){
+  try{const perm=await Notification.requestPermission();
+    if(perm!=="granted"){toast("Ծանուցումները չեն միացվել");render();return}
+    toast("Միացնում եմ…");await subscribePush(true);toast("Ծանուցումները միացված են։ Փորձնական ծանուցումը կգա մի քանի վայրկյանից։");render()}
+  catch(e){toast("Չհաջողվեց միացնել ծանուցումները");render()}
+}
 function installHint(){
   if(ls.get("vk-hint")==="1"||window.matchMedia("(display-mode: standalone)").matches||navigator.standalone) return "";
   const ios=/iphone|ipad|ipod/i.test(navigator.userAgent);
@@ -345,7 +367,7 @@ function teacherScreen(D,now){
   const me=meS(),subs=mySubjects(),subj=subs[0]||"";
   const mine=D.kids.filter(k=>k.place==="class"&&k.teacher===me.id);
   const others=D.kids.filter(k=>!(k.place==="class"&&k.teacher===me.id)&&matchQ(k));
-  let h=`<div class="stack">${installHint()}${dueBanner(now)}`;
+  let h=`<div class="stack">${installHint()}${pushCard()}${dueBanner(now)}`;
   h+=sec("Ինձ մոտ են",mine.length,mine.length?panel(mine.map(k=>{const bad=now-k.since>S.settings.sessionMax*60000;
     return `<div class="row"><button class="av s-${bad?"bad":"class"}" data-act="open" data-kid="${esc(k.id)}" style="border:0" aria-label="${esc(k.name)}">${esc(ini(k.name))}</button><div class="rm" data-act="open" data-kid="${esc(k.id)}"><div class="rn">${esc(k.name)}</div><div class="rs${bad?" bad":""} num">${dur(now-k.since)}</div></div><button class="btn sm pri" data-act="mark" data-kind="done" data-kid="${esc(k.id)}">Արեց</button></div>`}).join("")):emptyP("Հիմա ձեզ մոտ ոչ ոք չկա։ Սեղմեք երեխայի անվան վրա ներքևում, որ վերցնեք։"));
   h+=sec("Բոլոր երեխաները",null,search()+(others.length?panel(others.map(k=>{const d=subs.filter(x=>k.done[x]);return kidRow(k,now,{sub:d.length?state(k,now).w+" · "+d.join(", ")+"՝ արված":undefined})}).join("")):emptyP("Ոչ ոք չի գտնվել։")));
@@ -388,11 +410,11 @@ function nowScreen(D,now){
   const F=[["all","Բոլորը"],["center","Կենտրոնում"],["class","Դասին"],["play","Խաղասենյակ"],["meal","Ճաշ"],["road","Ճանապարհին"],["school","Դպրոցում"],["none","Չեն եկել"],["home","Գնացել են"]];
   const list=D.kids.filter(k=>(S.filter==="all"||(S.filter==="center"?k.inCenter:k.place===S.filter))&&matchQ(k));
   const listH=sec("Ով որտեղ է",list.length,search()+`<div class="chips">${F.map(f=>`<button class="chip ${S.filter===f[0]?"on":""}" data-act="filter" data-v="${f[0]}">${f[1]}</button>`).join("")}</div>`+(list.length?panel(list.map(k=>kidRow(k,now)).join("")):emptyP("Այս ցուցակում ոչ ոք չկա։")));
-  return `<div class="stack">${installHint()}<div class="two"><div class="stack">${nums}${alertsH}${teachH}</div><div class="stack">${listH}</div></div></div>`;
+  return `<div class="stack">${installHint()}${pushCard()}<div class="two"><div class="stack">${nums}${alertsH}${teachH}</div><div class="stack">${listH}</div></div></div>`;
 }
 function cookScreen(D,now){
   const eating=D.kids.filter(k=>k.place==="meal"),notYet=D.kids.filter(k=>k.inCenter&&!k.ate&&k.place!=="meal"),ate=D.kids.filter(k=>k.ate);
-  let h=`<div class="stack">${installHint()}<div class="nums"><div class="nbox k-meal"><span>Դեռ չեն կերել</span><b class="num">${notYet.length}</b></div><div class="nbox k-meal"><span>Ուտում են</span><b class="num">${eating.length}</b></div><div class="nbox k-play"><span>Կերել են</span><b class="num">${ate.length}</b></div><div class="nbox"><span>Կենտրոնում</span><b class="num">${D.kids.filter(k=>k.inCenter).length}</b></div></div>`;
+  let h=`<div class="stack">${installHint()}${pushCard()}<div class="nums"><div class="nbox k-meal"><span>Դեռ չեն կերել</span><b class="num">${notYet.length}</b></div><div class="nbox k-meal"><span>Ուտում են</span><b class="num">${eating.length}</b></div><div class="nbox k-play"><span>Կերել են</span><b class="num">${ate.length}</b></div><div class="nbox"><span>Կենտրոնում</span><b class="num">${D.kids.filter(k=>k.inCenter).length}</b></div></div>`;
   h+=sec("Ուտում են",eating.length,eating.length?panel(eating.map(k=>`<div class="row wrap"><div class="av s-meal">${esc(ini(k.name))}</div><div class="rm"><div class="rn">${esc(k.name)}</div><div class="rs num">${dur(now-k.since)}</div></div><button class="btn sm pri" data-act="mark" data-kind="ate" data-kid="${esc(k.id)}">Կերավ</button></div>`).join("")):emptyP("Սեղանի շուրջ հիմա ոչ ոք չկա։"));
   h+=sec("Դեռ չեն կերել",notYet.length,notYet.length?panel(notYet.map(k=>`<div class="row wrap"><div class="av s-${state(k,now).c}">${esc(ini(k.name))}</div><div class="rm"><div class="rn">${esc(k.name)}</div><div class="rs">${esc(state(k,now).w)}</div></div><button class="btn sm" data-act="mark" data-kind="meal" data-kid="${esc(k.id)}">Նստեց ուտելու</button></div>`).join("")):emptyP("Կենտրոնում բոլորը կերել են։"));
   return h+`</div>`;
@@ -522,7 +544,7 @@ function header(tabs){
 }
 function loginHtml(){
   return `<div class="login"><h1>Մուտք</h1><p>Մուտքագրեք ձեր անձնական կոդը և սեղմեք «Մուտք»։ Կոդը տալիս է Իլոնան։</p>
-    <input id="pin" class="pinfield num" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="off" placeholder="••••••" aria-label="Անձնական կոդ">
+    <input id="pin" name="vk-code-field" class="pinfield num" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true" placeholder="••••••" aria-label="Անձնական կոդ">
     <div class="err" id="pin-err">${esc(S.pinErr)}</div>
     <button class="btn full pri" data-act="login" ${S.busyPin?"disabled":""}>${S.busyPin?"Ստուգում եմ…":"Մուտք"}</button></div>`;
 }
@@ -583,8 +605,10 @@ async function mark(kind,kid,subject){
 }
 let busy=false;
 function applyState(st,t0){
+  const was=S.me;
   S.offset=st.serverNow-Math.round((t0+Date.now())/2);S.day=st.day;S.me=st.me.id;S.staff=st.staff.sort((a,b)=>a.order-b.order);S.kids=st.kids;S.settings=st.settings;
   S.marks=st.marks.concat(queuedAsMarks());S.routes=st.routes||[];S.noSchool=!!st.noSchool;S.sheetUrl=st.sheetUrl||"";S.offline=Q.get().length>0;
+  try{if(("Notification" in window)&&Notification.permission==="granted"&&ls.get("vk-push-me")!==S.me&&"PushManager" in window)subscribePush(false).catch(()=>{})}catch(e){}
 }
 async function refresh(){
   if(busy||!S.code||S.phase!=="app")return;busy=true;
@@ -621,6 +645,7 @@ document.addEventListener("click",async e=>{
   else if(a==="login")tryLogin();
   else if(a==="logout")logout();
   else if(a==="reload")location.reload();
+  else if(a==="push-on")enablePush();
   else if(a==="hint-x"){ls.set("vk-hint","1");render()}
   else if(a==="install"&&S.installEvt){S.installEvt.prompt();S.installEvt=null;ls.set("vk-hint","1");render()}
   else if(a==="week"){b.textContent="Հավաքում եմ…";try{S.week=await api("api_week",S.code);render()}catch(err){toast("Չհաջողվեց");b.textContent="Հավաքել 7 օրվա տվյալները"}}
