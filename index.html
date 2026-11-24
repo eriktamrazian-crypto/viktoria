@@ -446,6 +446,62 @@ button.row:active,.row [data-act]:active{background:rgba(0,0,0,.03)}
 .krow+.krow::before{left:48px}
 .krow .d{background:var(--paper)}
 @media (max-width:360px){.kh{margin:0;padding:0}.lg b{font-size:20px}.kpi b{font-size:56px}}
+/* дашборд директора на компьютере (24.11) */
+.dash,.board{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+@media (min-width:1240px){.dash,.board{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.tile{background:#fff;border:0;border-radius:18px;padding:18px 20px;text-align:left;display:flex;flex-direction:column;min-width:0;color:var(--ink);font:inherit}
+.tile.w2{grid-column:span 2}
+button.tile{cursor:pointer;transition:box-shadow .15s ease,transform .16s var(--ease-out)}
+@media (hover:hover) and (pointer:fine){button.tile:hover{box-shadow:0 0 0 1px #d9ddd3}}
+button.tile:active{transform:scale(.99)}
+.tl{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:13px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-3)}
+.tl em{font-style:normal;text-transform:none;letter-spacing:0;font-weight:500}
+.tv{font-size:40px;font-weight:700;line-height:1.05;letter-spacing:-.02em;margin-top:12px;font-variant-numeric:tabular-nums}
+.tv small{font-size:17px;font-weight:600;color:var(--ink-3);letter-spacing:0;margin-left:4px}
+.tv.g{color:var(--hero)}.tv.r{color:var(--c-urgent)}
+.ts{font-size:14px;color:var(--ink-2);margin-top:4px}.ts b{font-weight:600}.ts .r{color:var(--c-urgent);font-weight:600}
+.prog{height:8px;border-radius:5px;background:var(--wash);overflow:hidden;margin-top:auto}.prog i{display:block;height:100%;background:var(--green);border-radius:5px}
+.tile .prog{margin-top:16px}
+.bars{display:flex;align-items:flex-end;gap:6px;height:54px;margin-top:auto;padding-top:14px}
+.bars i{flex:1;background:#dfe3da;border-radius:4px 4px 2px 2px;min-height:3px}.bars i.t{background:var(--green)}.bars.bad i.t{background:var(--c-urgent)}
+.bl{display:flex;gap:6px;margin-top:5px}.bl span{flex:1;text-align:center;font-size:11px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.tile .seg{margin-top:16px}.tile .leg{margin-top:8px}
+.tile .row{min-height:0;padding:9px 0}.tile .rn{font-size:15px}.tile .rs{font-size:13.5px}
+.tile .calm{margin-top:10px}
+.trow{display:flex;justify-content:space-between;gap:10px;font-size:14px;padding:6px 0;border-top:1px solid var(--line)}.trow:first-of-type{margin-top:12px}.trow span{color:var(--ink-2)}.trow b{font-weight:600}.trow b.r{color:var(--c-urgent)}
+.dsec{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:8px 0 -6px}
+.dsec h2{margin:0;font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3)}
+.dsec .search{max-width:320px}
+.col{background:#fff;border-radius:18px;padding:14px 16px 8px;min-width:0}
+.col .tl i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:7px;vertical-align:1px}
+.col .row{min-height:0;padding:9px 0}.col .rn{font-size:15px}.col .rs{font-size:13px}.col .rt{font-size:13px}.col .chev{display:none}
+.col .none{color:var(--ink-3);font-size:14px;padding:10px 0 12px}
+.board.small .col{background:none;padding:6px 4px}
+.board{align-items:start}
+.tile .ts b,.tile .trow b{display:inline;font-size:inherit;line-height:inherit}
+.tile .leg{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}.tile .lg{min-width:0;padding:6px 4px 4px}
+.dash.d3{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media (max-width:1239px){.dash.d3{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.dgrp{font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);margin:6px 0 -12px}
+.tile{padding:16px 20px}
+.tv{font-size:34px;margin-top:10px}
+.tl .r{color:var(--c-urgent);font-weight:600}
+.okline{margin-top:14px;color:var(--ink-2);font-weight:500}
+.funnel{display:flex;flex-direction:column;gap:5px;margin:12px -6px 2px}.fstep{padding:2px 6px;border-radius:10px}
+.fstep{display:grid;grid-template-columns:150px minmax(0,1fr) 34px 44px;align-items:center;gap:12px;font-size:14.5px}
+.fl{color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fb{height:12px;border-radius:6px;background:var(--wash);overflow:hidden}.fb i{display:block;height:100%;background:var(--green);border-radius:6px;min-width:2px}
+.fstep b{text-align:right;font-weight:700}.fstep em{font-style:normal;color:var(--ink-3);font-size:13px;text-align:right}
+.tile.day .ts{margin-top:8px}
+.own{margin-top:10px;font-size:12px;color:var(--ink-3)}
+.tile .bars{height:44px}
+button.fstep{border:0;background:none;border-radius:10px;text-align:left;font:inherit;color:inherit;cursor:pointer}
+@media (hover:hover) and (pointer:fine){button.fstep:hover{background:var(--paper)}}
+button.fstep.on{background:var(--green-2)}
+.fb{position:relative}.fb s{position:absolute;top:-2px;bottom:-2px;width:2px;margin-left:-1px;background:var(--ink);opacity:.55;border-radius:1px;text-decoration:none}
+.tl s.uk{display:inline-block;width:2px;height:11px;background:var(--ink);opacity:.55;vertical-align:-1px;margin-right:4px;text-decoration:none}
+.dhead .fresh{margin-left:auto;font-size:13px;color:var(--ink-3)}
+.lnk{border:0;background:none;color:var(--green);font:inherit;text-transform:none;letter-spacing:0;padding:0;cursor:pointer;font-weight:600}
 /* desktop: меню слева, контент справа (24.11) */
 .dhead,.dl{display:none}
 @media (min-width:960px){
@@ -472,6 +528,7 @@ button.row:active,.row [data-act]:active{background:rgba(0,0,0,.03)}
   .hero .hero-top,.hero .hsub{display:none}
   .hero .kpi{margin-top:20px}
   .kpi b{font-size:56px}
+  main.dashm .hero .kpi{display:none}
   .leg{display:flex;gap:6px;flex-wrap:wrap}
   .lg{min-width:118px;padding:8px 12px 10px 4px}
   .hint.inst{display:none}
@@ -714,6 +771,7 @@ function placeRow(k,now){const s=state(k,now);let sub=s.w,subCls="";
   if(k.place==="road")sub="Տանում է՝ "+sname(k.escort);
   return kidRow(k,now,{sub,subCls})}
 function nowScreen(D,now){
+  if(DESK()&&meS()&&(meS().role==="owner"||meS().role==="coord"))return dashScreen(D,now);
   const al=alerts(D,now),f=["class","play","meal","road"].includes(S.filter)?S.filter:"";
   const cnt=v=>D.kids.filter(k=>k.place===v&&(v==="road"||k.inCenter)).length;
   const tot=TILES.reduce((a,t)=>a+cnt(t[0]),0);
@@ -731,6 +789,79 @@ function nowScreen(D,now){
     return `<div class="row"><span class="av ${n>mx?"s-bad":n?"p-class":""}"></span><div class="rm"><div class="rn">${esc(s.name)}</div><div class="rs">${esc((s.subjects&&s.subjects.length?s.subjects.join(", "):s.subject)||ROLE[s.role]||"")}</div></div><div class="rt num${n>mx?" u":""}">${n?n+" երեխա":"ազատ է"}</div></div>`}).join(""))):"";
   return `<div class="stack">${tiles}${installHint()}${pushCard()}<div class="nowg"><div class="g-al">${alH}</div><div class="g-li stack">${listH}</div>${teachH?`<div class="g-te">${teachH}</div>`:""}</div></div>`;
 }
+
+const DESK=()=>window.matchMedia("(min-width:960px)").matches;
+const WKD=["Կի","Եկ","Եք","Չո","Հի","Ու","Շա"];
+function weekDays(now){const out=[];for(let i=6;i>=0;i--){const t=now-i*86400000;out.push({key:dayKey(t),d:new Date(t)})}return out}
+function lateHome(m){if(m.kind!=="home")return false;const d=new Date(m.at);return d.getHours()*60+d.getMinutes()>18*60+30}
+function barsH(vals,days,todayCls,bad){const mx=Math.max(1,...vals);return `<div class="bars${bad&&vals[vals.length-1]?" bad":""}">${vals.map((v,i)=>`<i class="${i===vals.length-1?"t":""}" style="height:${Math.max(4,Math.round(v/mx*100))}%" title="${v}"></i>`).join("")}</div><div class="bl">${days.map(x=>`<span>${x.d.getDate()}</span>`).join("")}</div>`}
+const KIDS_GOAL="50–55"; /* цель центра из ЦКП (док. 25 Арсена, 16.11.2026) */
+function dashScreen(D,now){
+  if(!S.week&&!S.weekLoading&&S.code){S.weekLoading=1;api("api_week",S.code).then(w=>{S.week=Array.isArray(w)?w:[];S.weekLoading=0;render()}).catch(()=>{S.weekLoading=0})}
+  const m=S.payMonth||(S.payMonth=curMonth());
+  if(!S.pay){try{const c=JSON.parse(localStorage.getItem("vk-pay")||"null");if(c&&c.month===m)S.pay=c}catch(e){}}
+  if((!S.pay||S.pay.month!==m)&&!S.payLoading&&S.code){S.payLoading=1;api("api_payments",S.code,m).then(r=>{S.pay=r;S.payLoading=0;render()}).catch(()=>{S.payLoading=0})}
+  const al=alerts(D,now),urg=al.filter(a=>a.u).length,f=["class","play","meal","road"].includes(S.filter)?S.filter:"";
+  const cnt=v=>D.kids.filter(k=>k.place===v&&(v==="road"||k.inCenter)).length;
+  const tot=TILES.reduce((a,t)=>a+cnt(t[0]),0),inC=D.kids.filter(k=>k.inCenter).length;
+  const came=D.kids.filter(k=>k.arrivedAt),N=came.length;
+  const days=weekDays(now),wk=S.week?S.week.concat(S.marks.filter(x=>x.day===S.day)):null;
+  const perDay=fn=>days.map(x=>fn(wk.filter(mm=>mm.day===x.key)));
+  const av=wk?perDay(a=>new Set(a.filter(mm=>mm.kind==="arrive"||mm.kind==="take").map(mm=>mm.kid)).size):null;
+  const past=av?av.slice(0,6).filter(v=>v):[],avg=past.length?Math.round(past.reduce((a,b)=>a+b,0)/past.length):null;
+  /* 1. учебный день ребёнка (ЦКП-1): от 100% пришедших */
+  const ate=came.filter(k=>k.ate),hw=came.filter(k=>Object.keys(k.done).length),gone=came.filter(k=>k.place==="home");
+  /* «обычно к этому часу» — по прошлым дням недели */
+  const tod=t=>{const d=new Date(t);return d.getHours()*60+d.getMinutes()},nowT=tod(now),usual={};
+  if(wk){const acc={ate:[],hw:[],gone:[]};days.slice(0,6).forEach(x=>{const a=wk.filter(mm=>mm.day===x.key&&tod(mm.at)<=nowT);const c=new Set(a.filter(mm=>mm.kind==="arrive"||mm.kind==="take").map(mm=>mm.kid));if(!c.size)return;
+      const pc=kinds=>Math.round(new Set(a.filter(mm=>kinds.includes(mm.kind)&&c.has(mm.kid)).map(mm=>mm.kid)).size/c.size*100);acc.ate.push(pc(["ate"]));acc.hw.push(pc(["done"]));acc.gone.push(pc(["home"]))});
+    Object.keys(acc).forEach(k=>{if(acc[k].length)usual[k]=Math.round(acc[k].reduce((a,b)=>a+b,0)/acc[k].length)})}
+  const trusted=S.marks.filter(mm=>mm.kind==="home"&&String(mm.who||"").startsWith("⚠")).length;
+  const goneNoHw=gone.filter(k=>!Object.keys(k.done).length).length,goneNoEat=gone.filter(k=>!k.ate).length;
+  const step=(l,n,key,fk)=>{const p=N?Math.round(n/N*100):0,u=usual[key],tag=fk?"button":"div";return `<${tag} class="fstep${fk&&S.filter===fk?" on":""}"${fk?` data-act="filter" data-v="${fk}" aria-pressed="${S.filter===fk}" title="Ցույց տալ, ով դեռ չի"`:""}><span class="fl">${l}</span><span class="fb"><i style="width:${p}%"></i>${u!=null?`<s style="left:${u}%"></s>`:""}</span><b class="num">${n}</b><em class="num">${N?p+"%":""}</em></${tag}>`};
+  const tDay=`<div class="tile w2 day"><div class="tl">Երեխայի օրը · այսօր<em>${Object.keys(usual).length?`<s class="uk"></s> սովորաբար այս ժամին`:""}</em></div>
+    <div class="funnel">${step("Եկել են",N)}${step("Կերել են",ate.length,"ate","noeat")}${step("Դասերն արել են",hw.length,"hw","nohw")}${step("Գնացել են տուն",gone.length,"gone")}</div>
+    <div class="ts">${goneNoHw||goneNoEat?`<span class="r">Գնացել են ${goneNoHw?"առանց դասերի՝ "+goneNoHw:""}${goneNoHw&&goneNoEat?", ":""}${goneNoEat?"առանց ուտելու՝ "+goneNoEat:""}</span>`:N?"Տուն գնացածներից բոլորն արել են դասերը և կերել են":"Այսօր դեռ ոչ ոք չի եկել"}${trusted?` · <span class="r">Ուրիշ մարդու են հանձնել՝ ${trusted}</span>`:""}</div></div>`;
+  /* 2. требует действия */
+  S.exp=S.exp||{};const alLim=S.exp.al?al.length:Math.min(al.length,4);
+  const tAl=`<div class="tile w2"><div class="tl">Պետք է արձագանքել<em>${urg?`<span class="r">${urg} շտապ</span>`:""}${urg&&al.length-urg?" · ":""}${al.length-urg?(al.length-urg)+" հիշեցում":""}</em></div>${al.length?`<div class="panel">${al.slice(0,alLim).map(arow).join("")}${alLim<al.length?`<button class="row" data-act="expand" data-v="al"><span class="rm" style="color:var(--green);font-weight:600">Եվս ${al.length-alLim}</span>${IC.chev}</button>`:""}</div>`:`<div class="okline">Հիմա ամեն ինչ կարգին է</div>`}</div>`;
+  /* 3. сейчас: где дети */
+  const seg=`<div class="seg">${tot?TILES.map(([v,,,c])=>cnt(v)?`<i style="flex:${cnt(v)};background:var(--${c})"></i>`:"").join(""):`<i style="flex:1;background:var(--line)"></i>`}</div><div class="leg">${TILES.map(([v,l,,c])=>`<button class="lg${f===v?" on":""}" data-act="filter" data-v="${v}" aria-pressed="${f===v}"><b class="num">${cnt(v)}</b><span><i style="background:var(--${c})"></i>${l}</span></button>`).join("")}</div>`;
+  const tNow=`<div class="tile w2"><div class="tl">Հիմա կենտրոնում<em>${inC} երեխա</em></div>${seg}</div>`;
+  /* 4. педагоги */
+  const teachers=workers().filter(x=>x.role==="teacher"||x.role==="coord"),mx=S.settings.teacherMax||3;
+  const tc=teachers.map(x=>({x,n:D.kids.filter(k=>k.place==="class"&&k.teacher===x.id).length})),over=tc.filter(t=>t.n>mx).length;
+  const tTe=`<div class="tile"><div class="tl">Մանկավարժներ<em>նորման՝ ${mx}</em></div>${tc.map(t=>`<div class="trow"><span>${esc(t.x.name)}</span><b class="${t.n>mx?"r":""}">${t.n?t.n:"ազատ"}</b></div>`).join("")}</div>`;
+  /* 5. дорога */
+  const rs=liveRoutes().map(r=>({r,s:rstat(r,now)})),rDone=rs.filter(x=>x.s.st==="done").length,rLate=rs.filter(x=>x.s.st==="late").length;
+  const nxt=rs.filter(x=>x.s.st!=="done"&&x.s.st!=="late").sort((a,b)=>String(a.r.time).localeCompare(String(b.r.time)))[0];
+  const tRoad=`<button class="tile" data-act="tab" data-v="road"><div class="tl">Դպրոցից վերցնել</div><div class="tv${rLate?" r":""}">${rDone}<small>/ ${rs.length}</small></div><div class="ts">${rLate?`<span class="r">Ուշանում է՝ ${rLate}</span>`:nxt?`Հաջորդը՝ <b>${esc(nxt.r.time)}</b>`:rs.length?"Բոլորին վերցրել են":"Այսօր չկա"}</div></button>`;
+  /* 6. месяц: оплата (док. 38, владелец Тамара) */
+  let tPay;
+  if(S.pay&&S.pay.month===m){const ks=S.pay.kids,withDue=ks.filter(k=>k.due),okN=withDue.filter(k=>k.paid>=k.due).length,debt=ks.reduce((a,k)=>a+Math.max(0,k.due-k.paid),0);
+    const d=new Date(now),left=28-d.getDate(),p=withDue.length?Math.round(okN/withDue.length*100):0;
+    tPay=`<button class="tile" data-act="tab" data-v="pay"><div class="tl">Վճարել են մինչև 28-ը</div><div class="tv${left<0&&debt?" r":""}">${okN}<small>/ ${withDue.length}</small></div><div class="ts">${left>0?"Մնաց "+left+" օր":left===0?"Այսօր վերջին օրն է":"Ժամկետն անցել է"}${debt?` · պարտք ${money(debt)}`:""}</div><div class="prog"><i style="width:${p}%"></i></div><div class="own">Թամարա · վճարումների ստուգում</div></button>`}
+  else tPay=`<div class="tile"><div class="tl">Վճարել են մինչև 28-ը</div><div class="skel" style="padding-top:14px"><i></i><i></i></div></div>`;
+  /* 7. опоздания родителей (док. 38, владелец Тамара), перевёрнутый: ноль — хорошо */
+  let tLate;
+  if(wk){const lv=perDay(a=>new Set(a.filter(lateHome).map(mm=>mm.kid)).size),lw=lv.reduce((a,b)=>a+b,0);
+    const lc={};wk.filter(lateHome).forEach(mm=>{lc[mm.kid]=(lc[mm.kid]||new Set()).add(mm.day)});const rep2=Object.keys(lc).filter(k=>lc[k].size>1).sort((a,b)=>lc[b].size-lc[a].size).slice(0,2);
+    tLate=`<div class="tile"><div class="tl">Ուշ են վերցրել<em>18:30-ից հետո</em></div><div class="tv${lv[6]?" r":""}">${lw}<small>7 օրում</small></div>${rep2.length?`<div class="ts">Կրկնվում է՝ ${rep2.map(k=>esc(kidName(k).split(" ")[0])+" ("+lc[k].size+")").join(", ")}</div>`:""}${barsH(lv,days,1,1)}<div class="own">Թամարա · ընդունման մատյան</div></div>`}
+  else tLate=`<div class="tile"><div class="tl">Ուշ են վերցրել</div><div class="skel" style="padding-top:14px"><i></i><i></i></div></div>`;
+  /* 8. дети: сколько записано против цели (ЦКП-2) */
+  const enr=activeKids().length;
+  const tKids=`<div class="tile"><div class="tl">Երեխաներ կենտրոնում<em>նպատակ՝ ${KIDS_GOAL}</em></div><div class="tv">${enr}</div><div class="ts">${avg!=null?"Օրական գալիս են միջինը՝ <b>"+avg+"</b>":"&nbsp;"}</div>${av?barsH(av,days,1,0):""}<div class="own">Իլոնա · նոր երեխաներ</div></div>`;
+  const q=S.q.trim(),list=D.kids.filter(matchQ);
+  const col=([p,name])=>{const ks=list.filter(k=>k.place===p),c=(TILES.find(t=>t[0]===p)||[])[3],lim=q||S.exp[p]||ks.length<=8?ks.length:7;
+    return `<div class="col"><div class="tl"><span>${c?`<i style="background:var(--${c})"></i>`:""}${name}</span><em>${ks.length}</em></div><div class="panel">${ks.length?ks.slice(0,lim).map(k=>placeRow(k,now)).join("")+(lim<ks.length?`<button class="row" data-act="expand" data-v="${p}"><span class="rm" style="color:var(--green);font-weight:600">Եվս ${ks.length-lim}</span></button>`:""):`<div class="none">${q?"Չի գտնվել":"Ոչ ոք"}</div>`}</div></div>`};
+  if(S.filter==="noeat"||S.filter==="nohw"){const miss=list.filter(k=>k.arrivedAt&&(S.filter==="noeat"?!k.ate:!Object.keys(k.done).length));
+    const boardF=`<div class="board" style="grid-template-columns:1fr"><div class="col"><div class="tl"><span>${S.filter==="noeat"?"Դեռ չեն կերել":"Դասերը դեռ չեն արել"}</span><em>${miss.length}</em></div><div class="panel">${miss.length?miss.map(k=>placeRow(k,now)).join(""):`<div class="none">Բոլորը</div>`}</div></div></div>`;
+    return `<div class="stack"><div class="dash">${tDay}${tAl}</div><div class="dash d2">${tNow}${tRoad}${tTe}</div><div class="dgrp">Ամիս և շաբաթ</div><div class="dash d3">${tPay}${tLate}${tKids}</div><div class="dsec" id="kidlist"><h2>Ընտրված՝ <button class="lnk" data-act="filter" data-v="all">ցույց տալ բոլորին</button></h2>${search()}</div>${boardF}${pushCard()}</div>`}
+  const main4=PLACES.slice(0,4).filter(([p])=>!f||p===f),rest=PLACES.slice(4);
+  const board=`<div class="board"${f?' style="grid-template-columns:1fr"':""}>${main4.map(col).join("")}</div>${f?"":`<div class="board small">${rest.map(col).join("")}</div>`}`;
+  return `<div class="stack"><div class="dash">${tDay}${tAl}</div><div class="dash d2">${tNow}${tRoad}${tTe}</div><div class="dgrp">Ամիս և շաբաթ</div><div class="dash d3">${tPay}${tLate}${tKids}</div><div class="dsec" id="kidlist"><h2>Բոլոր երեխաները</h2>${search()}</div>${board}${pushCard()}</div>`;
+}
+let lastDesk=null;window.matchMedia("(min-width:960px)").addEventListener("change",()=>{try{render()}catch(e){}});
 function cookScreen(D,now){
   const eating=D.kids.filter(k=>k.place==="meal"),notYet=D.kids.filter(k=>k.inCenter&&!k.ate&&k.place!=="meal"),ate=D.kids.filter(k=>k.ate);
   let h=`<div class="stack">${installHint()}${pushCard()}<div class="nums"><div class="nbox k-meal"><span>Դեռ չեն կերել</span><b class="num">${notYet.length}</b></div><div class="nbox k-meal"><span>Ուտում են</span><b class="num">${eating.length}</b></div><div class="nbox k-play"><span>Կերել են</span><b class="num">${ate.length}</b></div><div class="nbox"><span>Կենտրոնում</span><b class="num">${D.kids.filter(k=>k.inCenter).length}</b></div></div>`;
@@ -994,7 +1125,7 @@ function heroFor(tab,D,now){
   else{l1=me.name;title=TT[tab]||me.name;sub=dateHy(now)}
   const acts=`<div class="hacts"><button class="hb2" data-act="docs" aria-label="Փաստաթղթեր">${ic("book")}${S.docsUnread?`<span class="bd dot"></span>`:""}</button><button class="hb2" data-act="inbox" aria-label="Ծանուցումներ">${ic("bell")}${S.unread?`<span class="bd num${S.unread>(S.unreadSeen||0)?" pop":""}">${S.unread>99?"99+":S.unread}</span>`:""}</button><button class="hb2" data-act="logout" aria-label="Ելք">${ic("out")}</button></div>`;
   const dt=(r==="teacher"||(r==="coord"&&tab==="lessons"))?(mySubjects().join(", ")||ROLE[r]):r==="cook"?"Խոհանոց":(TT[tab]||"Հիմա");
-  return `<section class="hero"><div class="dhead"><h1>${esc(dt)}</h1><span>${esc(dateHy(now))}</span></div><div class="hero-top"><div><small>${esc(l1)}</small><b>${esc(title)}</b></div>${acts}</div>${kpi?`<div class="kpi"><b class="num">${kpi[0]}</b><span>${kpi[1]}</span></div>`:sub?`<div class="hsub">${esc(sub)}</div>`:""}</section>`;
+  return `<section class="hero"><div class="dhead"><h1>${esc(dt)}</h1><span>${esc(dateHy(now))}</span>${S.lastSync?`<span class="fresh">թարմացվել է ${hm(S.lastSync)}</span>`:""}</div><div class="hero-top"><div><small>${esc(l1)}</small><b>${esc(title)}</b></div>${acts}</div>${kpi?`<div class="kpi"><b class="num">${kpi[0]}</b><span>${kpi[1]}</span></div>`:sub?`<div class="hsub">${esc(sub)}</div>`:""}</section>`;
 }
 function screen(tab,D,now){
   const role=meS().role;
@@ -1045,7 +1176,7 @@ function render(){
   const D=derive(S.marks),tabs=tabsFor(meS().role,D,now);
   if(tabs.length&&!tabs.some(t=>t[0]===S.tab))S.tab=tabs[0][0];
   header(tabs);
-  bar.hidden=!tabs.length;app.className=tabs.length?"":"notabs";app.dataset.tab=S.tab||"";
+  bar.hidden=!tabs.length;app.className=tabs.length?"":"notabs";app.dataset.tab=S.tab||"";app.classList.toggle("dashm",DESK()&&(S.tab==="now")&&!!meS()&&(meS().role==="owner"||meS().role==="coord"));
   bar.innerHTML=tabs.map(t=>`<button class="tab ${S.tab===t[0]?"on":""}" data-act="tab" data-v="${t[0]}"${S.tab===t[0]?' aria-current="page"':""}>${ic(S.tab===t[0]?t[2]+"F":t[2])}<span>${t[1]}</span>${t[3]?`<span class="badge num">${t[3]}</span>`:""}</button>`).join("");
   if(lastTabShown!==S.tab){lastTabShown=S.tab;app.classList.remove("tab-in");void app.offsetWidth;app.classList.add("tab-in")}
   document.body.classList.add("inapp");const tc=document.querySelector('meta[name="theme-color"]');if(tc)tc.content="#f3f4ef";
@@ -1103,7 +1234,7 @@ let busy=false;
 let lastSig="";
 function setBadge(n){try{if(navigator.setAppBadge){n?navigator.setAppBadge(n):navigator.clearAppBadge()}}catch(e){}}
 function sigOf(st){return JSON.stringify([st.contacts,st.unread,st.me&&st.me.id,st.kids,st.staff,st.settings,st.marks,st.routes,st.noSchool])}
-function applyState(st,t0,off){
+function applyState(st,t0,off){S.lastSync=Date.now();
   const was=S.me;
   if(!S.docsTried){S.docsTried=1;setTimeout(()=>api("api_docs",S.code).then(l=>{S.docs=l;S.docsUnread=docsUnreadN();render();docPrefetch()}).catch(()=>{}),800)}
   S.offset=t0==null?off:st.serverNow-Math.round((t0+Date.now())/2);S.day=st.day;S.me=st.me.id;S.staff=st.staff.sort((a,b)=>a.order-b.order);S.kids=st.kids;S.settings=st.settings;
@@ -1174,8 +1305,8 @@ async function act(e,b,a){
   else if(a==="comeback"){try{await api("api_setActive",S.code,b.dataset.kid,true);toast("Վերադարձված է")}catch(err){toast("Չհաջողվեց")}refresh()}
   else if(a==="tab"){S.tab=b.dataset.v;S.q="";S.sheet=null;ls.set("vk-tab",S.tab);render();window.scrollTo(0,0)}
   else if(a==="expand"){S.exp=S.exp||{};S.exp[b.dataset.v]=1;render()}
-  else if(a==="filter"){const tile=b.classList.contains("nbox")||b.classList.contains("tile");S.filter=(S.filter===b.dataset.v&&tile)?"all":b.dataset.v;render();
-    if(tile){const l=document.getElementById("kidlist");if(l&&window.innerWidth<960)l.scrollIntoView({behavior:"smooth",block:"start"})}}
+  else if(a==="filter"){const tile=b.classList.contains("nbox")||b.classList.contains("tile")||b.classList.contains("lg")||b.classList.contains("fstep");S.filter=(S.filter===b.dataset.v&&tile)?"all":b.dataset.v;render();
+    if(tile){const l=document.getElementById("kidlist");if(l&&(window.innerWidth<960||b.classList.contains("fstep")))l.scrollIntoView({behavior:"smooth",block:"start"})}}
   else if(a==="login")tryLogin();
   else if(a==="pin-key"){if(S.pin.length<8){S.pin+=b.dataset.v;S.pinErr="";pinUpdate()}}
   else if(a==="pin-del"){S.pin=S.pin.slice(0,-1);S.pinErr="";pinUpdate()}
