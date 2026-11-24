@@ -446,23 +446,50 @@ button.row:active,.row [data-act]:active{background:rgba(0,0,0,.03)}
 .krow+.krow::before{left:48px}
 .krow .d{background:var(--paper)}
 @media (max-width:360px){.kh{margin:0;padding:0}.lg b{font-size:20px}.kpi b{font-size:56px}}
-/* desktop */
+/* desktop: меню слева, контент справа (24.11) */
+.dhead,.dl{display:none}
 @media (min-width:960px){
-  body.inapp .top{display:block}
-  .hero .hacts{display:none}
-  .nowg{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);grid-template-areas:"al li" "te li";gap:24px 28px;align-items:start}.g-al{grid-area:al}.g-li{grid-area:li}.g-te{grid-area:te}
+  body.inapp .top{display:block;position:fixed;left:0;top:0;bottom:0;width:244px;padding:22px 14px 18px;border:0;border-right:1px solid var(--line);background:var(--paper);overflow-y:auto}
+  body.inapp .top-in{flex-direction:column;align-items:stretch;gap:2px;height:100%;max-width:none;min-height:0}
+  body.inapp .me{flex:none;padding:0 10px 18px}
+  body.inapp .me .av{display:none}
+  .dtabs{display:flex;flex-direction:column;gap:2px;margin:0}
+  .dtab,body.inapp .hbtn,body.inapp .bell,body.inapp .out{border:0;background:none;border-radius:12px;min-height:44px;width:100%;padding:0 12px;font-size:15px;font-weight:500;color:var(--ink-2);display:flex;align-items:center;gap:12px;position:relative;text-align:left}
+  .dtab svg.ph,body.inapp .hbtn svg.ph,body.inapp .bell svg.ph,body.inapp .out svg.ph{width:21px;height:21px;flex:none}
+  .dtab.on{background:#fff;color:var(--ink);font-weight:600;box-shadow:none}
+  .dtab.on svg.ph{color:var(--green)}
+  .dtab .badge,body.inapp .bell .badge{position:static;margin-left:auto;background:var(--brand)}
+  body.inapp .hbtn .dot{position:static;margin-left:auto}
+  .dl{display:inline}
+  body.inapp .hbtn{margin-top:16px}
+  body.inapp .out{margin-top:auto}
+  @media (hover:hover) and (pointer:fine){.dtab:not(.on):hover,body.inapp .hbtn:hover,body.inapp .bell:hover,body.inapp .out:hover{background:var(--wash)}}
+  body.inapp main{margin:0 0 0 244px;max-width:1160px;padding:30px 44px 56px}
+  .dhead{display:flex;align-items:baseline;gap:16px;margin:0 0 4px}
+  .dhead h1{margin:0;font-size:28px;line-height:1.2;letter-spacing:-.015em}
+  .dhead span{color:var(--ink-2);font-size:15px}
+  .hero{padding:0}
+  .hero .hero-top,.hero .hsub{display:none}
+  .hero .kpi{margin-top:20px}
+  .kpi b{font-size:56px}
+  .leg{display:flex;gap:6px;flex-wrap:wrap}
+  .lg{min-width:118px;padding:8px 12px 10px 4px}
+  .hint.inst{display:none}
+  .hint{align-items:center;padding:12px 16px}
+  .hint>div{display:flex;align-items:center;gap:6px 14px;flex-wrap:wrap;flex:1}
+  .hint>div>div{margin:0!important}
+  .nowg{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);grid-template-areas:"al li" "te li";grid-template-rows:auto 1fr;gap:30px 48px;align-items:start}.g-al{grid-area:al}.g-li{grid-area:li}.g-te{grid-area:te}
   .tcards{margin:0;padding:0}
   .tabbar{display:none}
-  main{padding-bottom:48px}
-  .dtabs{display:flex;gap:4px;margin:0 auto}
-  .dtab{border:0;background:none;border-radius:12px;min-height:44px;padding:0 16px;font-size:15px;font-weight:600;color:var(--ink-2);display:flex;align-items:center;gap:8px;position:relative}
-  .dtab.on{background:var(--card);color:var(--green);box-shadow:0 0 0 1px var(--line)}
-  .dtab .badge{position:static}
-  .two{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:28px;align-items:start}
+  .two{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:48px;align-items:start}
+  main[data-tab="pay"] .panel{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:48px}
+  main[data-tab="pay"] .panel>.row:nth-child(2){border-top:0}
+  @media (min-width:1280px){main[data-tab="team"] section:first-child .panel{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:48px}main[data-tab="team"] section:first-child .panel>.row:nth-child(2){border-top:0}}
+  .monthbar{max-width:420px}
   .sheet{left:auto;top:0;width:440px;max-height:none;border-radius:22px 0 0 22px;transform:translateX(100%);padding-top:28px}
   .sheet.in{transform:none}
   .grab{display:none}
-  .toast{bottom:28px}
+  .toast{bottom:28px;left:244px}
 }
 </style>
 </head>
@@ -629,7 +656,7 @@ function installHint(){
   if(ls.get("vk-hint")==="1"||window.matchMedia("(display-mode: standalone)").matches||navigator.standalone) return "";
   const ios=/iphone|ipad|ipod/i.test(navigator.userAgent);
   const how=ios?"Safari-ում սեղմեք «Կիսվել» կոճակը, հետո «Գլխավոր էկրանին»":(S.installEvt?"":"Բրաուզերի մենյուում ընտրեք «Ավելացնել գլխավոր էկրանին»");
-  return `<div class="hint"><span class="hint-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="3" width="10" height="18" rx="2"/><path d="M11 18h2"/></svg></span><div><b>Ավելացրեք հեռախոսի էկրանին</b>${how}${S.installEvt?`<div style="margin-top:8px"><button class="btn sm pri" data-act="install">Տեղադրել</button></div>`:""}</div><button class="x" data-act="hint-x" aria-label="Փակել">✕</button></div>`;
+  return `<div class="hint inst"><span class="hint-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="3" width="10" height="18" rx="2"/><path d="M11 18h2"/></svg></span><div><b>Ավելացրեք հեռախոսի էկրանին</b>${how}${S.installEvt?`<div style="margin-top:8px"><button class="btn sm pri" data-act="install">Տեղադրել</button></div>`:""}</div><button class="x" data-act="hint-x" aria-label="Փակել">✕</button></div>`;
 }
 
 /* ---------- screens ---------- */
@@ -958,7 +985,7 @@ function tabsFor(role,D,now){
 }
 const WDF=["Կիրակի","Երկուշաբթի","Երեքշաբթի","Չորեքշաբթի","Հինգշաբթի","Ուրբաթ","Շաբաթ"],MG=["հունվարի","փետրվարի","մարտի","ապրիլի","մայիսի","հունիսի","հուլիսի","օգոստոսի","սեպտեմբերի","հոկտեմբերի","նոյեմբերի","դեկտեմբերի"];
 const dateHy=t=>{const d=new Date(t);return WDF[d.getDay()]+", "+d.getDate()+" "+MG[d.getMonth()]};
-const TT={road:"Ճանապարհ",pay:"Վճարումներ",report:"Ամփոփում",team:"Թիմ",door:"Գալ-գնալ"};
+const TT={now:"Հիմա",lessons:"Դասեր",road:"Ճանապարհ",pay:"Վճարումներ",report:"Ամփոփում",team:"Թիմ",door:"Գալ-գնալ"};
 function heroFor(tab,D,now){
   const me=meS(),r=me.role;let l1,title=me.name,kpi=null,ovl=false,sub="";
   if(r==="teacher"||(r==="coord"&&tab==="lessons")){l1=mySubjects().join(", ")||ROLE[r];kpi=[D.kids.filter(k=>k.place==="class"&&k.teacher===me.id).length,"երեխա հիմա ձեզ մոտ է"];ovl=!!dueBanner(now)}
@@ -966,7 +993,8 @@ function heroFor(tab,D,now){
   else if(tab==="now"){l1=dateHy(now);kpi=[D.kids.filter(k=>k.inCenter).length,"երեխա հիմա կենտրոնում է"];ovl=true}
   else{l1=me.name;title=TT[tab]||me.name;sub=dateHy(now)}
   const acts=`<div class="hacts"><button class="hb2" data-act="docs" aria-label="Փաստաթղթեր">${ic("book")}${S.docsUnread?`<span class="bd dot"></span>`:""}</button><button class="hb2" data-act="inbox" aria-label="Ծանուցումներ">${ic("bell")}${S.unread?`<span class="bd num${S.unread>(S.unreadSeen||0)?" pop":""}">${S.unread>99?"99+":S.unread}</span>`:""}</button><button class="hb2" data-act="logout" aria-label="Ելք">${ic("out")}</button></div>`;
-  return `<section class="hero"><div class="hero-top"><div><small>${esc(l1)}</small><b>${esc(title)}</b></div>${acts}</div>${kpi?`<div class="kpi"><b class="num">${kpi[0]}</b><span>${kpi[1]}</span></div>`:sub?`<div class="hsub">${esc(sub)}</div>`:""}</section>`;
+  const dt=(r==="teacher"||(r==="coord"&&tab==="lessons"))?(mySubjects().join(", ")||ROLE[r]):r==="cook"?"Խոհանոց":(TT[tab]||"Հիմա");
+  return `<section class="hero"><div class="dhead"><h1>${esc(dt)}</h1><span>${esc(dateHy(now))}</span></div><div class="hero-top"><div><small>${esc(l1)}</small><b>${esc(title)}</b></div>${acts}</div>${kpi?`<div class="kpi"><b class="num">${kpi[0]}</b><span>${kpi[1]}</span></div>`:sub?`<div class="hsub">${esc(sub)}</div>`:""}</section>`;
 }
 function screen(tab,D,now){
   const role=meS().role;
@@ -987,8 +1015,8 @@ function header(tabs){
   let h="";
   if(me&&S.phase==="app"){
     h=`<div class="me"><div class="av s-play">${esc(ini(me.name))}</div><div class="me-t"><div class="me-n">${esc(me.name)}</div><div class="me-r">${esc(roleLine(me))}</div></div></div>`;
-    if(tabs.length)h+=`<div class="dtabs">${tabs.map(t=>`<button class="dtab ${S.tab===t[0]?"on":""}" data-act="tab" data-v="${t[0]}">${t[1]}${t[3]?`<span class="badge num">${t[3]}</span>`:""}</button>`).join("")}</div>`;
-    h+=`<button class="hbtn" data-act="docs" aria-label="Փաստաթղթեր">${ic("book")}${S.docsUnread?`<span class="dot"></span>`:""}</button><button class="bell" data-act="inbox" aria-label="Ծանուցումներ${S.unread?" · "+S.unread+" նոր":""}">${ic("bell")}${S.unread?`<span class="badge num${S.unread>(S.unreadSeen||0)?" pop":""}">${S.unread>99?"99+":S.unread}</span>`:""}</button><button class="out" data-act="logout">Ելք</button>`;
+    if(tabs.length)h+=`<div class="dtabs">${tabs.map(t=>`<button class="dtab ${S.tab===t[0]?"on":""}" data-act="tab" data-v="${t[0]}">${ic(t[2])}${t[1]}${t[3]?`<span class="badge num">${t[3]}</span>`:""}</button>`).join("")}</div>`;
+    h+=`<button class="hbtn" data-act="docs" aria-label="Փաստաթղթեր">${ic("book")}<span class="dl">Փաստաթղթեր</span>${S.docsUnread?`<span class="dot"></span>`:""}</button><button class="bell" data-act="inbox" aria-label="Ծանուցումներ${S.unread?" · "+S.unread+" նոր":""}">${ic("bell")}<span class="dl">Ծանուցումներ</span>${S.unread?`<span class="badge num${S.unread>(S.unreadSeen||0)?" pop":""}">${S.unread>99?"99+":S.unread}</span>`:""}</button><button class="out" data-act="logout"><span class="dl">${ic("out")}</span>Ելք</button>`;
   }else h=`<div class="me"><img src="icon-192.png" alt="" width="36" height="36" style="border-radius:9px"><div class="me-t"><div class="me-n">Վիկտորյա</div><div class="me-r">ուսումնական կենտրոն</div></div></div>`;
   document.getElementById("hdr").innerHTML=h;
 }
@@ -1017,7 +1045,7 @@ function render(){
   const D=derive(S.marks),tabs=tabsFor(meS().role,D,now);
   if(tabs.length&&!tabs.some(t=>t[0]===S.tab))S.tab=tabs[0][0];
   header(tabs);
-  bar.hidden=!tabs.length;app.className=tabs.length?"":"notabs";
+  bar.hidden=!tabs.length;app.className=tabs.length?"":"notabs";app.dataset.tab=S.tab||"";
   bar.innerHTML=tabs.map(t=>`<button class="tab ${S.tab===t[0]?"on":""}" data-act="tab" data-v="${t[0]}"${S.tab===t[0]?' aria-current="page"':""}>${ic(S.tab===t[0]?t[2]+"F":t[2])}<span>${t[1]}</span>${t[3]?`<span class="badge num">${t[3]}</span>`:""}</button>`).join("");
   if(lastTabShown!==S.tab){lastTabShown=S.tab;app.classList.remove("tab-in");void app.offsetWidth;app.classList.add("tab-in")}
   document.body.classList.add("inapp");const tc=document.querySelector('meta[name="theme-color"]');if(tc)tc.content="#f3f4ef";
